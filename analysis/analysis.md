@@ -1,1 +1,1 @@
-Analysis is done in this folder.
+All analysis is done in this folder.

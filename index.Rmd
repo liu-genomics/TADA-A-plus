@@ -8,4 +8,15 @@ output:
 <br>
 
 ***
-### 1. Analyze various coding annotations
+# 1. Analyze various coding annotations
+
+## Use manuscript data/MSSNG/Simons_519, scaling factors are computed using WGS data, based on coding regions and regions 10kb within TSSs.
+Annotations include 
++ Ribosnitch (allele-specific)
++ RBP binding sites
++ conservation
++ Polyphen-damaging (Mis3)
++ Loss-of-function and Gain-of-function
++ CADD 
+
+> Other scaling options include using non-functional synonymous mutations. 

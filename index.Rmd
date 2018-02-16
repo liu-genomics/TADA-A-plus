@@ -55,7 +55,11 @@ When adjusting mutation rates, need to generate synonymous mutation rates for ea
 * [clean dataset](analysis/180215_invesigate_ASD_DNM_in_denovo_db_for_WES_studies.html)
 
 ### 1.2.1 Iossifov data
++ 2767 coding mutations after filtering, 490 nonfunctional syn mutations.
 
 ### 1.2.2 Krumm data
++ 915 coding mutations after filtering, 119 nonfunctional syn mutations.
 
 ### 1.2.3 DeRubeis2014 data
++ 1590 coding mutations after filtering, 315 nonfunctional syn mutations. 
+

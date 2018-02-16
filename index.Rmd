@@ -50,7 +50,7 @@ From denovo-db
 
 Need to use the nonfunctional syn mutations to adjust mutation rates.
 
-[When adjusting mutation rates, need to generate synonymous mutation rates for each 50 bp window](`../data/Example_windows_coding_with_nonfunctional_syn_mutrate.bed`). 
+When adjusting mutation rates, need to generate synonymous mutation rates for each 50 bp window, the file is here `../data/Example_windows_coding_with_nonfunctional_syn_mutrate.bed`
 
 * [clean dataset](analysis/180215_invesigate_ASD_DNM_in_denovo_db_for_WES_studies.html)
 

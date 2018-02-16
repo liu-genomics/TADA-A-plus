@@ -9,7 +9,7 @@ output: html_document
 ```{r}
 library(data.table)
 library(parallel)
-source("../TADA-A/lib/TADA_Annotation_v2.R")
+source("../TADA-A/lib/TADA_Annotation.R")
 ```
 
 Use coding window file. The previous scaling factors are still applicable. 
@@ -25,7 +25,7 @@ compact_data_1 <- TADA_A_read_info(mut_files = c("../data/Yuen_NM2015_cases_DNM_
                                                                  c("../other_annotations/coding/Polyphen_HDIV_probably_damaging_altA.bed.merge.bed", "../other_annotations/coding/Polyphen_HDIV_probably_damaging_altC.bed.merge.bed", "../other_annotations/coding/Polyphen_HDIV_probably_damaging_altG.bed.merge.bed", "../other_annotations/coding/Polyphen_HDIV_probably_damaging_altT.bed.merge.bed"),c("../other_annotations/coding/171121_coding_stop_loss_and_gain_SNV_altA.bed.merge.bed", "../other_annotations/coding/171121_coding_stop_loss_and_gain_SNV_altC.bed.merge.bed", "../other_annotations/coding/171121_coding_stop_loss_and_gain_SNV_altG.bed.merge.bed", "../other_annotations/coding/171121_coding_stop_loss_and_gain_SNV_altT.bed.merge.bed")),
                                  report_proportion = 18665/18665,
                                  chunk_partition_num =1,
-                                 node_n = 1,
+                                 node_n = 6,
                                  mutrate_ref_files = c("../other_annotations/Mark_Daly_mutrate/Example_windows_extended_1bp_for_getting_base_level_mutrate.bed.fasta.tri.alt_A.mutrate.bw",
                       "../other_annotations/Mark_Daly_mutrate/Example_windows_extended_1bp_for_getting_base_level_mutrate.bed.fasta.tri.alt_C.mutrate.bw",
                       "../other_annotations/Mark_Daly_mutrate/Example_windows_extended_1bp_for_getting_base_level_mutrate.bed.fasta.tri.alt_G.mutrate.bw",
@@ -38,7 +38,7 @@ compact_data_1 <- TADA_A_read_info(mut_files = c("../data/Yuen_NM2015_cases_DNM_
 ```{r,cache=TRUE, cache.extra=TADA_A_RR_estimate, dependson=compact_data_1}
 rr <- as.data.frame(matrix(0,10,3))
 for(i in 1:10){
-  temp <-TADA_A_RR_estimate(data = compact_data_1$base_info, selected_annotations = c(1), gene_prior_file = "../data/Example_gene_prior.txt", optimization_iteration = 2000)
+  temp <-TADA_A_RR_estimate(data = compact_data_1$base_info, selected_annotations = c(i), gene_prior_file = "../data/Example_gene_uniform_prior.txt", optimization_iteration = 2000)
   print(paste("Results for the ", i, "th annotation:", sep = ""))
   print(temp)
   rr[i,] <- temp$rr_report

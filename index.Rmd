@@ -8,15 +8,58 @@ output:
 <br>
 
 ***
+
+
+
+<br>
+
 # 1. Analyze various coding annotations
 
-## Use manuscript data/MSSNG/Simons_519, scaling factors are computed using WGS data, based on coding regions and regions 10kb within TSSs.
-Annotations include 
+<br>
+
+> Annotations include 
+
 + Ribosnitch (allele-specific)
 + RBP binding sites
-+ conservation
++ conservation (GERP)
 + Polyphen-damaging (Mis3)
 + Loss-of-function and Gain-of-function
 + CADD 
 
-> Other scaling options include using non-functional synonymous mutations. 
+## 1.1 For WGS data
+
+Use manuscript data/MSSNG/Simons_519, scaling factors are computed using WGS data, based on coding regions and regions 10kb within TSSs.
+
+
+### 1.1.1 manuscript meta-analysis data
+coding RR estimation.[link](analysis/180214_results_summary_manuscript_data_RR_estimation_with_mutrate_adjusted_for_div_coding_features.html)
+
+
+### 1.1.2 MSSNG data
+
+### 1.1.3 Simons data
+
+## 1.2 For WES data
+From denovo-db
+
+| Name | PMID | Probands | Controls | Type |
+|----|----|----|----|----|
+|Iossifov | 25363768 | 2508 | 1911 | exome |
+|Krumm | 25961944 | 2377 | 1786 | exome |
+|DeRubeis2014 | 25363760 | 2270 | 0 | exome |
+
+Need to use the nonfunctional syn mutations to adjust mutation rates.
+
+When adjusting mutation rates, need to generate synonymous mutation rates for each 50 bp window, the file is here `../data/Example_windows_coding_with_nonfunctional_syn_mutrate.bed`
+
+* [clean dataset](analysis/180215_invesigate_ASD_DNM_in_denovo_db_for_WES_studies.html)
+
+### 1.2.1 Iossifov data
++ 2767 coding mutations after filtering, 490 nonfunctional syn mutations.
+
+### 1.2.2 Krumm data
++ 915 coding mutations after filtering, 119 nonfunctional syn mutations.
+
+### 1.2.3 DeRubeis2014 data
++ 1590 coding mutations after filtering, 315 nonfunctional syn mutations. 
+

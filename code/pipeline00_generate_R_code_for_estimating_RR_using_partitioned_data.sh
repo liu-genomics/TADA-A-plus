@@ -1,0 +1,2 @@
+bash ../lib/180215_generate_partitioned_compact_data.sh 180216_RR_estimate_DATA_Yuen_2017_ANNO ../data/denovo_db_Yuen_2017_cases_DNM_SNV_cleaned_with_allele_info.txt \
+../data/Example_windows_mutrate_scaling_file_for_Yuen_2017_cases_DNM_cleaned.txt 1609

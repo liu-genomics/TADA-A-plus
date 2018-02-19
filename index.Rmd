@@ -32,14 +32,21 @@ Use manuscript data/MSSNG/Simons_519, scaling factors are computed using WGS dat
 
 
 ### 1.1.1 manuscript meta-analysis data
-coding RR estimation.[link](analysis/180214_results_summary_manuscript_data_RR_estimation_with_mutrate_adjusted_for_div_coding_features.html)
++ coding RR estimation.[link](analysis/180214_results_summary_manuscript_data_RR_estimation_with_mutrate_adjusted_for_div_coding_features.html)
 
 
 ### 1.1.2 MSSNG data
-coding RR estimation.[link](analysis/180216_RR_estimate_DATA_Yuen_2017_ANNO_RR_estimate.html)
++ coding RR estimation (scaling file doesn't account for div score).[link](analysis/180216_RR_estimate_DATA_Yuen_2017_ANNO_RR_estimate.html)
+
++ coding RR estimation (scaling file accounting for div score).[link](analysis/180216_with_div_adjusted_RR_estimate_DATA_Yuen_2017_ANNO_RR_estimate.html)
+* [Adjusting mutation rate accounting for div score](analysis/180215_recalibrate_mutation_rate_with_div_score_for_MSSNG_and_Simons_519.html)
+
 Execution code to do data partition and reading-in is `code/pipeline00_generate_R_code_for_estimating_RR_using_partitioned_data`
 
 ### 1.1.3 Simons data
+
++ coding RR estimation (scaling file accounting for div score).[link](analysis/180216_with_div_adjusted_RR_estimate_Simons_519_new_version_ANNO_RR_estimate.html)
+* [Adjusting mutation rate accounting for div score](analysis/180215_recalibrate_mutation_rate_with_div_score_for_MSSNG_and_Simons_519.html)
 
 ## 1.2 For WES data
 From denovo-db

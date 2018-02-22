@@ -35,6 +35,9 @@ $3 $4 NA c\(\"../other_annotations/coding/171121_coding_stop_loss_and_gain_SNV_a
 bash ../lib/180215_print_partitioned_R_script_for_RR_estimate_nonAS_annotations.sh $1_CADD $2 \
 $3 $4 NA c\(\"../other_annotations/allele_specific_CADD/Example_windows_coding_SNVs_gt15_altA.bed\",\"../other_annotations/allele_specific_CADD/Example_windows_coding_SNVs_gt15_altC.bed\",\"../other_annotations/allele_specific_CADD/Example_windows_coding_SNVs_gt15_altG.bed\",\"../other_annotations/allele_specific_CADD/Example_windows_coding_SNVs_gt15_altT.bed\"\)
 
+bash ../lib/180215_print_partitioned_R_script_for_RR_estimate_nonAS_annotations.sh $1_Ray_RBP_motif $2 \
+$3 $4 \"../other_annotations/coding/Ray_et_al_RBP_motif_hits/A_Up_Down.best_hit.hg19.bed.merge.bed\" NA
+
 # print a Rmd file to calculate relative risk
 
 echo "
@@ -58,7 +61,8 @@ prefix_vector <- data.frame(annotation_name = c(\"CADD\",
                                                 \"Mis3\",
                                                 \"Nonfunctional_syn\",
                                                 \"ribosnitch\",
-                                                \"spidex\"), 
+                                                \"spidex\",
+                                                \"Ray_RBP_motif\"), 
                             prefix = c(\"$1_CADD/$1_CADD_\",
                                        \"$1_CLIP/$1_CLIP_\",
                                        \"$1_CLIPdb/$1_CLIPdb_\",
@@ -69,7 +73,8 @@ prefix_vector <- data.frame(annotation_name = c(\"CADD\",
                                        \"$1_Mis3/$1_Mis3_\",
                                        \"$1_nonfunctional_syn/$1_nonfunctional_syn_\",
                                        \"$1_ribosnitch/$1_ribosnitch_\",
-                                       \"$1_spidex/$1_spidex_\"))
+                                       \"$1_spidex/$1_spidex_\",
+                                       \"$1_Ray_RBP_motif/$1_Ray_RBP_motif_\"))
 
 report_rr_from_compact_data_in_partitioned_form <- function(prefix_vector){
   report <- data.frame(annotation = NA, log_RR = NA, lower_bound = NA, upper_bound = NA)

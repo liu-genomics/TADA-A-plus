@@ -57,18 +57,22 @@ From denovo-db
 |Krumm | 25961944 | 2377 | 1786 | exome |
 |DeRubeis2014 | 25363760 | 2270 | 0 | exome |
 
-Need to use the nonfunctional syn mutations to adjust mutation rates.
++ Need to use the nonfunctional syn mutations to adjust mutation rates.
 
-When adjusting mutation rates, need to generate synonymous mutation rates for each 50 bp window, the file is here `../data/Example_windows_coding_with_nonfunctional_syn_mutrate.bed`
++ When adjusting mutation rates, need to generate synonymous mutation rates for each 50 bp window, the file is here `../data/Example_windows_coding_with_nonfunctional_syn_mutrate.bed`
 
 * [clean dataset](analysis/180215_invesigate_ASD_DNM_in_denovo_db_for_WES_studies.html)
 
++ [Adjust mutation rate using nonfunctional synonymous mutations](analysis/180215_recalibrate_mutation_rate_with_div_score_for_WES_data.html)
+
+
+
 ### 1.2.1 Iossifov data
-+ 2767 coding mutations after filtering, 490 nonfunctional syn mutations.
++ 2767 coding mutations after filtering, 490 nonfunctional syn mutations.[link](analysis/180221_with_div_adjusted_RR_estimate_Iossifov_ANNO_RR_estimate.html)
 
 ### 1.2.2 Krumm data
-+ 915 coding mutations after filtering, 119 nonfunctional syn mutations.
++ 915 coding mutations after filtering, 119 nonfunctional syn mutations.[link](analysis/180221_with_div_adjusted_RR_estimate_Krumm_ANNO_RR_estimate.html)
 
 ### 1.2.3 DeRubeis2014 data
-+ 1590 coding mutations after filtering, 315 nonfunctional syn mutations. 
++ 1590 coding mutations after filtering, 315 nonfunctional syn mutations. [link](analysis/180221_with_div_adjusted_RR_estimate_DeRubeis_ANNO_RR_estimate.html)
 

@@ -9,3 +9,18 @@ bash ../lib/180215_generate_partitioned_compact_data.sh 180216_with_div_adjusted
 # SSC 519 trios data, with accouting for div score in mutation rate calibration
 bash ../lib/180215_generate_partitioned_compact_data.sh 180216_with_div_adjusted_RR_estimate_Simons_519_new_version_ANNO ../data/Simons_519_new_version_controls_with_allele_info.txt \
 ../data/Example_windows_mutrate_with_div_score_scaling_file_for_Simons_519_new_cases_DNM.txt 519
+
+
+# DeRubeis2014  data
+bash ../lib/180215_generate_partitioned_compact_data.sh 180221_with_div_adjusted_RR_estimate_DeRubeis_ANNO ../data/denovo_db_DeRubeis2014_cases_SNV_remove_recurrent_mutations_with_allele_info.txt \
+../data/Example_windows_coding_with_nonfunctional_syn_mutrate_scaling_file_for_denovo_db_DeRubeis2014_cases_DNM.txt 2270
+
+# Krumm data
+bash ../lib/180215_generate_partitioned_compact_data.sh 180221_with_div_adjusted_RR_estimate_Krumm_ANNO ../data/denovo_db_Krumm_cases_SNV_remove_recurrent_mutations_with_allele_info.txt \
+../data/Example_windows_coding_with_nonfunctional_syn_mutrate_scaling_file_for_denovo_db_Krumm_cases_DNM.txt 2377
+
+
+
+# Iossifov data
+bash ../lib/180215_generate_partitioned_compact_data.sh 180221_with_div_adjusted_RR_estimate_Iossifov_ANNO ../data/denovo_db_Iossifov_cases_SNV_remove_recurrent_mutations_with_allele_info.txt \
+../data/Example_windows_coding_with_nonfunctional_syn_mutrate_scaling_file_for_denovo_db_Iossifov_cases_DNM.txt 2508

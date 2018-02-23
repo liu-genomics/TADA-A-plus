@@ -150,6 +150,16 @@ source(&quot;../TADA-A/lib/TADA_Annotation.R&quot;)</code></pre>
 ## (Intercept) -1.8170065 0.10988804 -16.535071 2.051377e-61
 ## GC_content   0.1916438 0.10548919   1.816715 6.926081e-02
 ## div_score    0.1620877 0.09451295   1.714979 8.634911e-02</code></pre>
+<pre class="r"><code>TADA_A_adjust_mutation_rate(mut_file = &quot;../data/denovo_db_Krumm_controls_SNV_remove_recurrent_mutations_nonfunctional_syn.bed&quot;,
+                            window_file = &quot;../data/Example_windows_coding_with_nonfunctional_syn_mutrate.bed&quot;,
+                            sample_size = 1786, 
+                            scale_features = c(&quot;GC_content&quot;, &quot;div_score&quot;),
+                            scaling_file_name = &quot;../data/Example_windows_coding_with_nonfunctional_syn_mutrate_scaling_file_for_denovo_db_Krumm_controls_DNM.txt&quot;,
+                            mutrate_mode = &quot;special&quot;)</code></pre>
+<pre><code>##                Estimate Std. Error     z value     Pr(&gt;|z|)
+## (Intercept) -1.81833733  0.1251432 -14.5300536 7.815924e-48
+## GC_content   0.08475256  0.1246703   0.6798134 4.966226e-01
+## div_score    0.10490794  0.1161975   0.9028413 3.666101e-01</code></pre>
 <pre class="r"><code>TADA_A_adjust_mutation_rate(mut_file = &quot;../data/denovo_db_Iossifov_cases_SNV_remove_recurrent_mutations_nonfunctional_syn.bed&quot;,
                             window_file = &quot;../data/Example_windows_coding_with_nonfunctional_syn_mutrate.bed&quot;,
                             sample_size = 2508, 
@@ -160,6 +170,16 @@ source(&quot;../TADA-A/lib/TADA_Annotation.R&quot;)</code></pre>
 ## (Intercept) -0.36064522 0.05070735 -7.1122871 1.141355e-12
 ## GC_content   0.03051131 0.05114433  0.5965727 5.507927e-01
 ## div_score    0.07252286 0.04877958  1.4867463 1.370818e-01</code></pre>
+<pre class="r"><code>TADA_A_adjust_mutation_rate(mut_file = &quot;../data/denovo_db_Iossifov_controls_SNV_remove_recurrent_mutations_nonfunctional_syn.bed&quot;,
+                            window_file = &quot;../data/Example_windows_coding_with_nonfunctional_syn_mutrate.bed&quot;,
+                            sample_size = 1911, 
+                            scale_features = c(&quot;GC_content&quot;, &quot;div_score&quot;),
+                            scaling_file_name = &quot;../data/Example_windows_coding_with_nonfunctional_syn_mutrate_scaling_file_for_denovo_db_Iossifov_controls_DNM.txt&quot;,
+                            mutrate_mode = &quot;special&quot;)</code></pre>
+<pre><code>##                Estimate Std. Error    z value     Pr(&gt;|z|)
+## (Intercept) -0.28977270 0.05614072 -5.1615421 2.449238e-07
+## GC_content   0.06740860 0.05640987  1.1949788 2.320953e-01
+## div_score    0.05335043 0.05430499  0.9824222 3.258919e-01</code></pre>
 <p>Setting <code>mutrate_mode = &quot;special&quot;</code> will ensure all the windows will get a scaling factor.</p>
 </div>
 

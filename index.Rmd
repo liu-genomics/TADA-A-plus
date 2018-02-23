@@ -50,6 +50,9 @@ Execution code to do data partition and reading-in is `code/pipeline00_generate_
 + coding RR estimation (scaling file accounting for div score).[link](analysis/180216_with_div_adjusted_RR_estimate_Simons_519_new_version_ANNO_RR_estimate.html)
 * [Adjusting mutation rate accounting for div score](analysis/180215_recalibrate_mutation_rate_with_div_score_for_MSSNG_and_Simons_519.html)
 
+### 1.1.4 Wong NC et al. control data
++ coding RR estimation (scaling factors were calculated accouting for div score, using coding sequences and promoter-proximal non-coding sequences, used in the manuscript). [link](analysis/180221_with_div_adjusted_RR_estimate_Wong_control_ANNO_RR_estimate.html)
+
 ## 1.2 For WES data
 From denovo-db
 

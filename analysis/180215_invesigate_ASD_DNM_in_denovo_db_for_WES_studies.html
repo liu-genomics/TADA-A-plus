@@ -284,6 +284,115 @@ write.table(Iossifov_cases_SNV_remove_recurrent_mutations_bed[,1:3], &quot;../da
 # # 
 # # # This is the number of samples that have been left.
 # # length(unique(Yuen2017_cases_SNV_remove_recurrent_mutations_mutcount_gt10[[1]]))</code></pre>
+<p>Iossifov data set for control</p>
+<pre class="r"><code>table(Iossifov$PrimaryPhenotype)</code></pre>
+<pre><code>## 
+##  autism control 
+##    6206    4239</code></pre>
+<pre class="r"><code>Iossifov_controls &lt;- Iossifov[PrimaryPhenotype == &quot;control&quot;]
+table(Iossifov_controls$PrimaryPhenotype)</code></pre>
+<pre><code>## 
+## control 
+##    4239</code></pre>
+<pre class="r"><code>Iossifov_controls_SNV &lt;- Iossifov_controls[Variant == &quot;G&gt;A&quot; | Variant == &quot;G&gt;T&quot; | Variant == &quot;G&gt;C&quot; | Variant == &quot;A&gt;T&quot; | Variant == &quot;A&gt;C&quot; | Variant == &quot;A&gt;G&quot; | Variant == &quot;C&gt;A&quot; | Variant == &quot;C&gt;T&quot; | Variant == &quot;C&gt;G&quot; |Variant == &quot;T&gt;A&quot; | Variant == &quot;T&gt;C&quot; | Variant == &quot;T&gt;G&quot;]
+
+table(Iossifov_controls_SNV$Variant)</code></pre>
+<pre><code>## 
+##  A&gt;C  A&gt;G  A&gt;T  C&gt;A  C&gt;G  C&gt;T  G&gt;A  G&gt;C  G&gt;T  T&gt;A  T&gt;C  T&gt;G 
+##   80  340   98  191  173 1110 1013  265  197   66  374   94</code></pre>
+<pre class="r"><code>dim(Iossifov_controls_SNV)</code></pre>
+<pre><code>## [1] 4001   31</code></pre>
+<pre class="r"><code># now remember there are situations where one mutation would have multiple entries in the table
+length(unique(Iossifov_controls_SNV$Position))</code></pre>
+<pre><code>## [1] 1990</code></pre>
+<pre class="r"><code>head(Iossifov_controls_SNV[duplicated(Iossifov_controls_SNV$Position)])</code></pre>
+<pre><code>##    #SampleID StudyName PubmedID NumProbands NumControls SequenceType
+## 1:  12111.s1  Iossifov 25363768        2508        1911        exome
+## 2:  11057.s1  Iossifov 25363768        2508        1911        exome
+## 3:  11057.s1  Iossifov 25363768        2508        1911        exome
+## 4:  11057.s1  Iossifov 25363768        2508        1911        exome
+## 5:  11057.s1  Iossifov 25363768        2508        1911        exome
+## 6:  11057.s1  Iossifov 25363768        2508        1911        exome
+##    PrimaryPhenotype Validation Chr Position Variant rsID DbsnpBuild
+## 1:          control        yes   1  1225729     G&gt;A    0          0
+## 2:          control        yes   1  1558774     G&gt;A    0          0
+## 3:          control        yes   1  1558774     G&gt;A    0          0
+## 4:          control        yes   1  1558774     G&gt;A    0          0
+## 5:          control        yes   1  1558774     G&gt;A    0          0
+## 6:          control        yes   1  1558774     G&gt;A    0          0
+##    AncestralAllele 1000GenomeCount ExacFreq EspAaFreq EspEaFreq
+## 1:             G,G               0 0.000000         0         0
+## 2:               G               0 0.000033         0         0
+## 3:               G               0 0.000033         0         0
+## 4:               G               0 0.000033         0         0
+## 5:               G               0 0.000033         0         0
+## 6:               G               0 0.000033         0         0
+##        Transcript codingDnaSize   Gene   FunctionClass cDnaVariant
+## 1:    NR_037668.2          2960 SCNN1D non-coding-exon   n.1873G&gt;A
+## 2: NM_001170689.1          2262   MIB2          intron    c.-59G&gt;A
+## 3:    NM_080875.2          3213   MIB2        missense    c.287G&gt;A
+## 4: NM_001170686.1          3201   MIB2        missense    c.287G&gt;A
+## 5: NM_001170688.1          3018   MIB2        missense    c.287G&gt;A
+## 6:    NR_033183.1          3121   MIB2 non-coding-exon    n.332G&gt;A
+##    ProteinVariant Exon/Intron PolyPhen(HDiv) PolyPhen(HVar) SiftScore
+## 1:             NA      exon12         -1.000         -1.000    -1.000
+## 2:             NA     intron2         -1.000         -1.000    -1.000
+## 3:       p.(R96Q)       exon3          0.889          0.039     0.105
+## 4:       p.(R96Q)       exon3          0.889          0.039     0.105
+## 5:       p.(R96Q)       exon3          0.889          0.039     0.105
+## 6:             NA       exon3         -1.000         -1.000    -1.000
+##    CaddScore LofScore LrtScore
+## 1:     11.87       -1 -1.00000
+## 2:     10.18       -1 -1.00000
+## 3:     10.18       -1  0.05351
+## 4:     10.18       -1  0.05351
+## 5:     10.18       -1  0.05351
+## 6:     10.18       -1 -1.00000</code></pre>
+<pre class="r"><code># get the ref/alt alleles and genomic positions
+allele_temp &lt;-data.table(unlist(strsplit(Iossifov_controls_SNV$Variant, split = &quot;&gt;&quot;)))
+even_index &lt;- seq(2,nrow(allele_temp),2)
+odd_index &lt;- seq(1,nrow(allele_temp),2)
+
+Iossifov_controls_SNV &lt;- data.table(Iossifov_controls_SNV[,c(&quot;#SampleID&quot;, &quot;Chr&quot;, &quot;Position&quot;)], ref = allele_temp[odd_index], alt = allele_temp[even_index])
+
+# remove redundant information
+Iossifov_controls_SNV &lt;- unique(Iossifov_controls_SNV)
+
+options(scipen=999)
+# generate bed file format
+Iossifov_controls_SNV_bed &lt;- data.table(paste(&quot;chr&quot;, Iossifov_controls_SNV$Chr, sep = &quot;&quot;), Iossifov_controls_SNV$Position - 1, Iossifov_controls_SNV$Position, Iossifov_controls_SNV$ref.V1, Iossifov_controls_SNV$alt.V1)
+
+# NOTION, fwrite here write two numbers (85000000 and 153000000 in scientifi notion, I haven't figured out how to turn it off, so I use write.table here instead.)
+write.table(Iossifov_controls_SNV_bed, &quot;../data/denovo_db_Iossifov_controls_DNM_SNV_with_allele_info.txt&quot;, col.names = FALSE, row.names = FALSE, sep = &quot;\t&quot;, quote = FALSE)
+
+write.table(Iossifov_controls_SNV_bed[,1:3], &quot;../data/denovo_db_Iossifov_controls_DNM_SNV.bed&quot;, col.names = FALSE, row.names = FALSE, sep = &quot;\t&quot;, quote = FALSE)</code></pre>
+<p>One problem that I found from the data set is that for Yuen2017, there are about 3300 DNM SNVs that appear in at least two SampleIDs. And most of the cases, the two SampleIDs are quite similar. To see how this would affect parameter estimation, I will remove mutations that appear in at least two Samples.</p>
+<pre class="r"><code>Iossifov_controls_SNV_remove_recurrent_mutations &lt;- Iossifov_controls_SNV[!(duplicated(Iossifov_controls_SNV[,2:4]) | duplicated(Iossifov_controls_SNV[,2:4], fromLast = TRUE)), ]
+
+Iossifov_controls_SNV_remove_recurrent_mutations_bed &lt;- data.table(paste(&quot;chr&quot;, Iossifov_controls_SNV_remove_recurrent_mutations$Chr, sep = &quot;&quot;), Iossifov_controls_SNV_remove_recurrent_mutations$Position - 1, Iossifov_controls_SNV_remove_recurrent_mutations$Position, Iossifov_controls_SNV_remove_recurrent_mutations$ref.V1, Iossifov_controls_SNV_remove_recurrent_mutations$alt.V1)
+
+dim(Iossifov_controls_SNV_remove_recurrent_mutations)</code></pre>
+<pre><code>## [1] 1990    5</code></pre>
+<pre class="r"><code>write.table(Iossifov_controls_SNV_remove_recurrent_mutations_bed, &quot;../data/denovo_db_Iossifov_controls_SNV_remove_recurrent_mutations_with_allele_info.txt&quot;, col.names = FALSE, row.names = FALSE, sep = &quot;\t&quot;, quote = FALSE)
+
+write.table(Iossifov_controls_SNV_remove_recurrent_mutations_bed[,1:3], &quot;../data/denovo_db_Iossifov_controls_SNV_remove_recurrent_mutations.bed&quot;, col.names = FALSE, row.names = FALSE, sep = &quot;\t&quot;, quote = FALSE)
+
+
+# # even after this, there are a lot of individuals that have very few number of mutations
+# hist(as.vector(table(Iossifov_cases_SNV_remove_recurrent_mutations[[1]])))
+# sample_mut_count &lt;- data.table(SampleID = names(table(Iossifov_cases_SNV_remove_recurrent_mutations[[1]])), mut_count = as.vector(table(Iossifov_cases_SNV_remove_recurrent_mutations[[1]])))
+# # # remove samples that have smaller than 10 DNM SNVs
+# # Yuen2017_cases_SNV_remove_recurrent_mutations_mutcount_gt10 &lt;- Yuen2017_cases_SNV_remove_recurrent_mutations[!is.element(`#SampleID`, sample_mut_count[mut_count &lt; 10]$SampleID)]
+# # 
+# # Yuen2017_cases_SNV_remove_recurrent_mutations_mutcount_gt10_bed &lt;- data.table(paste(&quot;chr&quot;, Yuen2017_cases_SNV_remove_recurrent_mutations_mutcount_gt10$Chr, sep = &quot;&quot;), Yuen2017_cases_SNV_remove_recurrent_mutations_mutcount_gt10$Position - 1, Yuen2017_cases_SNV_remove_recurrent_mutations_mutcount_gt10$Position, Yuen2017_cases_SNV_remove_recurrent_mutations_mutcount_gt10$ref.V1, Yuen2017_cases_SNV_remove_recurrent_mutations_mutcount_gt10$alt.V1)
+# # 
+# # # NOTION, fwrite here write two numbers (85000000 and 153000000 in scientifi notion, I haven't figured out how to turn it off, so I use write.table here instead.)
+# # write.table(Yuen2017_cases_SNV_remove_recurrent_mutations_mutcount_gt10_bed, &quot;../data/denovo_db_Yuen_2017_cases_DNM_SNV_cleaned_with_allele_info.txt&quot;, col.names = FALSE, row.names = FALSE, sep = &quot;\t&quot;, quote = FALSE)
+# # 
+# # write.table(Yuen2017_cases_SNV_remove_recurrent_mutations_mutcount_gt10_bed[,1:3], &quot;../data/denovo_db_Yuen_2017_cases_DNM_SNV_cleaned.bed&quot;, col.names = FALSE, row.names = FALSE, sep = &quot;\t&quot;, quote = FALSE)
+# # 
+# # # This is the number of samples that have been left.
+# # length(unique(Yuen2017_cases_SNV_remove_recurrent_mutations_mutcount_gt10[[1]]))</code></pre>
 <p>Krumm data set</p>
 <pre class="r"><code>table(Krumm$PrimaryPhenotype)</code></pre>
 <pre><code>## 
@@ -382,6 +491,116 @@ write.table(Krumm_cases_SNV_remove_recurrent_mutations_bed[,1:3], &quot;../data/
 # # even after this, there are a lot of individuals that have very few number of mutations
 # hist(as.vector(table(Krumm_cases_SNV_remove_recurrent_mutations[[1]])))
 # sample_mut_count &lt;- data.table(SampleID = names(table(Krumm_cases_SNV_remove_recurrent_mutations[[1]])), mut_count = as.vector(table(Krumm_cases_SNV_remove_recurrent_mutations[[1]])))
+# # # remove samples that have smaller than 10 DNM SNVs
+# # Yuen2017_cases_SNV_remove_recurrent_mutations_mutcount_gt10 &lt;- Yuen2017_cases_SNV_remove_recurrent_mutations[!is.element(`#SampleID`, sample_mut_count[mut_count &lt; 10]$SampleID)]
+# # 
+# # Yuen2017_cases_SNV_remove_recurrent_mutations_mutcount_gt10_bed &lt;- data.table(paste(&quot;chr&quot;, Yuen2017_cases_SNV_remove_recurrent_mutations_mutcount_gt10$Chr, sep = &quot;&quot;), Yuen2017_cases_SNV_remove_recurrent_mutations_mutcount_gt10$Position - 1, Yuen2017_cases_SNV_remove_recurrent_mutations_mutcount_gt10$Position, Yuen2017_cases_SNV_remove_recurrent_mutations_mutcount_gt10$ref.V1, Yuen2017_cases_SNV_remove_recurrent_mutations_mutcount_gt10$alt.V1)
+# # 
+# # # NOTION, fwrite here write two numbers (85000000 and 153000000 in scientifi notion, I haven't figured out how to turn it off, so I use write.table here instead.)
+# # write.table(Yuen2017_cases_SNV_remove_recurrent_mutations_mutcount_gt10_bed, &quot;../data/denovo_db_Yuen_2017_cases_DNM_SNV_cleaned_with_allele_info.txt&quot;, col.names = FALSE, row.names = FALSE, sep = &quot;\t&quot;, quote = FALSE)
+# # 
+# # write.table(Yuen2017_cases_SNV_remove_recurrent_mutations_mutcount_gt10_bed[,1:3], &quot;../data/denovo_db_Yuen_2017_cases_DNM_SNV_cleaned.bed&quot;, col.names = FALSE, row.names = FALSE, sep = &quot;\t&quot;, quote = FALSE)
+# # 
+# # # This is the number of samples that have been left.
+# # length(unique(Yuen2017_cases_SNV_remove_recurrent_mutations_mutcount_gt10[[1]]))</code></pre>
+<p>Krumm data set control</p>
+<pre class="r"><code>table(Krumm$PrimaryPhenotype)</code></pre>
+<pre><code>## 
+##  autism control 
+##    2115    1373</code></pre>
+<pre class="r"><code>Krumm_controls &lt;- Krumm[PrimaryPhenotype == &quot;control&quot;]
+table(Krumm_controls$PrimaryPhenotype)</code></pre>
+<pre><code>## 
+## control 
+##    1373</code></pre>
+<pre class="r"><code>Krumm_controls_SNV &lt;- Krumm_controls[Variant == &quot;G&gt;A&quot; | Variant == &quot;G&gt;T&quot; | Variant == &quot;G&gt;C&quot; | Variant == &quot;A&gt;T&quot; | Variant == &quot;A&gt;C&quot; | Variant == &quot;A&gt;G&quot; | Variant == &quot;C&gt;A&quot; | Variant == &quot;C&gt;T&quot; | Variant == &quot;C&gt;G&quot; |Variant == &quot;T&gt;A&quot; | Variant == &quot;T&gt;C&quot; | Variant == &quot;T&gt;G&quot;]
+
+table(Krumm_controls_SNV$Variant)</code></pre>
+<pre><code>## 
+## A&gt;C A&gt;G A&gt;T C&gt;A C&gt;G C&gt;T G&gt;A G&gt;C G&gt;T T&gt;A T&gt;C T&gt;G 
+##  32 129  36 105  74 238 247  44 101  39  91  62</code></pre>
+<pre class="r"><code>dim(Krumm_controls_SNV)</code></pre>
+<pre><code>## [1] 1198   31</code></pre>
+<pre class="r"><code># now remember there are situations where one mutation would have multiple entries in the table
+length(unique(Krumm_controls_SNV$Position))</code></pre>
+<pre><code>## [1] 595</code></pre>
+<pre class="r"><code>head(Krumm_controls_SNV[duplicated(Krumm_controls_SNV$Position)])</code></pre>
+<pre><code>##    #SampleID StudyName PubmedID NumProbands NumControls SequenceType
+## 1:  12833.s1     Krumm 25961944        2377        1786        exome
+## 2:  12833.s1     Krumm 25961944        2377        1786        exome
+## 3:  11513.s1     Krumm 25961944        2377        1786        exome
+## 4:  11513.s1     Krumm 25961944        2377        1786        exome
+## 5:  11513.s1     Krumm 25961944        2377        1786        exome
+## 6:  14697.s1     Krumm 25961944        2377        1786        exome
+##    PrimaryPhenotype Validation Chr Position Variant rsID DbsnpBuild
+## 1:          control    unknown   1  8421106     A&gt;G    0          0
+## 2:          control    unknown   1  8421106     A&gt;G    0          0
+## 3:          control    unknown   1 19570149     G&gt;T    0          0
+## 4:          control    unknown   1 19570149     G&gt;T    0          0
+## 5:          control    unknown   1 19570149     G&gt;T    0          0
+## 6:          control    unknown   1 20304971     G&gt;T    0          0
+##    AncestralAllele 1000GenomeCount ExacFreq EspAaFreq EspEaFreq
+## 1:               A               0        0         0         0
+## 2:               A               0        0         0         0
+## 3:               G               0        0         0         0
+## 4:               G               0        0         0         0
+## 5:               G               0        0         0         0
+## 6:               N               0        0         0         0
+##        Transcript codingDnaSize    Gene FunctionClass cDnaVariant
+## 1:    NM_012102.3          4701    RERE      missense   c.2461T&gt;C
+## 2: NM_001042682.1          3039    RERE      missense    c.799T&gt;C
+## 3: NM_001271427.1          2979    EMC1      missense    c.339C&gt;A
+## 4: NM_001271428.1          2979    EMC1      missense    c.339C&gt;A
+## 5: NM_001271429.1          2916    EMC1      missense    c.273C&gt;A
+## 6: NM_001161729.1           435 PLA2G2A    synonymous     c.87C&gt;A
+##    ProteinVariant Exon/Intron PolyPhen(HDiv) PolyPhen(HVar) SiftScore
+## 1:      p.(S821P)      exon19          0.999          0.980     0.009
+## 2:      p.(S267P)       exon8          0.999          0.980     0.009
+## 3:      p.(N113K)       exon4          0.896          0.721     0.170
+## 4:      p.(N113K)       exon4          0.896          0.721     0.170
+## 5:       p.(N91K)       exon3          0.896          0.721     0.170
+## 6:       p.(I29=)       exon3         -1.000         -1.000    -1.000
+##    CaddScore LofScore LrtScore
+## 1:     19.94       -1       -1
+## 2:     19.94       -1       -1
+## 3:     24.00       -1        0
+## 4:     24.00       -1        0
+## 5:     24.00       -1        0
+## 6:      5.74       -1       -1</code></pre>
+<pre class="r"><code># get the ref/alt alleles and genomic positions
+allele_temp &lt;-data.table(unlist(strsplit(Krumm_controls_SNV$Variant, split = &quot;&gt;&quot;)))
+even_index &lt;- seq(2,nrow(allele_temp),2)
+odd_index &lt;- seq(1,nrow(allele_temp),2)
+
+Krumm_controls_SNV &lt;- data.table(Krumm_controls_SNV[,c(&quot;#SampleID&quot;, &quot;Chr&quot;, &quot;Position&quot;)], ref = allele_temp[odd_index], alt = allele_temp[even_index])
+
+# remove redundant information
+Krumm_controls_SNV &lt;- unique(Krumm_controls_SNV)
+
+options(scipen=999)
+# generate bed file format
+Krumm_controls_SNV_bed &lt;- data.table(paste(&quot;chr&quot;, Krumm_controls_SNV$Chr, sep = &quot;&quot;), Krumm_controls_SNV$Position - 1, Krumm_controls_SNV$Position, Krumm_controls_SNV$ref.V1, Krumm_controls_SNV$alt.V1)
+
+# NOTION, fwrite here write two numbers (85000000 and 153000000 in scientifi notion, I haven't figured out how to turn it off, so I use write.table here instead.)
+write.table(Krumm_controls_SNV_bed, &quot;../data/denovo_db_Krumm_controls_DNM_SNV_with_allele_info.txt&quot;, col.names = FALSE, row.names = FALSE, sep = &quot;\t&quot;, quote = FALSE)
+
+write.table(Krumm_controls_SNV_bed[,1:3], &quot;../data/denovo_db_Krumm_controls_DNM_SNV.bed&quot;, col.names = FALSE, row.names = FALSE, sep = &quot;\t&quot;, quote = FALSE)</code></pre>
+<p>One problem that I found from the data set is that for Yuen2017, there are about 3300 DNM SNVs that appear in at least two SampleIDs. And most of the cases, the two SampleIDs are quite similar. To see how this would affect parameter estimation, I will remove mutations that appear in at least two Samples.</p>
+<pre class="r"><code>Krumm_controls_SNV_remove_recurrent_mutations &lt;- Krumm_controls_SNV[!(duplicated(Krumm_controls_SNV[,2:4]) | duplicated(Krumm_controls_SNV[,2:4], fromLast = TRUE)), ]
+
+# generate bed file format
+Krumm_controls_SNV_remove_recurrent_mutations_bed &lt;- data.table(paste(&quot;chr&quot;, Krumm_controls_SNV_remove_recurrent_mutations$Chr, sep = &quot;&quot;), Krumm_controls_SNV_remove_recurrent_mutations$Position - 1, Krumm_controls_SNV_remove_recurrent_mutations$Position, Krumm_controls_SNV_remove_recurrent_mutations$ref.V1, Krumm_controls_SNV_remove_recurrent_mutations$alt.V1)
+
+dim(Krumm_controls_SNV_remove_recurrent_mutations)</code></pre>
+<pre><code>## [1] 592   5</code></pre>
+<pre class="r"><code>write.table(Krumm_controls_SNV_remove_recurrent_mutations_bed, &quot;../data/denovo_db_Krumm_controls_SNV_remove_recurrent_mutations_with_allele_info.txt&quot;, col.names = FALSE, row.names = FALSE, sep = &quot;\t&quot;, quote = FALSE)
+
+write.table(Krumm_controls_SNV_remove_recurrent_mutations_bed[,1:3], &quot;../data/denovo_db_Krumm_controls_SNV_remove_recurrent_mutations.bed&quot;, col.names = FALSE, row.names = FALSE, sep = &quot;\t&quot;, quote = FALSE)
+
+
+# # even after this, there are a lot of individuals that have very few number of mutations
+# hist(as.vector(table(Krumm_controls_SNV_remove_recurrent_mutations[[1]])))
+# sample_mut_count &lt;- data.table(SampleID = names(table(Krumm_controls_SNV_remove_recurrent_mutations[[1]])), mut_count = as.vector(table(Krumm_controls_SNV_remove_recurrent_mutations[[1]])))
 # # # remove samples that have smaller than 10 DNM SNVs
 # # Yuen2017_cases_SNV_remove_recurrent_mutations_mutcount_gt10 &lt;- Yuen2017_cases_SNV_remove_recurrent_mutations[!is.element(`#SampleID`, sample_mut_count[mut_count &lt; 10]$SampleID)]
 # # 

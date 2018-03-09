@@ -1,0 +1,39 @@
+---
+title: "Test the relative risks of coding mutations"
+author: "Yuwen"
+date: "02/14/2018"
+output: html_document
+---
+
+
+```{r}
+library(data.table)
+library(parallel)
+source("../TADA-A/lib/TADA_Annotation.R")
+```
+
+Use coding window file. The previous scaling factors are still applicable. 
+
+```{r, cache=TRUE, cache.extra=TADA_A_read_info}
+compact_data_1 <- TADA_A_read_info(mut_files = c("../data/Yuen_NM2015_cases_DNM_with_allele_info.txt","../data/Kong_cases_DNM_with_allele_info.txt","../data/Wu_cases_DNM_with_allele_info.txt", "../data/Jiang_cases_DNM_with_allele_info.txt", "../data/Michaelson_cases_DNM_with_allele_info.txt"),
+                                 window_file = "../data/Example_windows_coding.bed",
+                                 mutrate_scaling_files = c("../data/Example_windows_mutrate_with_div_score_scaling_file_for_Yuen_NM2015_cases_DNM.txt","../data/Example_windows_mutrate_with_div_score_scaling_file_for_Kong_cases_DNM.txt", "../data/Example_windows_mutrate_with_div_score_scaling_file_for_Wu_cases_DNM.txt", "../data/Example_windows_mutrate_with_div_score_scaling_file_for_Jiang_cases_DNM.txt", "../data/Example_windows_mutrate_with_div_score_scaling_file_for_Michaelson_cases_DNM.txt"),
+                                 sample_sizes = c(162, 78, 32, 32, 10),
+                                 gene_prior_file = "../data/Example_gene_uniform_prior.txt",
+                                 nonAS_noncoding_annotations = NA,
+                                 AS_noncoding_annotations = list(c("../other_annotations/coding/CLIP/human_combine.merged_hg19_refGenes_exons.gtf.lg.transc.fa.RNAsnpM3.bed.abspos.p0.05.merged.altA.bed", "../other_annotations/coding/CLIP/human_combine.merged_hg19_refGenes_exons.gtf.lg.transc.fa.RNAsnpM3.bed.abspos.p0.05.merged.altC.bed", "../other_annotations/coding/CLIP/human_combine.merged_hg19_refGenes_exons.gtf.lg.transc.fa.RNAsnpM3.bed.abspos.p0.05.merged.altG.bed", "../other_annotations/coding/CLIP/human_combine.merged_hg19_refGenes_exons.gtf.lg.transc.fa.RNAsnpM3.bed.abspos.p0.05.merged.altT.bed")),
+                                 report_proportion = 18665/18665,
+                                 chunk_partition_num =2,
+                                 node_n = 1,
+                                 mutrate_ref_files = c("../other_annotations/Mark_Daly_mutrate/Example_windows_extended_1bp_for_getting_base_level_mutrate.bed.fasta.tri.alt_A.mutrate.bw",
+                      "../other_annotations/Mark_Daly_mutrate/Example_windows_extended_1bp_for_getting_base_level_mutrate.bed.fasta.tri.alt_C.mutrate.bw",
+                      "../other_annotations/Mark_Daly_mutrate/Example_windows_extended_1bp_for_getting_base_level_mutrate.bed.fasta.tri.alt_G.mutrate.bw",
+                      "../other_annotations/Mark_Daly_mutrate/Example_windows_extended_1bp_for_getting_base_level_mutrate.bed.fasta.tri.alt_T.mutrate.bw")
+)
+
+```
+
+
+```{r,cache=TRUE, cache.extra=TADA_A_RR_estimate, dependson=compact_data_1}
+TADA_A_RR_estimate(data = compact_data_1$base_info, selected_annotations = c(1), gene_prior_file = "../data/Example_gene_uniform_prior.txt", optimization_iteration = 2000, mode = "single_fast")
+```

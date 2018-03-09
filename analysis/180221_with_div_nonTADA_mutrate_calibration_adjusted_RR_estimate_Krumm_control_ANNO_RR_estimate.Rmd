@@ -1,0 +1,61 @@
+
+```{r}
+library(data.table)
+library(parallel)
+source("../TADA-A/lib/TADA_Annotation.R")
+```
+
+Use coding window file. The previous scaling factors are still applicable. 
+
+
+```{r, cache=TRUE}
+prefix_vector <- data.frame(annotation_name = c("CADD",
+                                                "CLIP",
+                                                "CLIPdb",
+                                                "CLIPdb_ribosnitch",
+                                                "CLIP_ribosnitch",
+                                                "GERP",
+                                                "LoF",
+                                                "Mis3",
+                                                "Nonfunctional_syn",
+                                                "ribosnitch",
+                                                "spidex",
+                                                "Ray_RBP_motif"), 
+                            prefix = c("180221_with_div_nonTADA_mutrate_calibration_adjusted_RR_estimate_Krumm_control_ANNO_CADD/180221_with_div_nonTADA_mutrate_calibration_adjusted_RR_estimate_Krumm_control_ANNO_CADD_",
+                                       "180221_with_div_nonTADA_mutrate_calibration_adjusted_RR_estimate_Krumm_control_ANNO_CLIP/180221_with_div_nonTADA_mutrate_calibration_adjusted_RR_estimate_Krumm_control_ANNO_CLIP_",
+                                       "180221_with_div_nonTADA_mutrate_calibration_adjusted_RR_estimate_Krumm_control_ANNO_CLIPdb/180221_with_div_nonTADA_mutrate_calibration_adjusted_RR_estimate_Krumm_control_ANNO_CLIPdb_",
+                                       "180221_with_div_nonTADA_mutrate_calibration_adjusted_RR_estimate_Krumm_control_ANNO_CLIPdb_ribosnitch/180221_with_div_nonTADA_mutrate_calibration_adjusted_RR_estimate_Krumm_control_ANNO_CLIPdb_ribosnitch_",
+                                       "180221_with_div_nonTADA_mutrate_calibration_adjusted_RR_estimate_Krumm_control_ANNO_CLIP_ribosnitch/180221_with_div_nonTADA_mutrate_calibration_adjusted_RR_estimate_Krumm_control_ANNO_CLIP_ribosnitch_",
+                                       "180221_with_div_nonTADA_mutrate_calibration_adjusted_RR_estimate_Krumm_control_ANNO_GERP/180221_with_div_nonTADA_mutrate_calibration_adjusted_RR_estimate_Krumm_control_ANNO_GERP_",
+                                       "180221_with_div_nonTADA_mutrate_calibration_adjusted_RR_estimate_Krumm_control_ANNO_LoF/180221_with_div_nonTADA_mutrate_calibration_adjusted_RR_estimate_Krumm_control_ANNO_LoF_",
+                                       "180221_with_div_nonTADA_mutrate_calibration_adjusted_RR_estimate_Krumm_control_ANNO_Mis3/180221_with_div_nonTADA_mutrate_calibration_adjusted_RR_estimate_Krumm_control_ANNO_Mis3_",
+                                       "180221_with_div_nonTADA_mutrate_calibration_adjusted_RR_estimate_Krumm_control_ANNO_nonfunctional_syn/180221_with_div_nonTADA_mutrate_calibration_adjusted_RR_estimate_Krumm_control_ANNO_nonfunctional_syn_",
+                                       "180221_with_div_nonTADA_mutrate_calibration_adjusted_RR_estimate_Krumm_control_ANNO_ribosnitch/180221_with_div_nonTADA_mutrate_calibration_adjusted_RR_estimate_Krumm_control_ANNO_ribosnitch_",
+                                       "180221_with_div_nonTADA_mutrate_calibration_adjusted_RR_estimate_Krumm_control_ANNO_spidex/180221_with_div_nonTADA_mutrate_calibration_adjusted_RR_estimate_Krumm_control_ANNO_spidex_",
+                                       "180221_with_div_nonTADA_mutrate_calibration_adjusted_RR_estimate_Krumm_control_ANNO_Ray_RBP_motif/180221_with_div_nonTADA_mutrate_calibration_adjusted_RR_estimate_Krumm_control_ANNO_Ray_RBP_motif_"))
+
+report_rr_from_compact_data_in_partitioned_form <- function(prefix_vector){
+  report <- data.frame(annotation = NA, log_RR = NA, lower_bound = NA, upper_bound = NA)
+  for(i in 1:length(prefix_vector[,1])){
+    data_partition <- list()
+    test = sprintf("%02d", 0:9)
+    for(j in 1:10){
+      temp <- readRDS(paste(prefix_vector[i,2], test[j], ".RDS", sep = ""))
+      data_partition <- append(data_partition, temp$base_info)
+    }
+  temp <- TADA_A_RR_estimate(data = data_partition, selected_annotations = c(1), gene_prior_file = "../data/Example_gene_uniform_prior.txt", optimization_iteration = 2000, mode = "single_fast")
+  print(temp)
+  report[i,1] <- as.character(prefix_vector[i,1])
+  report[i,2:4] <- temp$rr_report
+  }
+  return(report)
+}
+
+report <- report_rr_from_compact_data_in_partitioned_form(prefix_vector)
+```
+
+```{r}
+knitr::kable(report)
+```
+
+

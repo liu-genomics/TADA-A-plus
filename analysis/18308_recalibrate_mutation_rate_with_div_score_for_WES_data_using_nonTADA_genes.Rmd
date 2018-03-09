@@ -1,0 +1,69 @@
+---
+title: "180308_recalibrate_mutation_rate_for_WES_data_using_nonTADA_genes"
+author: "Yuwen"
+date: "03/08/2018"
+output: html_document
+---
+
+Recalibrate mutation rate with divergence score for WES studies. Using nonfunctional syn mutations to calibrate.
+The `window_file` is `../data/Example_windows_coding.bed`
+Use mutations in the windows of nonTADA genes (TADA coding prior < 0.05, about 16000 genes)
+
+```{r}
+library(data.table)
+library(parallel)
+source("../TADA-A/lib/TADA_Annotation.R")
+```
+
+### adjust mutation rate 
+
+```{r, cache=TRUE, cache.extra=TADA_A_adjust_mutation_rate}
+TADA_A_adjust_mutation_rate(mut_file = "../data/denovo_db_DeRubeis2014_cases_SNV_remove_recurrent_mutations.bed",
+                            window_file = "../data/Example_windows_coding_for_mutation_rate_adjustment.bed",
+                            sample_size = 2270, 
+                            scale_features = c("GC_content", "div_score"),
+                            scaling_file_name = "../data/Example_windows_coding_using_nonTADA_genes_mutrate_scaling_file_for_denovo_db_DeRubeis2014_cases_DNM.txt",
+                            mutrate_mode = "special",
+                            genes = "../data/Example_gene_prior_st_0.05.txt")
+
+
+TADA_A_adjust_mutation_rate(mut_file = "../data/denovo_db_Krumm_cases_SNV_remove_recurrent_mutations.bed",
+                            window_file = "../data/Example_windows_coding_for_mutation_rate_adjustment.bed",
+                            sample_size = 2377, 
+                            scale_features = c("GC_content", "div_score"),
+                            scaling_file_name = "../data/Example_windows_coding_using_nonTADA_genes_mutrate_scaling_file_for_denovo_db_Krumm_cases_DNM.txt",
+                            mutrate_mode = "special",
+                            genes = "../data/Example_gene_prior_st_0.05.txt")
+
+TADA_A_adjust_mutation_rate(mut_file = "../data/denovo_db_Krumm_controls_SNV_remove_recurrent_mutations.bed",
+                            window_file = "../data/Example_windows_coding_for_mutation_rate_adjustment.bed",
+                            sample_size = 1786, 
+                            scale_features = c("GC_content", "div_score"),
+                            scaling_file_name = "../data/Example_windows_coding_using_nonTADA_genes_mutrate_scaling_file_for_denovo_db_Krumm_controls_DNM.txt",
+                            mutrate_mode = "special",
+                            genes = "../data/Example_gene_prior_st_0.05.txt")
+
+TADA_A_adjust_mutation_rate(mut_file = "../data/denovo_db_Iossifov_cases_SNV_remove_recurrent_mutations.bed",
+                            window_file = "../data/Example_windows_coding_for_mutation_rate_adjustment.bed",
+                            sample_size = 2508, 
+                            scale_features = c("GC_content", "div_score"),
+                            scaling_file_name = "../data/Example_windows_coding_using_nonTADA_genes_mutrate_scaling_file_for_denovo_db_Iossifov_cases_DNM.txt",
+                            mutrate_mode = "special",
+                            genes = "../data/Example_gene_prior_st_0.05.txt")
+
+TADA_A_adjust_mutation_rate(mut_file = "../data/denovo_db_Iossifov_controls_SNV_remove_recurrent_mutations.bed",
+                            window_file = "../data/Example_windows_coding_for_mutation_rate_adjustment.bed",
+                            sample_size = 1911, 
+                            scale_features = c("GC_content", "div_score"),
+                            scaling_file_name = "../data/Example_windows_coding_using_nonTADA_genes_mutrate_scaling_file_for_denovo_db_Iossifov_controls_DNM.txt",
+                            mutrate_mode = "special",
+                            genes = "../data/Example_gene_prior_st_0.05.txt")
+
+
+```
+
+
+
+
+
+Setting `mutrate_mode = "special"` will ensure all the windows will get a scaling factor.

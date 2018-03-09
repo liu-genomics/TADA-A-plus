@@ -1,0 +1,32 @@
+---
+title: "180308_recalibrate_mutation_rate_for_new_WGS_data_using_all_mutations"
+author: "Yuwen"
+date: "03/08/2018"
+output: html_document
+---
+
+Recalibrate mutation rate with divergence score for WGS studies. Using all mutations to calibrate.
+
+
+```{r}
+library(data.table)
+library(parallel)
+source("../TADA-A/lib/TADA_Annotation.R")
+```
+
+### adjust mutation rate 
+
+```{r, cache=TRUE, cache.extra=TADA_A_adjust_mutation_rate}
+TADA_A_adjust_mutation_rate(mut_file = "../data/Iceland_hg19_SNV.bed",
+                            window_file = "../data/Example_windows_with_div_score.bed",
+                            sample_size = 1549, 
+                            scale_features = c("GC_content", "div_score"),
+                            scaling_file_name = "../data/Example_windows_scaling_file_for_Iceland_hg19_SNV.txt")
+
+TADA_A_adjust_mutation_rate(mut_file = "../data/Neitherland_258_control_SNV.bed",
+                            window_file = "../data/Example_windows_with_div_score.bed",
+                            sample_size = 258, 
+                            scale_features = c("GC_content", "div_score"),
+                            scaling_file_name = "../data/Example_windows_scaling_file_for_Neitherland_258_control_SNV.txt")
+
+```

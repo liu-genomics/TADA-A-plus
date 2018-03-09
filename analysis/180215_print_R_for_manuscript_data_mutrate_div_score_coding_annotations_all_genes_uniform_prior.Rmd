@@ -1,0 +1,30 @@
+---
+output:
+  html_document:
+    toc: true
+    number_sections: true
+    theme: united
+    highlight: textmate
+---
+
+```{r}
+library(data.table)
+library(parallel)
+source("../lib/TADA_Annotation_v2.R")
+
+```
+
+
+
+```{r, cache=TRUE}
+data_partition <- list()
+test = sprintf("%02d", 0:49)
+for(i in 1:50){
+  temp <- readRDS(paste("171230_print_R_for_manuscript_data_mutrate_div_score_adjustment_Brain_K27ac_all_genes_uniform_prior/171230_print_R_for_manuscript_data_mutrate_div_score_adjustment_Brain_K27ac_all_genes_uniform_prior_", test[i], ".RDS", sep = ""))
+  data_partition <- append(data_partition, temp$base_info)
+}
+```
+
+```{r, cache=TRUE, dependson=data_partition}
+TADA_A_RR_estimate(data = data_partition, selected_annotations = c(1), gene_prior_file = "../data/Example_gene_uniform_prior.txt", mode = "single_fast")
+```

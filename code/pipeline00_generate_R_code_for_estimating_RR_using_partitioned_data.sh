@@ -15,22 +15,58 @@ bash ../lib/180215_generate_partitioned_compact_data.sh 180216_with_div_adjusted
 bash ../lib/180215_generate_partitioned_compact_data.sh 180221_with_div_adjusted_RR_estimate_DeRubeis_ANNO ../data/denovo_db_DeRubeis2014_cases_SNV_remove_recurrent_mutations_with_allele_info.txt \
 ../data/Example_windows_coding_with_nonfunctional_syn_mutrate_scaling_file_for_denovo_db_DeRubeis2014_cases_DNM.txt 2270
 
+# DeRubeis2014  data, using nonTADA genes adjust mutation rates
+bash ../lib/180215_generate_partitioned_compact_data.sh 180221_with_div_nonTADA_mutrate_calibration_adjusted_RR_estimate_DeRubeis_ANNO ../data/denovo_db_DeRubeis2014_cases_SNV_remove_recurrent_mutations_with_allele_info.txt \
+../data/Example_windows_coding_using_nonTADA_genes_mutrate_scaling_file_for_denovo_db_DeRubeis2014_cases_DNM.txt 2270
+
+
 # Krumm data
 bash ../lib/180215_generate_partitioned_compact_data.sh 180221_with_div_adjusted_RR_estimate_Krumm_ANNO ../data/denovo_db_Krumm_cases_SNV_remove_recurrent_mutations_with_allele_info.txt \
 ../data/Example_windows_coding_with_nonfunctional_syn_mutrate_scaling_file_for_denovo_db_Krumm_cases_DNM.txt 2377
+
+# Krumm data, using nonTADA genes adjust mutation rates
+bash ../lib/180215_generate_partitioned_compact_data.sh 180221_with_div_nonTADA_mutrate_calibration_adjusted_RR_estimate_Krumm_ANNO ../data/denovo_db_Krumm_cases_SNV_remove_recurrent_mutations_with_allele_info.txt \
+../data/Example_windows_coding_using_nonTADA_genes_mutrate_scaling_file_for_denovo_db_Krumm_cases_DNM.txt 2377
+
 
 # Krumm data control
 bash ../lib/180215_generate_partitioned_compact_data.sh 180221_with_div_adjusted_RR_estimate_Krumm_control_ANNO ../data/denovo_db_Krumm_controls_SNV_remove_recurrent_mutations_with_allele_info.txt \
 ../data/Example_windows_coding_with_nonfunctional_syn_mutrate_scaling_file_for_denovo_db_Krumm_controls_DNM.txt 1786
 
+# Krumm data control, using nonTADA genes adjust mutation rates
+bash ../lib/180215_generate_partitioned_compact_data.sh 180221_with_div_nonTADA_mutrate_calibration_adjusted_RR_estimate_Krumm_control_ANNO ../data/denovo_db_Krumm_controls_SNV_remove_recurrent_mutations_with_allele_info.txt \
+../data/Example_windows_coding_using_nonTADA_genes_mutrate_scaling_file_for_denovo_db_Krumm_controls_DNM.txt 1786
+
+
 # Iossifov data
 bash ../lib/180215_generate_partitioned_compact_data.sh 180221_with_div_adjusted_RR_estimate_Iossifov_ANNO ../data/denovo_db_Iossifov_cases_SNV_remove_recurrent_mutations_with_allele_info.txt \
 ../data/Example_windows_coding_with_nonfunctional_syn_mutrate_scaling_file_for_denovo_db_Iossifov_cases_DNM.txt 2508
+
+# Iossifov data, using nonTADA genes adjust mutation rates
+bash ../lib/180215_generate_partitioned_compact_data.sh 180221_with_div_nonTADA_mutrate_calibration_adjusted_RR_estimate_Iossifov_ANNO ../data/denovo_db_Iossifov_cases_SNV_remove_recurrent_mutations_with_allele_info.txt \
+../data/Example_windows_coding_using_nonTADA_genes_mutrate_scaling_file_for_denovo_db_Iossifov_cases_DNM.txt 2508
+
 
 # Iossifov control
 
 bash ../lib/180215_generate_partitioned_compact_data.sh 180221_with_div_adjusted_RR_estimate_Iossifov_control_ANNO ../data/denovo_db_Iossifov_controls_SNV_remove_recurrent_mutations_with_allele_info.txt \
 ../data/Example_windows_coding_with_nonfunctional_syn_mutrate_scaling_file_for_denovo_db_Iossifov_controls_DNM.txt 1911
+
+# Iossifov control, using nonTADA genes adjust mutation rates
+
+bash ../lib/180215_generate_partitioned_compact_data.sh 180221_with_div_nonTADA_mutrate_calibration_adjusted_RR_estimate_Iossifov_control_ANNO ../data/denovo_db_Iossifov_controls_SNV_remove_recurrent_mutations_with_allele_info.txt \
+../data/Example_windows_coding_using_nonTADA_genes_mutrate_scaling_file_for_denovo_db_Iossifov_controls_DNM.txt 1911
+
+# Iceland control
+bash ../lib/180215_generate_partitioned_compact_data.sh 180221_with_div_adjusted_RR_estimate_Iceland_control_ANNO ../data/Iceland_hg19_SNV_with_allele_info.txt \
+../data/Example_windows_scaling_file_for_Iceland_hg19_SNV.txt 1549
+
+# Neitherland control
+
+bash ../lib/180215_generate_partitioned_compact_data.sh 180221_with_div_adjusted_RR_estimate_Neitherland_control_ANNO ../data/Neitherland_258_control_SNV_with_allele_info.txt \
+../data/Example_windows_scaling_file_for_Neitherland_258_control_SNV.txt 258
+
+
 
 # Wong et al control
 

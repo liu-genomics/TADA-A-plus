@@ -53,6 +53,19 @@ Execution code to do data partition and reading-in is `code/pipeline00_generate_
 ### 1.1.4 Wong NC et al. control data
 + coding RR estimation (scaling factors were calculated accouting for div score, using coding sequences and promoter-proximal non-coding sequences, used in the manuscript). [link](analysis/180221_with_div_adjusted_RR_estimate_Wong_control_ANNO_RR_estimate.html)
 
+### 1.1.5 Neitherland 258 control
+
++ coding RR estimation (scaling factors were calculated accouting for div score, using coding sequences and promoter-proximal non-coding sequences, used in the manuscript[mutation rate adjustment](analysis/18308_recalibrate_mutation_rate_with_div_score_for_WES_data_using_nonTADA_genes.html))
+
++ [coding RR estimation accouting for div score](analysis/180221_with_div_adjusted_RR_estimate_Neitherland_control_ANNO_RR_estimate.html)
+
+### 1.1.5 Iceland 1549 control control
+
++ coding RR estimation (scaling factors were calculated accouting for div score, using coding sequences and promoter-proximal non-coding sequences, used in the manuscript[mutation rate adjustment](analysis/18308_recalibrate_mutation_rate_with_div_score_for_WES_data_using_nonTADA_genes.html))
+
++ [coding RR estimation accouting for div score](analysis/180221_with_div_adjusted_RR_estimate_Iceland_control_ANNO_RR_estimate.html)
+
+
 ## 1.2 For WES data
 From denovo-db
 
@@ -70,18 +83,33 @@ From denovo-db
 
 + [Adjust mutation rate using nonfunctional synonymous mutations](analysis/180215_recalibrate_mutation_rate_with_div_score_for_WES_data.html)
 
-
++ [Ajust mutation rate using all the mutations of nonTADA genes, which are genes with coding prior smaller than 0.05](analysis/18308_recalibrate_mutation_rate_with_div_score_for_WES_data_using_nonTADA_genes.html)
 
 ### 1.2.1 Iossifov data
-+ 2767 coding mutations after filtering, 490 nonfunctional syn mutations.[link](analysis/180221_with_div_adjusted_RR_estimate_Iossifov_ANNO_RR_estimate.html)
++ 2767 coding mutations after filtering, 490 nonfunctional syn mutations, Adjust mutation rate using nonfunctional synonymous mutations.[link](analysis/180221_with_div_adjusted_RR_estimate_Iossifov_ANNO_RR_estimate.html)
 
-+ Use unaffected control data.[link](analysis/180221_with_div_adjusted_RR_estimate_Iossifov_control_ANNO_RR_estimate.html)
++ Adjust mutation rate using all mutations in nonTADA genes.[link](analysis/180221_with_div_nonTADA_mutrate_calibration_adjusted_RR_estimate_Iossifov_ANNO_RR_estimate.html)
+
++ Use unaffected control data, Adjust mutation rate using nonfunctional synonymous mutations.[link](analysis/180221_with_div_adjusted_RR_estimate_Iossifov_control_ANNO_RR_estimate.html)
+
++ Use unaffected control data, Adjust mutation rate using nonTADA genes.[link](analysis/180221_with_div_nonTADA_mutrate_calibration_adjusted_RR_estimate_Iossifov_control_ANNO_RR_estimate.html)
 
 ### 1.2.2 Krumm data
-+ 915 coding mutations after filtering, 119 nonfunctional syn mutations.[link](analysis/180221_with_div_adjusted_RR_estimate_Krumm_ANNO_RR_estimate.html)
++ 915 coding mutations after filtering, 119 nonfunctional syn mutations, Adjust mutation rate using nonfunctional synonymous mutations.[link](analysis/180221_with_div_adjusted_RR_estimate_Krumm_ANNO_RR_estimate.html)
 
-+ Use unaffected control data.[link](analysis/180221_with_div_adjusted_RR_estimate_Krumm_control_ANNO_RR_estimate.html)
++ Adjust mutation rate using all mutations in nonTADA genes.[link](analysis/180221_with_div_nonTADA_mutrate_calibration_adjusted_RR_estimate_Krumm_ANNO_RR_estimate.html)
+
++ Use unaffected control data, Adjust mutation rate using nonfunctional synonymous mutations.[link](analysis/180221_with_div_adjusted_RR_estimate_Krumm_control_ANNO_RR_estimate.html)
+
++ Use unaffected control data, Adjust mutation rate using all mutations in nonTADA genes.[link](analysis/180221_with_div_nonTADA_mutrate_calibration_adjusted_RR_estimate_Krumm_control_ANNO_RR_estimate.html)
+
 
 ### 1.2.3 DeRubeis2014 data
-+ 1590 coding mutations after filtering, 315 nonfunctional syn mutations. [link](analysis/180221_with_div_adjusted_RR_estimate_DeRubeis_ANNO_RR_estimate.html)
++ 1590 coding mutations after filtering, 315 nonfunctional syn mutations, Adjust mutation rate using nonfunctional synonymous mutations. [link](analysis/180221_with_div_adjusted_RR_estimate_DeRubeis_ANNO_RR_estimate.html)
 
++ Adjust mutation rate using all mutations in using nonTADA genes. [link](analysis/180221_with_div_nonTADA_mutrate_calibration_adjusted_RR_estimate_DeRubeis_ANNO_RR_estimate.html)
+
+## 1.3 simulation results
++ nonfunctioal synonymous mutations and LoF mutations (logRR as 0 and 3, respectively)[link](analysis/180301_simulation_ANNO_RR_estimate.html).
+
++ Mis3 mutations (logRR as 1)[link](analysis/180301_simulation_ANNO_RR_estimate_Mis3.html).

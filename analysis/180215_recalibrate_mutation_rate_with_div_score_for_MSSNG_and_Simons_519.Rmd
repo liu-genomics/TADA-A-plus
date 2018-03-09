@@ -1,0 +1,29 @@
+---
+title: "171026_recalibrate_mutation_rate_with_div_score_for_MSNNG_and_Simons"
+output: html_document
+---
+
+Recalibrate mutation rate with divergence score for manuscript data.
+
+```{r}
+library(data.table)
+library(parallel)
+source("../TADA-A/lib/TADA_Annotation.R")
+```
+
+### adjust mutation rate 
+
+```{r, cache=TRUE, cache.extra=TADA_A_adjust_mutation_rate}
+TADA_A_adjust_mutation_rate(mut_file = "../data/denovo_db_Yuen_2017_cases_DNM_SNV_cleaned.bed",
+                            window_file = "../data/Example_windows_with_div_score.bed",
+                            sample_size = 1609, 
+                            scale_features = c("GC_content", "div_score"),
+                            scaling_file_name = "../data/Example_windows_mutrate_with_div_score_scaling_file_for_Yuen_NM2017_cases_DNM_cleaned.txt")
+
+TADA_A_adjust_mutation_rate(mut_file = "../data/Simons_519_new_version_cases.bed",
+                            window_file = "../data/Example_windows_with_div_score.bed",
+                            sample_size = 519, 
+                            scale_features = c("GC_content", "div_score"), 
+                            scaling_file_name = "../data/Example_windows_mutrate_with_div_score_scaling_file_for_Simons_519_new_cases_DNM.txt")
+
+```

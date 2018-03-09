@@ -1,0 +1,385 @@
+---
+title: "Investigate_ASD_DNM_in_denovo_db"
+author: "Yuwen"
+date: "9/14/2017"
+output: html_document
+---
+
+# Read in all DNMs in denovo-db
+
+```{r}
+library(data.table)
+```
+
+```{r, cache=TRUE}
+
+all_data <- fread("../other_annotations/Denovo_db/denovo-db.variants.v.1.5.tsv", header = TRUE, sep = "\t", stringsAsFactors = FALSE)
+```
+
+```{r}
+table(all_data$StudyName)
+Iossifov <- all_data[StudyName == "Iossifov"]
+Krumm <- all_data[StudyName == "Krumm"]
+DeRubeis2014 <- all_data[StudyName == "DeRubeis2014"]
+
+dim(Iossifov)
+dim(Krumm)
+dim(DeRubeis2014)
+
+```
+
+
+Iossifov data set
+```{r}
+
+
+table(Iossifov$PrimaryPhenotype)
+
+Iossifov_cases <- Iossifov[PrimaryPhenotype == "autism"]
+table(Iossifov_cases$PrimaryPhenotype)
+
+Iossifov_cases_SNV <- Iossifov_cases[Variant == "G>A" | Variant == "G>T" | Variant == "G>C" | Variant == "A>T" | Variant == "A>C" | Variant == "A>G" | Variant == "C>A" | Variant == "C>T" | Variant == "C>G" |Variant == "T>A" | Variant == "T>C" | Variant == "T>G"]
+
+table(Iossifov_cases_SNV$Variant)
+dim(Iossifov_cases_SNV)
+
+# now remember there are situations where one mutation would have multiple entries in the table
+length(unique(Iossifov_cases_SNV$Position))
+head(Iossifov_cases_SNV[duplicated(Iossifov_cases_SNV$Position)])
+
+# get the ref/alt alleles and genomic positions
+allele_temp <-data.table(unlist(strsplit(Iossifov_cases_SNV$Variant, split = ">")))
+even_index <- seq(2,nrow(allele_temp),2)
+odd_index <- seq(1,nrow(allele_temp),2)
+
+Iossifov_cases_SNV <- data.table(Iossifov_cases_SNV[,c("#SampleID", "Chr", "Position")], ref = allele_temp[odd_index], alt = allele_temp[even_index])
+
+# remove redundant information
+Iossifov_cases_SNV <- unique(Iossifov_cases_SNV)
+
+options(scipen=999)
+# generate bed file format
+Iossifov_cases_SNV_bed <- data.table(paste("chr", Iossifov_cases_SNV$Chr, sep = ""), Iossifov_cases_SNV$Position - 1, Iossifov_cases_SNV$Position, Iossifov_cases_SNV$ref.V1, Iossifov_cases_SNV$alt.V1)
+
+# NOTION, fwrite here write two numbers (85000000 and 153000000 in scientifi notion, I haven't figured out how to turn it off, so I use write.table here instead.)
+write.table(Iossifov_cases_SNV_bed, "../data/denovo_db_Iossifov_cases_DNM_SNV_with_allele_info.txt", col.names = FALSE, row.names = FALSE, sep = "\t", quote = FALSE)
+
+write.table(Iossifov_cases_SNV_bed[,1:3], "../data/denovo_db_Iossifov_cases_DNM_SNV.bed", col.names = FALSE, row.names = FALSE, sep = "\t", quote = FALSE)
+
+```
+
+One problem that I found from the data set is that for Yuen2017, there are about 3300 DNM SNVs that appear in at least two SampleIDs. And most of the cases, the two SampleIDs are quite similar. To see how this would affect parameter estimation, I will remove mutations that appear in at least two Samples.
+
+```{r}
+Iossifov_cases_SNV_remove_recurrent_mutations <- Iossifov_cases_SNV[!(duplicated(Iossifov_cases_SNV[,2:4]) | duplicated(Iossifov_cases_SNV[,2:4], fromLast = TRUE)), ]
+
+Iossifov_cases_SNV_remove_recurrent_mutations_bed <- data.table(paste("chr", Iossifov_cases_SNV_remove_recurrent_mutations$Chr, sep = ""), Iossifov_cases_SNV_remove_recurrent_mutations$Position - 1, Iossifov_cases_SNV_remove_recurrent_mutations$Position, Iossifov_cases_SNV_remove_recurrent_mutations$ref.V1, Iossifov_cases_SNV_remove_recurrent_mutations$alt.V1)
+
+dim(Iossifov_cases_SNV_remove_recurrent_mutations)
+write.table(Iossifov_cases_SNV_remove_recurrent_mutations_bed, "../data/denovo_db_Iossifov_cases_SNV_remove_recurrent_mutations_with_allele_info.txt", col.names = FALSE, row.names = FALSE, sep = "\t", quote = FALSE)
+
+write.table(Iossifov_cases_SNV_remove_recurrent_mutations_bed[,1:3], "../data/denovo_db_Iossifov_cases_SNV_remove_recurrent_mutations.bed", col.names = FALSE, row.names = FALSE, sep = "\t", quote = FALSE)
+
+
+# # even after this, there are a lot of individuals that have very few number of mutations
+# hist(as.vector(table(Iossifov_cases_SNV_remove_recurrent_mutations[[1]])))
+# sample_mut_count <- data.table(SampleID = names(table(Iossifov_cases_SNV_remove_recurrent_mutations[[1]])), mut_count = as.vector(table(Iossifov_cases_SNV_remove_recurrent_mutations[[1]])))
+# # # remove samples that have smaller than 10 DNM SNVs
+# # Yuen2017_cases_SNV_remove_recurrent_mutations_mutcount_gt10 <- Yuen2017_cases_SNV_remove_recurrent_mutations[!is.element(`#SampleID`, sample_mut_count[mut_count < 10]$SampleID)]
+# # 
+# # Yuen2017_cases_SNV_remove_recurrent_mutations_mutcount_gt10_bed <- data.table(paste("chr", Yuen2017_cases_SNV_remove_recurrent_mutations_mutcount_gt10$Chr, sep = ""), Yuen2017_cases_SNV_remove_recurrent_mutations_mutcount_gt10$Position - 1, Yuen2017_cases_SNV_remove_recurrent_mutations_mutcount_gt10$Position, Yuen2017_cases_SNV_remove_recurrent_mutations_mutcount_gt10$ref.V1, Yuen2017_cases_SNV_remove_recurrent_mutations_mutcount_gt10$alt.V1)
+# # 
+# # # NOTION, fwrite here write two numbers (85000000 and 153000000 in scientifi notion, I haven't figured out how to turn it off, so I use write.table here instead.)
+# # write.table(Yuen2017_cases_SNV_remove_recurrent_mutations_mutcount_gt10_bed, "../data/denovo_db_Yuen_2017_cases_DNM_SNV_cleaned_with_allele_info.txt", col.names = FALSE, row.names = FALSE, sep = "\t", quote = FALSE)
+# # 
+# # write.table(Yuen2017_cases_SNV_remove_recurrent_mutations_mutcount_gt10_bed[,1:3], "../data/denovo_db_Yuen_2017_cases_DNM_SNV_cleaned.bed", col.names = FALSE, row.names = FALSE, sep = "\t", quote = FALSE)
+# # 
+# # # This is the number of samples that have been left.
+# # length(unique(Yuen2017_cases_SNV_remove_recurrent_mutations_mutcount_gt10[[1]]))
+
+```
+
+Iossifov data set for control
+```{r}
+
+
+table(Iossifov$PrimaryPhenotype)
+
+Iossifov_controls <- Iossifov[PrimaryPhenotype == "control"]
+table(Iossifov_controls$PrimaryPhenotype)
+
+Iossifov_controls_SNV <- Iossifov_controls[Variant == "G>A" | Variant == "G>T" | Variant == "G>C" | Variant == "A>T" | Variant == "A>C" | Variant == "A>G" | Variant == "C>A" | Variant == "C>T" | Variant == "C>G" |Variant == "T>A" | Variant == "T>C" | Variant == "T>G"]
+
+table(Iossifov_controls_SNV$Variant)
+dim(Iossifov_controls_SNV)
+
+# now remember there are situations where one mutation would have multiple entries in the table
+length(unique(Iossifov_controls_SNV$Position))
+head(Iossifov_controls_SNV[duplicated(Iossifov_controls_SNV$Position)])
+
+# get the ref/alt alleles and genomic positions
+allele_temp <-data.table(unlist(strsplit(Iossifov_controls_SNV$Variant, split = ">")))
+even_index <- seq(2,nrow(allele_temp),2)
+odd_index <- seq(1,nrow(allele_temp),2)
+
+Iossifov_controls_SNV <- data.table(Iossifov_controls_SNV[,c("#SampleID", "Chr", "Position")], ref = allele_temp[odd_index], alt = allele_temp[even_index])
+
+# remove redundant information
+Iossifov_controls_SNV <- unique(Iossifov_controls_SNV)
+
+options(scipen=999)
+# generate bed file format
+Iossifov_controls_SNV_bed <- data.table(paste("chr", Iossifov_controls_SNV$Chr, sep = ""), Iossifov_controls_SNV$Position - 1, Iossifov_controls_SNV$Position, Iossifov_controls_SNV$ref.V1, Iossifov_controls_SNV$alt.V1)
+
+# NOTION, fwrite here write two numbers (85000000 and 153000000 in scientifi notion, I haven't figured out how to turn it off, so I use write.table here instead.)
+write.table(Iossifov_controls_SNV_bed, "../data/denovo_db_Iossifov_controls_DNM_SNV_with_allele_info.txt", col.names = FALSE, row.names = FALSE, sep = "\t", quote = FALSE)
+
+write.table(Iossifov_controls_SNV_bed[,1:3], "../data/denovo_db_Iossifov_controls_DNM_SNV.bed", col.names = FALSE, row.names = FALSE, sep = "\t", quote = FALSE)
+
+```
+
+One problem that I found from the data set is that for Yuen2017, there are about 3300 DNM SNVs that appear in at least two SampleIDs. And most of the cases, the two SampleIDs are quite similar. To see how this would affect parameter estimation, I will remove mutations that appear in at least two Samples.
+
+```{r}
+Iossifov_controls_SNV_remove_recurrent_mutations <- Iossifov_controls_SNV[!(duplicated(Iossifov_controls_SNV[,2:4]) | duplicated(Iossifov_controls_SNV[,2:4], fromLast = TRUE)), ]
+
+Iossifov_controls_SNV_remove_recurrent_mutations_bed <- data.table(paste("chr", Iossifov_controls_SNV_remove_recurrent_mutations$Chr, sep = ""), Iossifov_controls_SNV_remove_recurrent_mutations$Position - 1, Iossifov_controls_SNV_remove_recurrent_mutations$Position, Iossifov_controls_SNV_remove_recurrent_mutations$ref.V1, Iossifov_controls_SNV_remove_recurrent_mutations$alt.V1)
+
+dim(Iossifov_controls_SNV_remove_recurrent_mutations)
+write.table(Iossifov_controls_SNV_remove_recurrent_mutations_bed, "../data/denovo_db_Iossifov_controls_SNV_remove_recurrent_mutations_with_allele_info.txt", col.names = FALSE, row.names = FALSE, sep = "\t", quote = FALSE)
+
+write.table(Iossifov_controls_SNV_remove_recurrent_mutations_bed[,1:3], "../data/denovo_db_Iossifov_controls_SNV_remove_recurrent_mutations.bed", col.names = FALSE, row.names = FALSE, sep = "\t", quote = FALSE)
+
+
+# # even after this, there are a lot of individuals that have very few number of mutations
+# hist(as.vector(table(Iossifov_cases_SNV_remove_recurrent_mutations[[1]])))
+# sample_mut_count <- data.table(SampleID = names(table(Iossifov_cases_SNV_remove_recurrent_mutations[[1]])), mut_count = as.vector(table(Iossifov_cases_SNV_remove_recurrent_mutations[[1]])))
+# # # remove samples that have smaller than 10 DNM SNVs
+# # Yuen2017_cases_SNV_remove_recurrent_mutations_mutcount_gt10 <- Yuen2017_cases_SNV_remove_recurrent_mutations[!is.element(`#SampleID`, sample_mut_count[mut_count < 10]$SampleID)]
+# # 
+# # Yuen2017_cases_SNV_remove_recurrent_mutations_mutcount_gt10_bed <- data.table(paste("chr", Yuen2017_cases_SNV_remove_recurrent_mutations_mutcount_gt10$Chr, sep = ""), Yuen2017_cases_SNV_remove_recurrent_mutations_mutcount_gt10$Position - 1, Yuen2017_cases_SNV_remove_recurrent_mutations_mutcount_gt10$Position, Yuen2017_cases_SNV_remove_recurrent_mutations_mutcount_gt10$ref.V1, Yuen2017_cases_SNV_remove_recurrent_mutations_mutcount_gt10$alt.V1)
+# # 
+# # # NOTION, fwrite here write two numbers (85000000 and 153000000 in scientifi notion, I haven't figured out how to turn it off, so I use write.table here instead.)
+# # write.table(Yuen2017_cases_SNV_remove_recurrent_mutations_mutcount_gt10_bed, "../data/denovo_db_Yuen_2017_cases_DNM_SNV_cleaned_with_allele_info.txt", col.names = FALSE, row.names = FALSE, sep = "\t", quote = FALSE)
+# # 
+# # write.table(Yuen2017_cases_SNV_remove_recurrent_mutations_mutcount_gt10_bed[,1:3], "../data/denovo_db_Yuen_2017_cases_DNM_SNV_cleaned.bed", col.names = FALSE, row.names = FALSE, sep = "\t", quote = FALSE)
+# # 
+# # # This is the number of samples that have been left.
+# # length(unique(Yuen2017_cases_SNV_remove_recurrent_mutations_mutcount_gt10[[1]]))
+
+```
+
+Krumm data set
+```{r}
+
+
+table(Krumm$PrimaryPhenotype)
+
+Krumm_cases <- Krumm[PrimaryPhenotype == "autism"]
+table(Krumm_cases$PrimaryPhenotype)
+
+Krumm_cases_SNV <- Krumm_cases[Variant == "G>A" | Variant == "G>T" | Variant == "G>C" | Variant == "A>T" | Variant == "A>C" | Variant == "A>G" | Variant == "C>A" | Variant == "C>T" | Variant == "C>G" |Variant == "T>A" | Variant == "T>C" | Variant == "T>G"]
+
+table(Krumm_cases_SNV$Variant)
+dim(Krumm_cases_SNV)
+
+# now remember there are situations where one mutation would have multiple entries in the table
+length(unique(Krumm_cases_SNV$Position))
+head(Krumm_cases_SNV[duplicated(Krumm_cases_SNV$Position)])
+
+# get the ref/alt alleles and genomic positions
+allele_temp <-data.table(unlist(strsplit(Krumm_cases_SNV$Variant, split = ">")))
+even_index <- seq(2,nrow(allele_temp),2)
+odd_index <- seq(1,nrow(allele_temp),2)
+
+Krumm_cases_SNV <- data.table(Krumm_cases_SNV[,c("#SampleID", "Chr", "Position")], ref = allele_temp[odd_index], alt = allele_temp[even_index])
+
+# remove redundant information
+Krumm_cases_SNV <- unique(Krumm_cases_SNV)
+
+options(scipen=999)
+# generate bed file format
+Krumm_cases_SNV_bed <- data.table(paste("chr", Krumm_cases_SNV$Chr, sep = ""), Krumm_cases_SNV$Position - 1, Krumm_cases_SNV$Position, Krumm_cases_SNV$ref.V1, Krumm_cases_SNV$alt.V1)
+
+# NOTION, fwrite here write two numbers (85000000 and 153000000 in scientifi notion, I haven't figured out how to turn it off, so I use write.table here instead.)
+write.table(Krumm_cases_SNV_bed, "../data/denovo_db_Krumm_cases_DNM_SNV_with_allele_info.txt", col.names = FALSE, row.names = FALSE, sep = "\t", quote = FALSE)
+
+write.table(Krumm_cases_SNV_bed[,1:3], "../data/denovo_db_Krumm_cases_DNM_SNV.bed", col.names = FALSE, row.names = FALSE, sep = "\t", quote = FALSE)
+
+```
+
+One problem that I found from the data set is that for Yuen2017, there are about 3300 DNM SNVs that appear in at least two SampleIDs. And most of the cases, the two SampleIDs are quite similar. To see how this would affect parameter estimation, I will remove mutations that appear in at least two Samples.
+
+```{r}
+Krumm_cases_SNV_remove_recurrent_mutations <- Krumm_cases_SNV[!(duplicated(Krumm_cases_SNV[,2:4]) | duplicated(Krumm_cases_SNV[,2:4], fromLast = TRUE)), ]
+
+# generate bed file format
+Krumm_cases_SNV_remove_recurrent_mutations_bed <- data.table(paste("chr", Krumm_cases_SNV_remove_recurrent_mutations$Chr, sep = ""), Krumm_cases_SNV_remove_recurrent_mutations$Position - 1, Krumm_cases_SNV_remove_recurrent_mutations$Position, Krumm_cases_SNV_remove_recurrent_mutations$ref.V1, Krumm_cases_SNV_remove_recurrent_mutations$alt.V1)
+
+dim(Krumm_cases_SNV_remove_recurrent_mutations)
+
+write.table(Krumm_cases_SNV_remove_recurrent_mutations_bed, "../data/denovo_db_Krumm_cases_SNV_remove_recurrent_mutations_with_allele_info.txt", col.names = FALSE, row.names = FALSE, sep = "\t", quote = FALSE)
+
+write.table(Krumm_cases_SNV_remove_recurrent_mutations_bed[,1:3], "../data/denovo_db_Krumm_cases_SNV_remove_recurrent_mutations.bed", col.names = FALSE, row.names = FALSE, sep = "\t", quote = FALSE)
+
+
+# # even after this, there are a lot of individuals that have very few number of mutations
+# hist(as.vector(table(Krumm_cases_SNV_remove_recurrent_mutations[[1]])))
+# sample_mut_count <- data.table(SampleID = names(table(Krumm_cases_SNV_remove_recurrent_mutations[[1]])), mut_count = as.vector(table(Krumm_cases_SNV_remove_recurrent_mutations[[1]])))
+# # # remove samples that have smaller than 10 DNM SNVs
+# # Yuen2017_cases_SNV_remove_recurrent_mutations_mutcount_gt10 <- Yuen2017_cases_SNV_remove_recurrent_mutations[!is.element(`#SampleID`, sample_mut_count[mut_count < 10]$SampleID)]
+# # 
+# # Yuen2017_cases_SNV_remove_recurrent_mutations_mutcount_gt10_bed <- data.table(paste("chr", Yuen2017_cases_SNV_remove_recurrent_mutations_mutcount_gt10$Chr, sep = ""), Yuen2017_cases_SNV_remove_recurrent_mutations_mutcount_gt10$Position - 1, Yuen2017_cases_SNV_remove_recurrent_mutations_mutcount_gt10$Position, Yuen2017_cases_SNV_remove_recurrent_mutations_mutcount_gt10$ref.V1, Yuen2017_cases_SNV_remove_recurrent_mutations_mutcount_gt10$alt.V1)
+# # 
+# # # NOTION, fwrite here write two numbers (85000000 and 153000000 in scientifi notion, I haven't figured out how to turn it off, so I use write.table here instead.)
+# # write.table(Yuen2017_cases_SNV_remove_recurrent_mutations_mutcount_gt10_bed, "../data/denovo_db_Yuen_2017_cases_DNM_SNV_cleaned_with_allele_info.txt", col.names = FALSE, row.names = FALSE, sep = "\t", quote = FALSE)
+# # 
+# # write.table(Yuen2017_cases_SNV_remove_recurrent_mutations_mutcount_gt10_bed[,1:3], "../data/denovo_db_Yuen_2017_cases_DNM_SNV_cleaned.bed", col.names = FALSE, row.names = FALSE, sep = "\t", quote = FALSE)
+# # 
+# # # This is the number of samples that have been left.
+# # length(unique(Yuen2017_cases_SNV_remove_recurrent_mutations_mutcount_gt10[[1]]))
+
+```
+
+Krumm data set control
+```{r}
+
+
+table(Krumm$PrimaryPhenotype)
+
+Krumm_controls <- Krumm[PrimaryPhenotype == "control"]
+table(Krumm_controls$PrimaryPhenotype)
+
+Krumm_controls_SNV <- Krumm_controls[Variant == "G>A" | Variant == "G>T" | Variant == "G>C" | Variant == "A>T" | Variant == "A>C" | Variant == "A>G" | Variant == "C>A" | Variant == "C>T" | Variant == "C>G" |Variant == "T>A" | Variant == "T>C" | Variant == "T>G"]
+
+table(Krumm_controls_SNV$Variant)
+dim(Krumm_controls_SNV)
+
+# now remember there are situations where one mutation would have multiple entries in the table
+length(unique(Krumm_controls_SNV$Position))
+head(Krumm_controls_SNV[duplicated(Krumm_controls_SNV$Position)])
+
+# get the ref/alt alleles and genomic positions
+allele_temp <-data.table(unlist(strsplit(Krumm_controls_SNV$Variant, split = ">")))
+even_index <- seq(2,nrow(allele_temp),2)
+odd_index <- seq(1,nrow(allele_temp),2)
+
+Krumm_controls_SNV <- data.table(Krumm_controls_SNV[,c("#SampleID", "Chr", "Position")], ref = allele_temp[odd_index], alt = allele_temp[even_index])
+
+# remove redundant information
+Krumm_controls_SNV <- unique(Krumm_controls_SNV)
+
+options(scipen=999)
+# generate bed file format
+Krumm_controls_SNV_bed <- data.table(paste("chr", Krumm_controls_SNV$Chr, sep = ""), Krumm_controls_SNV$Position - 1, Krumm_controls_SNV$Position, Krumm_controls_SNV$ref.V1, Krumm_controls_SNV$alt.V1)
+
+# NOTION, fwrite here write two numbers (85000000 and 153000000 in scientifi notion, I haven't figured out how to turn it off, so I use write.table here instead.)
+write.table(Krumm_controls_SNV_bed, "../data/denovo_db_Krumm_controls_DNM_SNV_with_allele_info.txt", col.names = FALSE, row.names = FALSE, sep = "\t", quote = FALSE)
+
+write.table(Krumm_controls_SNV_bed[,1:3], "../data/denovo_db_Krumm_controls_DNM_SNV.bed", col.names = FALSE, row.names = FALSE, sep = "\t", quote = FALSE)
+
+```
+
+One problem that I found from the data set is that for Yuen2017, there are about 3300 DNM SNVs that appear in at least two SampleIDs. And most of the cases, the two SampleIDs are quite similar. To see how this would affect parameter estimation, I will remove mutations that appear in at least two Samples.
+
+```{r}
+Krumm_controls_SNV_remove_recurrent_mutations <- Krumm_controls_SNV[!(duplicated(Krumm_controls_SNV[,2:4]) | duplicated(Krumm_controls_SNV[,2:4], fromLast = TRUE)), ]
+
+# generate bed file format
+Krumm_controls_SNV_remove_recurrent_mutations_bed <- data.table(paste("chr", Krumm_controls_SNV_remove_recurrent_mutations$Chr, sep = ""), Krumm_controls_SNV_remove_recurrent_mutations$Position - 1, Krumm_controls_SNV_remove_recurrent_mutations$Position, Krumm_controls_SNV_remove_recurrent_mutations$ref.V1, Krumm_controls_SNV_remove_recurrent_mutations$alt.V1)
+
+dim(Krumm_controls_SNV_remove_recurrent_mutations)
+
+write.table(Krumm_controls_SNV_remove_recurrent_mutations_bed, "../data/denovo_db_Krumm_controls_SNV_remove_recurrent_mutations_with_allele_info.txt", col.names = FALSE, row.names = FALSE, sep = "\t", quote = FALSE)
+
+write.table(Krumm_controls_SNV_remove_recurrent_mutations_bed[,1:3], "../data/denovo_db_Krumm_controls_SNV_remove_recurrent_mutations.bed", col.names = FALSE, row.names = FALSE, sep = "\t", quote = FALSE)
+
+
+# # even after this, there are a lot of individuals that have very few number of mutations
+# hist(as.vector(table(Krumm_controls_SNV_remove_recurrent_mutations[[1]])))
+# sample_mut_count <- data.table(SampleID = names(table(Krumm_controls_SNV_remove_recurrent_mutations[[1]])), mut_count = as.vector(table(Krumm_controls_SNV_remove_recurrent_mutations[[1]])))
+# # # remove samples that have smaller than 10 DNM SNVs
+# # Yuen2017_cases_SNV_remove_recurrent_mutations_mutcount_gt10 <- Yuen2017_cases_SNV_remove_recurrent_mutations[!is.element(`#SampleID`, sample_mut_count[mut_count < 10]$SampleID)]
+# # 
+# # Yuen2017_cases_SNV_remove_recurrent_mutations_mutcount_gt10_bed <- data.table(paste("chr", Yuen2017_cases_SNV_remove_recurrent_mutations_mutcount_gt10$Chr, sep = ""), Yuen2017_cases_SNV_remove_recurrent_mutations_mutcount_gt10$Position - 1, Yuen2017_cases_SNV_remove_recurrent_mutations_mutcount_gt10$Position, Yuen2017_cases_SNV_remove_recurrent_mutations_mutcount_gt10$ref.V1, Yuen2017_cases_SNV_remove_recurrent_mutations_mutcount_gt10$alt.V1)
+# # 
+# # # NOTION, fwrite here write two numbers (85000000 and 153000000 in scientifi notion, I haven't figured out how to turn it off, so I use write.table here instead.)
+# # write.table(Yuen2017_cases_SNV_remove_recurrent_mutations_mutcount_gt10_bed, "../data/denovo_db_Yuen_2017_cases_DNM_SNV_cleaned_with_allele_info.txt", col.names = FALSE, row.names = FALSE, sep = "\t", quote = FALSE)
+# # 
+# # write.table(Yuen2017_cases_SNV_remove_recurrent_mutations_mutcount_gt10_bed[,1:3], "../data/denovo_db_Yuen_2017_cases_DNM_SNV_cleaned.bed", col.names = FALSE, row.names = FALSE, sep = "\t", quote = FALSE)
+# # 
+# # # This is the number of samples that have been left.
+# # length(unique(Yuen2017_cases_SNV_remove_recurrent_mutations_mutcount_gt10[[1]]))
+
+```
+
+DeRubeis2014 data set
+```{r}
+
+
+table(DeRubeis2014$PrimaryPhenotype)
+
+DeRubeis2014_cases <- DeRubeis2014[PrimaryPhenotype == "autism"]
+table(DeRubeis2014_cases$PrimaryPhenotype)
+
+DeRubeis2014_cases_SNV <- DeRubeis2014_cases[Variant == "G>A" | Variant == "G>T" | Variant == "G>C" | Variant == "A>T" | Variant == "A>C" | Variant == "A>G" | Variant == "C>A" | Variant == "C>T" | Variant == "C>G" |Variant == "T>A" | Variant == "T>C" | Variant == "T>G"]
+
+table(DeRubeis2014_cases_SNV$Variant)
+dim(DeRubeis2014_cases_SNV)
+
+# now remember there are situations where one mutation would have multiple entries in the table
+length(unique(DeRubeis2014_cases_SNV$Position))
+head(DeRubeis2014_cases_SNV[duplicated(DeRubeis2014_cases_SNV$Position)])
+
+# get the ref/alt alleles and genomic positions
+allele_temp <-data.table(unlist(strsplit(DeRubeis2014_cases_SNV$Variant, split = ">")))
+even_index <- seq(2,nrow(allele_temp),2)
+odd_index <- seq(1,nrow(allele_temp),2)
+
+DeRubeis2014_cases_SNV <- data.table(DeRubeis2014_cases_SNV[,c("#SampleID", "Chr", "Position")], ref = allele_temp[odd_index], alt = allele_temp[even_index])
+
+# remove redundant information
+DeRubeis2014_cases_SNV <- unique(DeRubeis2014_cases_SNV)
+
+options(scipen=999)
+# generate bed file format
+DeRubeis2014_cases_SNV_bed <- data.table(paste("chr", DeRubeis2014_cases_SNV$Chr, sep = ""), DeRubeis2014_cases_SNV$Position - 1, DeRubeis2014_cases_SNV$Position, DeRubeis2014_cases_SNV$ref.V1, DeRubeis2014_cases_SNV$alt.V1)
+
+# NOTION, fwrite here write two numbers (85000000 and 153000000 in scientifi notion, I haven't figured out how to turn it off, so I use write.table here instead.)
+write.table(DeRubeis2014_cases_SNV_bed, "../data/denovo_db_DeRubeis2014_cases_DNM_SNV_with_allele_info.txt", col.names = FALSE, row.names = FALSE, sep = "\t", quote = FALSE)
+
+write.table(DeRubeis2014_cases_SNV_bed[,1:3], "../data/denovo_db_DeRubeis2014_cases_DNM_SNV.bed", col.names = FALSE, row.names = FALSE, sep = "\t", quote = FALSE)
+
+```
+
+One problem that I found from the data set is that for Yuen2017, there are about 3300 DNM SNVs that appear in at least two SampleIDs. And most of the cases, the two SampleIDs are quite similar. To see how this would affect parameter estimation, I will remove mutations that appear in at least two Samples.
+
+```{r}
+DeRubeis2014_cases_SNV_remove_recurrent_mutations <- DeRubeis2014_cases_SNV[!(duplicated(DeRubeis2014_cases_SNV[,2:4]) | duplicated(DeRubeis2014_cases_SNV[,2:4], fromLast = TRUE)), ]
+
+DeRubeis2014_cases_SNV_remove_recurrent_mutations_bed <- data.table(paste("chr", DeRubeis2014_cases_SNV_remove_recurrent_mutations$Chr, sep = ""), DeRubeis2014_cases_SNV_remove_recurrent_mutations$Position - 1, DeRubeis2014_cases_SNV_remove_recurrent_mutations$Position, DeRubeis2014_cases_SNV_remove_recurrent_mutations$ref.V1, DeRubeis2014_cases_SNV_remove_recurrent_mutations$alt.V1)
+
+dim(DeRubeis2014_cases_SNV_remove_recurrent_mutations)
+
+write.table(DeRubeis2014_cases_SNV_remove_recurrent_mutations_bed, "../data/denovo_db_DeRubeis2014_cases_SNV_remove_recurrent_mutations_with_allele_info.txt", col.names = FALSE, row.names = FALSE, sep = "\t", quote = FALSE)
+
+write.table(DeRubeis2014_cases_SNV_remove_recurrent_mutations_bed[,1:3], "../data/denovo_db_DeRubeis2014_cases_SNV_remove_recurrent_mutations.bed", col.names = FALSE, row.names = FALSE, sep = "\t", quote = FALSE)
+
+
+# # even after this, there are a lot of individuals that have very few number of mutations
+# hist(as.vector(table(DeRubeis2014_cases_SNV_remove_recurrent_mutations[[1]])))
+# sample_mut_count <- data.table(SampleID = names(table(DeRubeis2014_cases_SNV_remove_recurrent_mutations[[1]])), mut_count = as.vector(table(DeRubeis2014_cases_SNV_remove_recurrent_mutations[[1]])))
+# # # remove samples that have smaller than 10 DNM SNVs
+# # Yuen2017_cases_SNV_remove_recurrent_mutations_mutcount_gt10 <- Yuen2017_cases_SNV_remove_recurrent_mutations[!is.element(`#SampleID`, sample_mut_count[mut_count < 10]$SampleID)]
+# # 
+# # Yuen2017_cases_SNV_remove_recurrent_mutations_mutcount_gt10_bed <- data.table(paste("chr", Yuen2017_cases_SNV_remove_recurrent_mutations_mutcount_gt10$Chr, sep = ""), Yuen2017_cases_SNV_remove_recurrent_mutations_mutcount_gt10$Position - 1, Yuen2017_cases_SNV_remove_recurrent_mutations_mutcount_gt10$Position, Yuen2017_cases_SNV_remove_recurrent_mutations_mutcount_gt10$ref.V1, Yuen2017_cases_SNV_remove_recurrent_mutations_mutcount_gt10$alt.V1)
+# # 
+# # # NOTION, fwrite here write two numbers (85000000 and 153000000 in scientifi notion, I haven't figured out how to turn it off, so I use write.table here instead.)
+# # write.table(Yuen2017_cases_SNV_remove_recurrent_mutations_mutcount_gt10_bed, "../data/denovo_db_Yuen_2017_cases_DNM_SNV_cleaned_with_allele_info.txt", col.names = FALSE, row.names = FALSE, sep = "\t", quote = FALSE)
+# # 
+# # write.table(Yuen2017_cases_SNV_remove_recurrent_mutations_mutcount_gt10_bed[,1:3], "../data/denovo_db_Yuen_2017_cases_DNM_SNV_cleaned.bed", col.names = FALSE, row.names = FALSE, sep = "\t", quote = FALSE)
+# # 
+# # # This is the number of samples that have been left.
+# # length(unique(Yuen2017_cases_SNV_remove_recurrent_mutations_mutcount_gt10[[1]]))
+
+```

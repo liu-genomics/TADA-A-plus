@@ -1,0 +1,18 @@
+---
+title: "Relative risk estimation for Coding annotations"
+output: html_document
+---
+Analysis performed by `180214_results_data_RR_estimation_with_mutrate_adjusted_for_div_coding_features*.Rmd`
+Use all genes with a uniform prior of 0.06
+
+|Annotation|logRR|lower bound|upper bound|
+|----|----|----|----|
+| ClipBD | 0.97 | -0.42 | 2.35 |
+| Clip   | -1 | -46.08 | 44.08|
+| Ribosnitch | -1 | -14.13 | 12.13|
+| Ribosnitch + ClipDB| -1 | -17.29 | 15.29|
+| Ribosnitch + Clip | -1 | -46.08 | 44.08|
+| Spidex | 0.008 | -5.38 | 5.40 |
+| nonfunctional syn | -1 | -4.93 | 2.93 |
+| mis3 | 1.33 | 0.31 | 2.36 |
+| LoF | -1 | -0.34 | 7.34|

@@ -1,0 +1,101 @@
+---
+title: "171003 MSSNG cleaned data"
+author: "Yuwen"
+date: "10/03/2017"
+output: html_document
+---
+
+Analyze manuscript data
+Only look at UTR feature and UTR composite features
+Use ../data/Example_windows_with_UTRs.bed as window file as the previous ../data/Example_windows.bed doesn't have UTR windows. 
+```{r}
+library(data.table)
+library(parallel)
+source("../lib/TADA_Annotation_v2.R")
+```
+
+### adjust mutation rate for the new windows
+
+```{r, cache=TRUE, cache.extra=TADA_A_adjust_mutation_rate,eval=FALSE}
+TADA_A_adjust_mutation_rate(mut_file = "../data/Yuen_NM2015_cases_DNM.bed",
+                            window_file = "../data/Example_windows_with_UTRs.bed",
+                            sample_size = 162, 
+                            scale_features = "GC_content", 
+                            scaling_file_name = "../data/Example_windows_with_UTRs_mutrate_scaling_file_for_Yuen_NM2015_cases_DNM.txt")
+
+TADA_A_adjust_mutation_rate(mut_file = "../data/Kong_cases_DNM.bed",
+                            window_file = "../data/Example_windows_with_UTRs.bed",
+                            sample_size = 78, 
+                            scale_features = "GC_content", 
+                            scaling_file_name = "../data/Example_windows_with_UTRs_mutrate_scaling_file_for_Kong_cases_DNM.txt")
+
+TADA_A_adjust_mutation_rate(mut_file = "../data/Wu_cases_DNM.bed",
+                            window_file = "../data/Example_windows_with_UTRs.bed",
+                            sample_size = 32, 
+                            scale_features = "GC_content", 
+                            scaling_file_name = "../data/Example_windows_with_UTRs_mutrate_scaling_file_for_Wu_cases_DNM.txt")
+
+TADA_A_adjust_mutation_rate(mut_file = "../data/Jiang_cases_DNM.bed",
+                            window_file = "../data/Example_windows_with_UTRs.bed",
+                            sample_size = 32, 
+                            scale_features = "GC_content", 
+                            scaling_file_name = "../data/Example_windows_with_UTRs_mutrate_scaling_file_for_Jiang_cases_DNM.txt")
+
+TADA_A_adjust_mutation_rate(mut_file = "../data/Michaelson_cases_DNM.bed",
+                            window_file = "../data/Example_windows_with_UTRs.bed",
+                            sample_size = 10, 
+                            scale_features = "GC_content", 
+                            scaling_file_name = "../data/Example_windows_with_UTRs_mutrate_scaling_file_for_Michaelson_cases_DNM.txt")
+```
+
+```{r, cache=TRUE, cache.extra=TADA_A_read_info}
+compact_data_2 <- TADA_A_read_info(mut_files = c("../data/Yuen_NM2015_cases_DNM_with_allele_info.txt","../data/Kong_cases_DNM_with_allele_info.txt","../data/Wu_cases_DNM_with_allele_info.txt", "../data/Jiang_cases_DNM_with_allele_info.txt", "../data/Michaelson_cases_DNM_with_allele_info.txt"),
+                                 window_file = "../data/Example_windows_with_UTRs.bed",
+                                 mutrate_scaling_files = c("../data/Example_windows_with_UTRs_mutrate_scaling_file_for_Yuen_NM2015_cases_DNM.txt","../data/Example_windows_with_UTRs_mutrate_scaling_file_for_Kong_cases_DNM.txt", "../data/Example_windows_with_UTRs_mutrate_scaling_file_for_Wu_cases_DNM.txt", "../data/Example_windows_with_UTRs_mutrate_scaling_file_for_Jiang_cases_DNM.txt", "../data/Example_windows_with_UTRs_mutrate_scaling_file_for_Michaelson_cases_DNM.txt"),
+                                 sample_sizes = c(162, 78, 32, 32, 10),
+                                 gene_prior_file = "../data/Example_gene_prior.txt",
+                                 nonAS_noncoding_annotations = c("../other_annotations/epigenomic_annotation/Whole_genome.3utr_genename.bed.sorted.merged.bed", "../other_annotations/epigenomic_annotation/Whole_genome.5utr_genename.bed.sorted.merged.bed","../other_annotations/conservation/Whole_genome.3utr_genename.bed.sorted.merged_gerp_gt2.bed", "../other_annotations/conservation/Whole_genome.5utr_genename.bed.sorted.merged_gerp_gt2.bed"),
+                                 AS_noncoding_annotations = list(c("../other_annotations/allele_specific_CADD/whole_genome_SNVs_gt10_altA_within_3utr.bed", "../other_annotations/allele_specific_CADD/whole_genome_SNVs_gt10_altC_within_3utr.bed", "../other_annotations/allele_specific_CADD/whole_genome_SNVs_gt10_altG_within_3utr.bed", "../other_annotations/allele_specific_CADD/whole_genome_SNVs_gt10_altT_within_3utr.bed"), c("../other_annotations/allele_specific_CADD/whole_genome_SNVs_gt10_altA_within_5utr.bed", "../other_annotations/allele_specific_CADD/whole_genome_SNVs_gt10_altC_within_5utr.bed", "../other_annotations/allele_specific_CADD/whole_genome_SNVs_gt10_altG_within_5utr.bed", "../other_annotations/allele_specific_CADD/whole_genome_SNVs_gt10_altT_within_5utr.bed")),
+                                 report_proportion = 1000/18665,
+                                 chunk_partition_num =1,
+                                 node_n = 6,
+                                 mutrate_ref_files = c("../other_annotations/Mark_Daly_mutrate/Example_windows_extended_1bp_for_getting_base_level_mutrate.bed.fasta.tri.alt_A.mutrate.bw",
+                      "../other_annotations/Mark_Daly_mutrate/Example_windows_extended_1bp_for_getting_base_level_mutrate.bed.fasta.tri.alt_C.mutrate.bw",
+                      "../other_annotations/Mark_Daly_mutrate/Example_windows_extended_1bp_for_getting_base_level_mutrate.bed.fasta.tri.alt_G.mutrate.bw",
+                      "../other_annotations/Mark_Daly_mutrate/Example_windows_extended_1bp_for_getting_base_level_mutrate.bed.fasta.tri.alt_T.mutrate.bw")
+)
+
+```
+
+```{r,cache=TRUE, cache.extra=TADA_A_RR_estimate, dependson=compact_data_2}
+a <- TADA_A_RR_estimate(data = compact_data_2$base_info, selected_annotations = c(1), gene_prior_file = "../data/Example_gene_prior.txt", optimization_iteration = 2000)
+```
+
+
+```{r,cache=TRUE, cache.extra=TADA_A_RR_estimate, dependson=compact_data_2}
+b <- TADA_A_RR_estimate(data = compact_data_2$base_info, selected_annotations = c(2), gene_prior_file = "../data/Example_gene_prior.txt", optimization_iteration = 2000)
+```
+
+```{r,cache=TRUE, cache.extra=TADA_A_RR_estimate, dependson=compact_data_2}
+c <- TADA_A_RR_estimate(data = compact_data_2$base_info, selected_annotations = c(3), gene_prior_file = "../data/Example_gene_prior.txt", optimization_iteration = 2000)
+```
+
+
+```{r,cache=TRUE, cache.extra=TADA_A_RR_estimate, dependson=compact_data_2}
+d <- TADA_A_RR_estimate(data = compact_data_2$base_info, selected_annotations = c(4), gene_prior_file = "../data/Example_gene_prior.txt", optimization_iteration = 2000)
+```
+
+```{r,cache=TRUE, cache.extra=TADA_A_RR_estimate, dependson=compact_data_2}
+e <- TADA_A_RR_estimate(data = compact_data_2$base_info, selected_annotations = c(5), gene_prior_file = "../data/Example_gene_prior.txt", optimization_iteration = 2000)
+```
+
+```{r,cache=TRUE, cache.extra=TADA_A_RR_estimate, dependson=compact_data_2}
+f <- TADA_A_RR_estimate(data = compact_data_2$base_info, selected_annotations = c(6), gene_prior_file = "../data/Example_gene_prior.txt", optimization_iteration = 2000)
+```
+
+
+```{r}
+report <- do.call(rbind, list(a$rr_report,b$rr_report,c$rr_report,d$rr_report,e$rr_report, f$rr_report))
+rownames(report) <- c("3UTR", "5UTR", "3UTR+Gerp>2", "5UTR+Gerp>2", "3UTR+CADD>10", "5UTR+CADD>10")
+knitr::kable(report)
+```

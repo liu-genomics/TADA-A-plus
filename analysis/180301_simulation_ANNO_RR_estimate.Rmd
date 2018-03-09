@@ -1,0 +1,40 @@
+
+```{r}
+library(data.table)
+library(parallel)
+source("../TADA-A/lib/TADA_Annotation.R")
+```
+
+Use coding window file. The previous scaling factors are still applicable. 
+
+
+```{r, cache=TRUE}
+prefix_vector <- data.frame(annotation_name = c(paste("Nonfunctional_syn_round", seq(0,9), sep = "_"), paste("LoF_round", seq(0,9), sep = "_")),
+prefix = c(paste("180301_simulation_ANNO_round", seq(0,9), "_nonfunctional_syn/180301_simulation_ANNO_round", seq(0,9), "_nonfunctional_syn_", sep =""), paste("180301_simulation_ANNO_round", seq(0,9), "_LoF/180301_simulation_ANNO_round", seq(0,9), "_LoF_", sep ="")))
+                            
+
+report_rr_from_compact_data_in_partitioned_form <- function(prefix_vector){
+  report <- data.frame(annotation = NA, log_RR = NA, lower_bound = NA, upper_bound = NA)
+  for(i in 1:length(prefix_vector[,1])){
+    data_partition <- list()
+    test = sprintf("%02d", 0:9)
+    for(j in 1:10){
+      temp <- readRDS(paste(prefix_vector[i,2], test[j], ".RDS", sep = ""))
+      data_partition <- append(data_partition, temp)
+    }
+  temp <- TADA_A_RR_estimate(data = data_partition, selected_annotations = c(1), gene_prior_file = "../data/Example_gene_uniform_prior.txt", optimization_iteration = 2000, mode = "single_fast")
+  print(temp)
+  report[i,1] <- as.character(prefix_vector[i,1])
+  report[i,2:4] <- temp$rr_report
+  }
+  return(report)
+}
+
+report <- report_rr_from_compact_data_in_partitioned_form(prefix_vector)
+```
+
+```{r}
+knitr::kable(report)
+```
+
+

@@ -1,0 +1,69 @@
+---
+output:
+  html_document:
+    toc: true
+    number_sections: true
+    theme: united
+    highlight: textmate
+---
+
+```{r}
+library(data.table)
+library(parallel)
+source("../TADA-A/lib/TADA_Annotation.R")
+
+```
+
+
+
+### Simulation 10 times
+> with Log(nonfuonctional synonymous) = 0; Log(LoF) = 1.5, using Top 3000 genes, uniform prior
+> Without including mutation rate adjustment
+
+```{r}
+nf_syn <- c()
+LoF <- c()
+```
+
+```{r, cache=TRUE,cache.extra=TADA_A_DNM_generator}
+set.seed(456)
+for(i in 1 : 10){
+TADA_A_DNM_generator(window_file = "../data/Example_windows_coding.bed",
+                                 mutrate_scaling_files = c("../data/Example_windows_coding_with_nonfunctional_syn_mutrate_scaling_file_for_denovo_db_Iossifov_controls_DNM.txt"),
+                                 sample_sizes = c(1620),
+                                 gene_prior_file = "../data/Example_gene_uniform_prior.txt",
+                                 nonAS_noncoding_annotations = NA,
+                                 AS_noncoding_annotations = list(c("../other_annotations/coding/171029_synonymous_SNV_altA.bed.merge_removing_spidex_lower10pct.bed","../other_annotations/coding/171029_synonymous_SNV_altC.bed.merge_removing_spidex_lower10pct.bed","../other_annotations/coding/171029_synonymous_SNV_altG.bed.merge_removing_spidex_lower10pct.bed","../other_annotations/coding/171029_synonymous_SNV_altT.bed.merge_removing_spidex_lower10pct.bed"), c("../other_annotations/coding/171121_coding_stop_loss_and_gain_SNV_altA.bed.merge.bed","../other_annotations/coding/171121_coding_stop_loss_and_gain_SNV_altC.bed.merge.bed","../other_annotations/coding/171121_coding_stop_loss_and_gain_SNV_altG.bed.merge.bed","../other_annotations/coding/171121_coding_stop_loss_and_gain_SNV_altT.bed.merge.bed")),
+                                 report_proportion = 3000/18665,
+                                 chunk_partition_num =1 ,
+                                 node_n = 1,
+                                 mutrate_ref_files = c("../other_annotations/Mark_Daly_mutrate/Example_windows_extended_1bp_for_getting_base_level_mutrate.bed.fasta.tri.alt_A.mutrate.bw",
+                      "../other_annotations/Mark_Daly_mutrate/Example_windows_extended_1bp_for_getting_base_level_mutrate.bed.fasta.tri.alt_C.mutrate.bw",
+                      "../other_annotations/Mark_Daly_mutrate/Example_windows_extended_1bp_for_getting_base_level_mutrate.bed.fasta.tri.alt_G.mutrate.bw",
+                      "../other_annotations/Mark_Daly_mutrate/Example_windows_extended_1bp_for_getting_base_level_mutrate.bed.fasta.tri.alt_T.mutrate.bw"),
+                                 rr = c(0,1.5),
+                                 output_allele_info_files = c("180301_LoF_1.5_nf_syn_0_with_allele_info.txt"),
+                                 output_bed_files = c("180301_LoF_1.5_nf_syn_0_DNM.bed"),
+                                 output_risk_genes_file = "180301_LoF_1.5_nf_syn_0_risk_genes.txt",
+                     compact_mut_output = "180301_LoF_1.5_nf_syn_0_with_allele_info.RDS")
+
+ 
+compact_data <- readRDS("180301_LoF_1.5_nf_syn_0_with_allele_info.RDS")
+nf_syn[i] <- TADA_A_RR_estimate(data = compact_data, selected_annotations = c(1), gene_prior_file = "../data/Example_gene_uniform_prior.txt", optimization_iteration = 2000)$mle$par
+LoF[i] <- TADA_A_RR_estimate(data = compact_data, selected_annotations = c(2), gene_prior_file = "../data/Example_gene_uniform_prior.txt", optimization_iteration = 2000)$mle$par
+
+
+system("rm 180301_LoF_1.5_nf_syn_0_with_allele_info.txt")
+system("rm 180301_LoF_1.5_nf_syn_0_DNM.bed")
+system("rm 180301_LoF_1.5_nf_syn_0_risk_genes.txt")
+system("rm 180301_LoF_1.5_nf_syn_0_with_allele_info.RDS")
+}
+
+```
+
+```{r}
+hist(nf_syn, main = "logRR distribution for nonfunctional syn")
+hist(LoF, main = "logRR distribution for LoF")
+nf_syn
+LoF
+```

@@ -5,6 +5,7 @@
 mkdir -p $1
 cd $1
 
+MutratePrefix=${7-../other_annotations/Mark_Daly_mutrate/Example_windows_extended_1bp_for_getting_base_level_mutrate.bed.fasta.tri}
 for i in {00..09} 
 do
 echo "
@@ -29,10 +30,10 @@ compact_data_1 <- TADA_A_read_info(mut_files = c(\"$2\"),
                                  report_proportion = 18665/18665,
                                  chunk_partition_num =1,
                                  node_n = 1,
-                                 mutrate_ref_files = c(\"../other_annotations/Mark_Daly_mutrate/Example_windows_extended_1bp_for_getting_base_level_mutrate.bed.fasta.tri.alt_A.mutrate.bw\",
-                      \"../other_annotations/Mark_Daly_mutrate/Example_windows_extended_1bp_for_getting_base_level_mutrate.bed.fasta.tri.alt_C.mutrate.bw\",
-                      \"../other_annotations/Mark_Daly_mutrate/Example_windows_extended_1bp_for_getting_base_level_mutrate.bed.fasta.tri.alt_G.mutrate.bw\",
-                      \"../other_annotations/Mark_Daly_mutrate/Example_windows_extended_1bp_for_getting_base_level_mutrate.bed.fasta.tri.alt_T.mutrate.bw\"),
+                                 mutrate_ref_files = c(\"$MutratePrefix.alt_A.mutrate.bw\",
+                      \"$MutratePrefix.alt_C.mutrate.bw\",
+                      \"$MutratePrefix.alt_G.mutrate.bw\",
+                      \"$MutratePrefix.alt_T.mutrate.bw\"),
 			MPI = $i
 )
 

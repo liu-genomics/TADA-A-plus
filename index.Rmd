@@ -59,12 +59,15 @@ Execution code to do data partition and reading-in is `code/pipeline00_generate_
 
 + [coding RR estimation accouting for div score](analysis/180221_with_div_adjusted_RR_estimate_Neitherland_control_ANNO_RR_estimate.html)
 
++ coding RR estimation accouting for div score, using the 7-mer ERV mutation rate model [link](analysis/180315_with_div_nonTADA_mutrate_calibration_adjusted_RR_estimate_ERV_mutrate_DATA_Neitherland_258_control_ANNO_RR_estimate.html).
+
 ### 1.1.5 Iceland 1549 control control
 
 + coding RR estimation (scaling factors were calculated accouting for div score, using coding sequences and promoter-proximal non-coding sequences, used in the manuscript[mutation rate adjustment](analysis/18308_recalibrate_mutation_rate_with_div_score_for_WES_data_using_nonTADA_genes.html))
 
 + [coding RR estimation accouting for div score](analysis/180221_with_div_adjusted_RR_estimate_Iceland_control_ANNO_RR_estimate.html)
 
++ coding RR estimation accouting for div score, using the 7-mer ERV mutation rate model [link](analysis/180315_with_div_nonTADA_mutrate_calibration_adjusted_RR_estimate_ERV_mutrate_DATA_Iceland_1594_control_ANNO_RR_estimate.html).
 
 ## 1.2 For WES data
 From denovo-db
@@ -85,23 +88,36 @@ From denovo-db
 
 + [Ajust mutation rate using all the mutations of nonTADA genes, which are genes with coding prior smaller than 0.05](analysis/18308_recalibrate_mutation_rate_with_div_score_for_WES_data_using_nonTADA_genes.html)
 
++ [Ajust mutation rate using all mutations of nonTADA genes, but using the 7-mer ERV muation rate model](analysis/180313_recalibrate_mutation_rate_with_div_score_for_WES_data_using_nonTADA_genes_ERV_mutrate.html)
+
++ [Ajust mutation rate using nonfunctional synonymous mutations, using the 7-mer ERV mutation rate](analysis/180315_recalibrate_mutation_rate_with_div_score_for_WES_data_using_nonfunctional_syn_ERV_mutrate.html)
+
 ### 1.2.1 Iossifov data
 + 2767 coding mutations after filtering, 490 nonfunctional syn mutations, Adjust mutation rate using nonfunctional synonymous mutations.[link](analysis/180221_with_div_adjusted_RR_estimate_Iossifov_ANNO_RR_estimate.html)
 
 + Adjust mutation rate using all mutations in nonTADA genes.[link](analysis/180221_with_div_nonTADA_mutrate_calibration_adjusted_RR_estimate_Iossifov_ANNO_RR_estimate.html)
 
++ Adjust mutation rate using all mutations in nonTADA genes, 7-mer ERV mutation rate model. [link](analysis/180313_with_div_nonTADA_mutrate_calibration_adjusted_RR_estimate_ERV_mutrate_DATA_Iossifov_ANNO_RR_estimate.html)
+
+
 + Use unaffected control data, Adjust mutation rate using nonfunctional synonymous mutations.[link](analysis/180221_with_div_adjusted_RR_estimate_Iossifov_control_ANNO_RR_estimate.html)
 
 + Use unaffected control data, Adjust mutation rate using nonTADA genes.[link](analysis/180221_with_div_nonTADA_mutrate_calibration_adjusted_RR_estimate_Iossifov_control_ANNO_RR_estimate.html)
+
++ Use unaffected control data, Adjust mutation rate using nonTADA genes, 7-mer ERV mutation rate model.[link](analysis/180313_with_div_nonTADA_mutrate_calibration_adjusted_RR_estimate_ERV_mutrate_DATA_Iossifov_control_ANNO_RR_estimate.html)
 
 ### 1.2.2 Krumm data
 + 915 coding mutations after filtering, 119 nonfunctional syn mutations, Adjust mutation rate using nonfunctional synonymous mutations.[link](analysis/180221_with_div_adjusted_RR_estimate_Krumm_ANNO_RR_estimate.html)
 
 + Adjust mutation rate using all mutations in nonTADA genes.[link](analysis/180221_with_div_nonTADA_mutrate_calibration_adjusted_RR_estimate_Krumm_ANNO_RR_estimate.html)
 
++ Adjust mutation rate using all mutations in nonTADA genes, 7-mer ERV mutation rate model. [link](analysis/180313_with_div_nonTADA_mutrate_calibration_adjusted_RR_estimate_ERV_mutrate_DATA_Krumm_ANNO_RR_estimate.html)
+
 + Use unaffected control data, Adjust mutation rate using nonfunctional synonymous mutations.[link](analysis/180221_with_div_adjusted_RR_estimate_Krumm_control_ANNO_RR_estimate.html)
 
 + Use unaffected control data, Adjust mutation rate using all mutations in nonTADA genes.[link](analysis/180221_with_div_nonTADA_mutrate_calibration_adjusted_RR_estimate_Krumm_control_ANNO_RR_estimate.html)
+
++ Use unaffected control data, Adjust mutation rate using nonTADA genes, 7-mer ERV mutation rate model.[link](analysis/180313_with_div_nonTADA_mutrate_calibration_adjusted_RR_estimate_ERV_mutrate_DATA_Iossifov_control_ANNO_RR_estimate.html)
 
 
 ### 1.2.3 DeRubeis2014 data
@@ -109,7 +125,17 @@ From denovo-db
 
 + Adjust mutation rate using all mutations in using nonTADA genes. [link](analysis/180221_with_div_nonTADA_mutrate_calibration_adjusted_RR_estimate_DeRubeis_ANNO_RR_estimate.html)
 
++ + Adjust mutation rate using all mutations in nonTADA genes, 7-mer ERV mutation rate model. [link](analysis/180313_with_div_nonTADA_mutrate_calibration_adjusted_RR_estimate_ERV_mutrate_DATA_DeRubeis_ANNO_RR_estimate.html)
+
 ## 1.3 simulation results
 + nonfunctioal synonymous mutations and LoF mutations (logRR as 0 and 3, respectively)[link](analysis/180301_simulation_ANNO_RR_estimate.html).
 
 + Mis3 mutations (logRR as 1)[link](analysis/180301_simulation_ANNO_RR_estimate_Mis3.html).
+
+
+# 2. Further refining mutation rates
+## 2.1 Investigation of ERVs derived mutation rates
+>Extremely rare variantsreveal patterns of germline mutation rate heterogeneity in humans
+
++ This paper uses 35 million extremely rare variants to estimate base-level mutation rates upon a 7-mer model with other genomic and epigenomic features.
++ The data can be downloaded [here](http://mutation.sph.umich.edu/), corresponding [GitHub](https://github.com/carjed/mr-eel)

@@ -1,0 +1,238 @@
+---
+output:
+  html_document:
+    toc: true
+---
+
+# compare 3-mer mutation rate model and 7-mer mutation rate model
+
+```{r}
+library(data.table)
+library(parallel)
+source("../TADA-A/lib/TADA_Annotation.R")
+source("../lib/TADA-A-plus.R")
+```
+
+## denovo_db_DeRubeis2014_cases_SNV_remove_recurrent_mutations
+
+```{r, cache=TRUE, cache.extra=TADA_A_adjust_mutation_rate}
+chr <- paste("chr", seq(1,22),sep = "")
+output_model_1 <- data.frame(ll = NA, expected_count = NA, observed_count = NA)
+output_model_2 <- data.frame(ll = NA, expected_count = NA, observed_count = NA)
+
+for(i in 1:10){
+# Use all chromosomes except chr1 to train mutation rate model, only use nonTADA_A genes to train mutation model.
+  a <- TADA_A_compare_mutrate_model(mut_file = "../data/denovo_db_DeRubeis2014_cases_SNV_remove_recurrent_mutations.bed",
+                              window_file = "../data/Example_windows_coding_for_mutation_rate_adjustment.bed",
+                              sample_size = 2270, 
+                              scale_features = c("GC_content", "div_score"),
+                              validation_chr = chr[i],
+                              mutrate_mode = "special",
+                              genes = "../data/Example_gene_prior_st_0.05.txt")
+  output_model_1[i,] <- as.vector(a)
+
+  b <- TADA_A_compare_mutrate_model(mut_file = "../data/denovo_db_DeRubeis2014_cases_SNV_remove_recurrent_mutations.bed",
+                              window_file = "../data/Example_windows_coding_for_mutation_rate_adjustment_ERV_mutrate.bed",
+                              sample_size = 2270, 
+                              scale_features = c("GC_content", "div_score"),
+                              validation_chr = chr[i],
+                              mutrate_mode = "special",
+                              genes = "../data/Example_gene_prior_st_0.05.txt")
+  output_model_2[i,] <- as.vector(b)
+}
+```
+
+### 3-mer model
+```{r}
+knitr::kable(output_model_1)
+```
+
+### 7-mer model
+```{r}
+knitr::kable(output_model_2)
+```
+
+### comparison of loglikelihood
+```{r}
+boxplot(output_model_1$ll - output_model_2$ll)
+```
+
+
+
+## denovo_db_Krumm_cases_SNV_remove_recurrent_mutations
+
+```{r, cache=TRUE, cache.extra=TADA_A_adjust_mutation_rate}
+chr <- paste("chr", seq(1,22),sep = "")
+output_model_1 <- data.frame(ll = NA, expected_count = NA, observed_count = NA)
+output_model_2 <- data.frame(ll = NA, expected_count = NA, observed_count = NA)
+
+for(i in 1:10){
+# Use all chromosomes except chr1 to train mutation rate model, only use nonTADA_A genes to train mutation model.
+  a <- TADA_A_compare_mutrate_model(mut_file = "../data/denovo_db_Krumm_cases_SNV_remove_recurrent_mutations.bed",
+                              window_file = "../data/Example_windows_coding_for_mutation_rate_adjustment.bed",
+                              sample_size = 2377, 
+                              scale_features = c("GC_content", "div_score"),
+                              validation_chr = chr[i],
+                              mutrate_mode = "special",
+                              genes = "../data/Example_gene_prior_st_0.05.txt")
+  output_model_1[i,] <- as.vector(a)
+
+  b <- TADA_A_compare_mutrate_model(mut_file = "../data/denovo_db_Krumm_cases_SNV_remove_recurrent_mutations.bed",
+                              window_file = "../data/Example_windows_coding_for_mutation_rate_adjustment_ERV_mutrate.bed",
+                              sample_size = 2377, 
+                              scale_features = c("GC_content", "div_score"),
+                              validation_chr = chr[i],
+                              mutrate_mode = "special",
+                              genes = "../data/Example_gene_prior_st_0.05.txt")
+  output_model_2[i,] <- as.vector(b)
+}
+```
+
+### 3-mer model
+```{r}
+knitr::kable(output_model_1)
+```
+
+### 7-mer model
+```{r}
+knitr::kable(output_model_2)
+```
+
+### comparison of loglikelihood
+```{r}
+boxplot(output_model_1$ll - output_model_2$ll)
+```
+
+
+## denovo_db_Krumm_controls_SNV_remove_recurrent_mutations
+
+```{r, cache=TRUE, cache.extra=TADA_A_adjust_mutation_rate}
+chr <- paste("chr", seq(1,22),sep = "")
+output_model_1 <- data.frame(ll = NA, expected_count = NA, observed_count = NA)
+output_model_2 <- data.frame(ll = NA, expected_count = NA, observed_count = NA)
+
+for(i in 1:10){
+# Use all chromosomes except chr1 to train mutation rate model, only use nonTADA_A genes to train mutation model.
+  a <- TADA_A_compare_mutrate_model(mut_file = "../data/denovo_db_Krumm_controls_SNV_remove_recurrent_mutations.bed",
+                              window_file = "../data/Example_windows_coding_for_mutation_rate_adjustment.bed",
+                              sample_size = 1786, 
+                              scale_features = c("GC_content", "div_score"),
+                              validation_chr = chr[i],
+                              mutrate_mode = "special",
+                              genes = "../data/Example_gene_prior_st_0.05.txt")
+  output_model_1[i,] <- as.vector(a)
+
+  b <- TADA_A_compare_mutrate_model(mut_file = "../data/denovo_db_Krumm_controls_SNV_remove_recurrent_mutations.bed",
+                              window_file = "../data/Example_windows_coding_for_mutation_rate_adjustment_ERV_mutrate.bed",
+                              sample_size = 1786, 
+                              scale_features = c("GC_content", "div_score"),
+                              validation_chr = chr[i],
+                              mutrate_mode = "special",
+                              genes = "../data/Example_gene_prior_st_0.05.txt")
+  output_model_2[i,] <- as.vector(b)
+}
+```
+
+### 3-mer model
+```{r}
+knitr::kable(output_model_1)
+```
+
+### 7-mer model
+```{r}
+knitr::kable(output_model_2)
+```
+
+### comparison of loglikelihood
+```{r}
+boxplot(output_model_1$ll - output_model_2$ll)
+```
+
+## denovo_db_Iossifov_cases_SNV_remove_recurrent_mutations
+
+```{r, cache=TRUE, cache.extra=TADA_A_adjust_mutation_rate}
+chr <- paste("chr", seq(1,22),sep = "")
+output_model_1 <- data.frame(ll = NA, expected_count = NA, observed_count = NA)
+output_model_2 <- data.frame(ll = NA, expected_count = NA, observed_count = NA)
+
+for(i in 1:10){
+# Use all chromosomes except chr1 to train mutation rate model, only use nonTADA_A genes to train mutation model.
+  a <- TADA_A_compare_mutrate_model(mut_file = "../data/denovo_db_Iossifov_cases_SNV_remove_recurrent_mutations.bed",
+                              window_file = "../data/Example_windows_coding_for_mutation_rate_adjustment.bed",
+                              sample_size = 2508, 
+                              scale_features = c("GC_content", "div_score"),
+                              validation_chr = chr[i],
+                              mutrate_mode = "special",
+                              genes = "../data/Example_gene_prior_st_0.05.txt")
+  output_model_1[i,] <- as.vector(a)
+
+  b <- TADA_A_compare_mutrate_model(mut_file = "../data/denovo_db_Iossifov_cases_SNV_remove_recurrent_mutations.bed",
+                              window_file = "../data/Example_windows_coding_for_mutation_rate_adjustment_ERV_mutrate.bed",
+                              sample_size = 2508, 
+                              scale_features = c("GC_content", "div_score"),
+                              validation_chr = chr[i],
+                              mutrate_mode = "special",
+                              genes = "../data/Example_gene_prior_st_0.05.txt")
+  output_model_2[i,] <- as.vector(b)
+}
+```
+
+### 3-mer model
+```{r}
+knitr::kable(output_model_1)
+```
+
+### 7-mer model
+```{r}
+knitr::kable(output_model_2)
+```
+
+### comparison of loglikelihood
+```{r}
+boxplot(output_model_1$ll - output_model_2$ll)
+```
+
+
+## denovo_db_Iossifov_controls_SNV_remove_recurrent_mutations
+
+```{r, cache=TRUE, cache.extra=TADA_A_adjust_mutation_rate}
+chr <- paste("chr", seq(1,22),sep = "")
+output_model_1 <- data.frame(ll = NA, expected_count = NA, observed_count = NA)
+output_model_2 <- data.frame(ll = NA, expected_count = NA, observed_count = NA)
+
+for(i in 1:10){
+# Use all chromosomes except chr1 to train mutation rate model, only use nonTADA_A genes to train mutation model.
+  a <- TADA_A_compare_mutrate_model(mut_file = "../data/denovo_db_Iossifov_controls_SNV_remove_recurrent_mutations.bed",
+                              window_file = "../data/Example_windows_coding_for_mutation_rate_adjustment.bed",
+                              sample_size = 1911, 
+                              scale_features = c("GC_content", "div_score"),
+                              validation_chr = chr[i],
+                              mutrate_mode = "special",
+                              genes = "../data/Example_gene_prior_st_0.05.txt")
+  output_model_1[i,] <- as.vector(a)
+
+  b <- TADA_A_compare_mutrate_model(mut_file = "../data/denovo_db_Iossifov_controls_SNV_remove_recurrent_mutations.bed",
+                              window_file = "../data/Example_windows_coding_for_mutation_rate_adjustment_ERV_mutrate.bed",
+                              sample_size = 1911, 
+                              scale_features = c("GC_content", "div_score"),
+                              validation_chr = chr[i],
+                              mutrate_mode = "special",
+                              genes = "../data/Example_gene_prior_st_0.05.txt")
+  output_model_2[i,] <- as.vector(b)
+}
+```
+
+### 3-mer model
+```{r}
+knitr::kable(output_model_1)
+```
+
+### 7-mer model
+```{r}
+knitr::kable(output_model_2)
+```
+
+### comparison of loglikelihood
+```{r}
+boxplot(output_model_1$ll - output_model_2$ll)
+```

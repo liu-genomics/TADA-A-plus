@@ -149,3 +149,8 @@ From denovo-db
 
 + This paper uses 35 million extremely rare variants to estimate base-level mutation rates upon a 7-mer model with other genomic and epigenomic features.
 + The data can be downloaded [here](http://mutation.sph.umich.edu/), corresponding [GitHub](https://github.com/carjed/mr-eel)
+
+## 2.1 compare pair likelihood using the 3-mer mutation rate model and the 7-mer mutation rate model
+> Leave out one chromosome during training and calculate the likelihood on the left-out chromosome.
+
++ Data analysis results are [here](./analysis/180321_compare_mutation_rate_models.html).

@@ -153,4 +153,4 @@ From denovo-db
 ## 2.1 compare pair likelihood using the 3-mer mutation rate model and the 7-mer mutation rate model
 > Leave out one chromosome during training and calculate the likelihood on the left-out chromosome.
 
-+ Data analysis results are [here](./analysis/180321_compare_mutation_rate_models.html).
++ Data analysis for WES data results are [here](./analysis/180321_compare_mutation_rate_models.html).

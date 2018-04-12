@@ -341,36 +341,33 @@ div.tocify {
 <span class="kw">source</span>(<span class="st">&quot;../lib/TADA-A-plus.R&quot;</span>)</code></pre></div>
 <div id="adjust-mutation-rate" class="section level3">
 <h3>adjust mutation rate</h3>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">TADA_A_adjust_mutation_rate_hierarchical</span>(<span class="dt">mut_files =</span> <span class="kw">c</span>(<span class="st">&quot;../data/denovo_db_DeRubeis2014_cases_SNV_remove_recurrent_mutations_nonfunctional_syn.bed&quot;</span>,<span class="st">&quot;../data/denovo_db_Krumm_cases_SNV_remove_recurrent_mutations_nonfunctional_syn.bed&quot;</span>, <span class="st">&quot;../data/denovo_db_Krumm_controls_SNV_remove_recurrent_mutations_nonfunctional_syn.bed&quot;</span>, <span class="st">&quot;../data/denovo_db_Iossifov_cases_SNV_remove_recurrent_mutations_nonfunctional_syn.bed&quot;</span>, <span class="st">&quot;../data/denovo_db_Iossifov_controls_SNV_remove_recurrent_mutations_nonfunctional_syn.bed&quot;</span>),
+<p>Use joint model but didn’t include Krumm data, as they represent additional information from 2377 SSC dataset.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">TADA_A_adjust_mutation_rate_hierarchical</span>(<span class="dt">mut_files =</span> <span class="kw">c</span>(<span class="st">&quot;../data/denovo_db_DeRubeis2014_cases_SNV_remove_recurrent_mutations_nonfunctional_syn.bed&quot;</span>, <span class="st">&quot;../data/denovo_db_Iossifov_cases_SNV_remove_recurrent_mutations_nonfunctional_syn.bed&quot;</span>, <span class="st">&quot;../data/denovo_db_Iossifov_controls_SNV_remove_recurrent_mutations_nonfunctional_syn.bed&quot;</span>),
                             <span class="dt">window_file =</span> <span class="st">&quot;../data/Example_windows_coding_for_nonfunctional_syn_mutation_rate_adjustment_ERV_mutrate_with_additioanl_covariates.bed&quot;</span>,
-                            <span class="dt">sample_sizes =</span> <span class="kw">c</span>(<span class="dv">2270</span>, <span class="dv">2377</span>, <span class="dv">1786</span>, <span class="dv">2508</span>, <span class="dv">1911</span>),
+                            <span class="dt">sample_sizes =</span> <span class="kw">c</span>(<span class="dv">2270</span>,<span class="dv">2508</span>,<span class="dv">1911</span>),
                             <span class="dt">scale_features =</span> <span class="kw">c</span>(<span class="st">&quot;GC_content&quot;</span>, <span class="st">&quot;div_score&quot;</span>, <span class="st">&quot;RepT&quot;</span>, <span class="st">&quot;RecomRate&quot;</span>),
-                            <span class="dt">scaling_file_names =</span> <span class="kw">c</span>(<span class="st">&quot;../data/Example_windows_coding_using_nonfunctional_syn_ERV_additional_covariates_joint_model_mutrate_scaling_file_for_denovo_db_DeRubeis2014_cases_DNM.txt&quot;</span>, <span class="st">&quot;../data/Example_windows_coding_using_nonfunctional_syn_ERV_additional_covariates_joint_model_mutrate_scaling_file_for_denovo_db_Krumm_cases_DNM.txt&quot;</span>, <span class="st">&quot;../data/Example_windows_coding_using_nonfunctional_syn_ERV_additional_covariates_joint_model_mutrate_scaling_file_for_denovo_db_Krumm_controls_DNM.txt&quot;</span>,<span class="st">&quot;../data/Example_windows_coding_using_nonfunctional_syn_ERV_additional_covariates_joint_model_mutrate_scaling_file_for_denovo_db_Iossifov_cases_DNM.txt&quot;</span>, <span class="st">&quot;../data/Example_windows_coding_using_nonfunctional_syn_ERV_additional_covariates_joint_model_mutrate_scaling_file_for_denovo_db_Iossifov_controls_DNM.txt&quot;</span>),
+                            <span class="dt">scaling_file_names =</span> <span class="kw">c</span>(<span class="st">&quot;../data/Example_windows_coding_using_nonfunctional_syn_ERV_additional_covariates_joint_model_2_mutrate_scaling_file_for_denovo_db_DeRubeis2014_cases_DNM.txt&quot;</span>,<span class="st">&quot;../data/Example_windows_coding_using_nonfunctional_syn_ERV_additional_covariates_joint_model_2_mutrate_scaling_file_for_denovo_db_Iossifov_cases_DNM.txt&quot;</span>, <span class="st">&quot;../data/Example_windows_coding_using_nonfunctional_syn_ERV_additional_covariates_joint_model_2_mutrate_scaling_file_for_denovo_db_Iossifov_controls_DNM.txt&quot;</span>),
                             <span class="dt">mutrate_mode =</span> <span class="st">&quot;special&quot;</span>,
                             <span class="dt">genes =</span> <span class="st">&quot;all&quot;</span>)</code></pre></div>
 <pre><code>##                       Estimate Std. Error    z value     Pr(&gt;|z|)
-## (Intercept)       -0.528403447 0.09008315 -5.8657304 4.471599e-09
-## GC_content        -0.129433598 0.06681152 -1.9372947 5.270933e-02
-## div_score          0.083629982 0.02834026  2.9509253 3.168236e-03
-## DHS               -0.093356858 0.06456787 -1.4458717 1.482132e-01
-## H3K27AC           -0.009178280 0.08170030 -0.1123408 9.105532e-01
-## H3K27M3           -0.062300767 0.07554152 -0.8247221 4.095294e-01
-## H3K36M3            0.020368192 0.06760378  0.3012877 7.631951e-01
-## H3K4M1             0.019376670 0.07243742  0.2674953 7.890878e-01
-## H3K4M3            -0.450476115 0.08530387 -5.2808404 1.285927e-07
-## H3K9AC             0.081569714 0.06608866  1.2342467 2.171110e-01
-## H3K9M3             0.019025883 0.09070094  0.2097650 8.338511e-01
-## Lamin              0.133525814 0.07863297  1.6980893 8.949090e-02
-## RepT               0.009321280 0.03163812  0.2946218 7.682828e-01
-## RecomRate         -0.006064852 0.02911097 -0.2083356 8.349669e-01
-## study2            -1.104884067 0.12074329 -9.1506871 5.657259e-20
-## study3            -1.115497877 0.13412368 -8.3169346 9.026757e-17
-## study4             0.306906644 0.07804524  3.9324199 8.409500e-05
-## study5             0.385207405 0.08140057  4.7322444 2.220508e-06
-## GC_content:study2  0.134325705 0.12406391  1.0827138 2.789355e-01
-## GC_content:study3  0.020404280 0.14058642  0.1451369 8.846028e-01
-## GC_content:study4 -0.121518070 0.08270164 -1.4693551 1.417365e-01
-## GC_content:study5 -0.054602940 0.08597302 -0.6351172 5.253520e-01</code></pre>
+## (Intercept)       -0.516524135 0.09398617 -5.4957460 3.890622e-08
+## GC_content        -0.119901339 0.06731010 -1.7813275 7.485896e-02
+## div_score          0.079820119 0.03069059  2.6008012 9.300634e-03
+## DHS               -0.105100352 0.06983391 -1.5050046 1.323229e-01
+## H3K27AC           -0.065728854 0.08953451 -0.7341175 4.628771e-01
+## H3K27M3           -0.071462456 0.08200916 -0.8713960 3.835380e-01
+## H3K36M3            0.032309126 0.07310220  0.4419720 6.585095e-01
+## H3K4M1             0.057264124 0.07800207  0.7341360 4.628659e-01
+## H3K4M3            -0.447628058 0.09241076 -4.8438956 1.273178e-06
+## H3K9AC             0.059910986 0.07132344  0.8399901 4.009139e-01
+## H3K9M3             0.016156749 0.09795102  0.1649472 8.689855e-01
+## Lamin              0.125738338 0.08474262  1.4837673 1.378707e-01
+## RepT              -0.002655982 0.03394318 -0.0782479 9.376309e-01
+## RecomRate         -0.016500472 0.03256764 -0.5066524 6.123987e-01
+## study2             0.306909432 0.07804528  3.9324534 8.408329e-05
+## study3             0.385208405 0.08140064  4.7322528 2.220416e-06
+## GC_content:study2 -0.121542478 0.08270946 -1.4695111 1.416942e-01
+## GC_content:study3 -0.054609527 0.08597802 -0.6351568 5.253261e-01</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">temp =<span class="st"> </span><span class="dv">2</span></code></pre></div>
 <p>Setting <code>mutrate_mode = &quot;special&quot;</code> will ensure all the windows will get a scaling factor.</p>
 </div>

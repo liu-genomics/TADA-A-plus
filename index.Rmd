@@ -32,14 +32,14 @@ Use manuscript data/MSSNG/Simons_519, scaling factors are computed using WGS dat
 
 
 ### 1.1.1 manuscript meta-analysis data
-+ coding RR estimation.[link](analysis/180214_results_summary_manuscript_data_RR_estimation_with_mutrate_adjusted_for_div_coding_features.html)
++ coding RR estimation.[link](analysis/180214_results_summary_manuscript_data_RR_estimation_with_mutrate_adjusted_for_div_coding_features.html)(Mutation rate adjusted using all mutations of manuscript windows including exons, promoters and promoter-proximal non-coding regions )
 
 
 ### 1.1.2 MSSNG data
-+ coding RR estimation (scaling file doesn't account for div score).[link](analysis/180216_RR_estimate_DATA_Yuen_2017_ANNO_RR_estimate.html)
++ coding RR estimation (scaling file doesn't account for div score).[link](analysis/180216_RR_estimate_DATA_Yuen_2017_ANNO_RR_estimate.html)(Mutation rate adjusted using all mutations of manuscript windows including exons, promoters and promoter-proximal non-coding regions )
 
 + coding RR estimation (scaling file accounting for div score).[link](analysis/180216_with_div_adjusted_RR_estimate_DATA_Yuen_2017_ANNO_RR_estimate.html)
-* [Adjusting mutation rate accounting for div score](analysis/180215_recalibrate_mutation_rate_with_div_score_for_MSSNG_and_Simons_519.html)
+* [Adjusting mutation rate accounting for div score](analysis/180215_recalibrate_mutation_rate_with_div_score_for_MSSNG_and_Simons_519.html) (Mutation rate adjusted using all mutations of manuscript windows including exons, promoters and promoter-proximal non-coding regions )
 
 + About 75% of the Yuen et al. data used in the TADA-A manuscript are also found in the denovo-db Yuen data. 
 
@@ -47,20 +47,20 @@ Execution code to do data partition and reading-in is `code/pipeline00_generate_
 
 ### 1.1.3 Simons data
 
+* [Adjusting mutation rate accounting for div score](analysis/180215_recalibrate_mutation_rate_with_div_score_for_MSSNG_and_Simons_519.html) (Mutation rate adjusted using all mutations of manuscript windows including exons, promoters and promoter-proximal non-coding regions )
+
 + coding RR estimation (scaling file accounting for div score).[link](analysis/180216_with_div_adjusted_RR_estimate_Simons_519_new_version_ANNO_RR_estimate.html)
-* [Adjusting mutation rate accounting for div score](analysis/180215_recalibrate_mutation_rate_with_div_score_for_MSSNG_and_Simons_519.html)
 
 ### 1.1.4 Wong NC et al. control data
-+ coding RR estimation (scaling factors were calculated accouting for div score, using coding sequences and promoter-proximal non-coding sequences, used in the manuscript). [link](analysis/180221_with_div_adjusted_RR_estimate_Wong_control_ANNO_RR_estimate.html)
++ coding RR estimation (scaling factors were calculated accouting for div score, using coding sequences and promoter-proximal non-coding sequences, used in the manuscript). [link](analysis/180221_with_div_adjusted_RR_estimate_Wong_control_ANNO_RR_estimate.html) (Mutation rate adjusted using all mutations of manuscript windows including exons, promoters and promoter-proximal non-coding regions )
 
 
 ### 1.1.5 Netherland 258 control
 
-+ coding RR estimation (scaling factors were calculated accouting for div score, using coding sequences and promoter-proximal non-coding sequences, used in the manuscript[mutation rate adjustment](analysis/18308_recalibrate_mutation_rate_with_div_score_for_WES_data_using_nonTADA_genes.html))
 
-+ [coding RR estimation accouting for div score](analysis/180221_with_div_adjusted_RR_estimate_Neitherland_control_ANNO_RR_estimate.html)
++ coding RR estimation, mutation adjustment using all genes in the manuscript windows, including coding sequences, promoters and promoter-proximal noncoding regions, 3-mer mutation rate model [coding RR estimation accouting for div score](analysis/180221_with_div_adjusted_RR_estimate_Neitherland_control_ANNO_RR_estimate.html)
 
-+ coding RR estimation accouting for div score, using the 7-mer ERV mutation rate mode, using nonTADA genes to adjust mutation rates for the coding part [link](analysis/180315_with_div_nonTADA_mutrate_calibration_adjusted_RR_estimate_ERV_mutrate_DATA_Neitherland_258_control_ANNO_RR_estimate.html).
++ coding RR estimation accouting for div score, using the 7-mer ERV mutation rate mode, using nonTADA genes in coding regions to adjust mutation rates for the coding part [link](analysis/180315_with_div_nonTADA_mutrate_calibration_adjusted_RR_estimate_ERV_mutrate_DATA_Neitherland_258_control_ANNO_RR_estimate.html).
 
 [Adjust mutation rates using the coding parts, nonfunctional synonymous mutations, 7-mer ERV mutation rates model](analysis/180405_recalibrate_mutation_rate_with_div_score_for_WGS_data_coding_part_using_nonfunctional_synonymous_ERV_mutrate.html)
 
@@ -72,9 +72,7 @@ Execution code to do data partition and reading-in is `code/pipeline00_generate_
 
 ### 1.1.5 Iceland 1549 control control
 
-+ coding RR estimation (scaling factors were calculated accouting for div score, using coding sequences and promoter-proximal non-coding sequences, used in the manuscript[mutation rate adjustment](analysis/18308_recalibrate_mutation_rate_with_div_score_for_WES_data_using_nonTADA_genes.html))
-
-+ [coding RR estimation accouting for div score](analysis/180221_with_div_adjusted_RR_estimate_Iceland_control_ANNO_RR_estimate.html)
++ coding RR estimation, mutation adjustment using all genes in the manuscript windows, including coding sequences, promoters and promoter-proximal noncoding regions, 3-mer mutation rate model [coding RR estimation accouting for div score](analysis/180221_with_div_adjusted_RR_estimate_Iceland_control_ANNO_RR_estimate.html).
 
 + coding RR estimation accouting for div score, using the 7-mer ERV mutation rate model, using nonTADA genes to adjust mutation rates for the coding part [link](analysis/180315_with_div_nonTADA_mutrate_calibration_adjusted_RR_estimate_ERV_mutrate_DATA_Iceland_1594_control_ANNO_RR_estimate.html).
 
@@ -108,6 +106,11 @@ From denovo-db
 
 + [Ajust mutation rate using nonfunctional synonymous mutations, using the 7-mer ERV mutation rate, additional rate-adjusting covariates, jointly model with data-specific covariates](analysis/180405_recalibrate_mutation_rate_with_div_score_for_WES_data_using_nonfunctional_syn_ERV_mutrate_with_additional_covariates_joint_model.html)
 
++ [Adjust mutation rate using nonfunctional synonymous mutations, using the 7-mer ERV mutation rate, additional rate-adjusting covariates, jointly model with data-specific covariates, without using Krumm data, without X or Y chromosomes](analysis/180410_recalibrate_mutation_rate_with_div_score_for_WES_data_using_nonfunctional_syn_ERV_mutrate_with_additional_covariates_noXY_joint_model.html)
+
+> It turns out that Krumm data collects mutations that were not previously discovered by Iossifov (for some major part of SSC data analyzed by Iossifov et al.)
+
+> The mr-eel pipeline has not been built to retireve mutation rates well on ChrX/Y. In practice, some of the ChrX/Y regions would be recovered but not all of them would. 
 
 ### 1.2.1 Iossifov data, cases
 + 2767 coding mutations after filtering, 490 nonfunctional syn mutations, Adjust mutation rate using nonfunctional synonymous mutations.[link](analysis/180221_with_div_adjusted_RR_estimate_Iossifov_ANNO_RR_estimate.html)
@@ -122,6 +125,8 @@ From denovo-db
 
 + Adjust mutation rate using nonfunctional synonymous mutations of all genes, 7-mer ERV mutation rate model, more rate-adjusting variates, joint mutation rates adjustment model, intercepts and GC effect are study-specific [link](analysis/180405_with_div_nonfunctional_syn_mutrate_calibration_adjusted_RR_estimate_ERV_mutrate_additional_covariates_joint_model_DATA_Iossifov_ANNO_RR_estimate.html)
 
++ Adjust mutation rate using nonfunctional synonymous mutations of all genes, 7-mer ERV mutation rate model, more rate-adjusting variates, joint mutation rates adjustment model, intercepts and GC effect are study-specific, noXY chromosomes, no Krumm data when jointly adjusting mutation rates [link](analysis/180410_with_div_nonfunctional_syn_mutrate_calibration_adjusted_RR_estimate_ERV_mutrate_additional_covariates_joint_model_noXY_DATA_Iossifov_ANNO_RR_estimate.html)
+
 ### 1.2.2 Iossifov data, controls
 + Use unaffected control data, Adjust mutation rate using nonfunctional synonymous mutations.[link](analysis/180221_with_div_adjusted_RR_estimate_Iossifov_control_ANNO_RR_estimate.html)
 
@@ -132,6 +137,10 @@ From denovo-db
 + Use unaffected control data, Adjust mutation rate using nonfunctional synonymous mutations, 7-mer ERV mutation rate model.[link](analysis/180313_with_div_nonfunctional_syn_mutrate_calibration_adjusted_RR_estimate_ERV_mutrate_DATA_Iossifov_control_ANNO_RR_estimate.html)
 
 + Adjust mutation rate using nonfunctional synonymous mutations of all genes, 7-mer ERV mutation rate model, more rate-adjusting variates [link](analysis/180405_with_div_nonfunctional_syn_mutrate_calibration_adjusted_RR_estimate_ERV_mutrate_additional_covariates_DATA_Iossifov_control_ANNO_RR_estimate.html)
+
++ Adjust mutation rate using nonfunctional synonymous mutations of all genes, 7-mer ERV mutation rate model, more rate-adjusting variates, joint mutation rates adjustment model, intercepts and GC effect are study-specific [link](analysis/180405_with_div_nonfunctional_syn_mutrate_calibration_adjusted_RR_estimate_ERV_mutrate_additional_covariates_joint_model_DATA_Iossifov_control_ANNO_RR_estimate.html)
+
++ Adjust mutation rate using nonfunctional synonymous mutations of all genes, 7-mer ERV mutation rate model, more rate-adjusting variates, joint mutation rates adjustment model, intercepts and GC effect are study-specific, noXY chromosomes, no Krumm data when jointly adjusting mutation rates [link](analysis/180410_with_div_nonfunctional_syn_mutrate_calibration_adjusted_RR_estimate_ERV_mutrate_additional_covariates_joint_model_noXY_DATA_Iossifov_control_ANNO_RR_estimate.html)
 
 
 ### 1.2.3 Krumm data, cases, 
@@ -172,6 +181,7 @@ From denovo-db
 
 + Adjust mutation rate using nonfunctional synonymous mutations of all genes, 7-mer ERV mutation rate model, more rate-adjusting variates, joint mutation rates adjustment model, intercepts and GC effect are study-specific [link](analysis/180405_with_div_nonfunctional_syn_mutrate_calibration_adjusted_RR_estimate_ERV_mutrate_additional_covariates_joint_model_DATA_DeRubeis_ANNO_RR_estimate.html)
 
++ Adjust mutation rate using nonfunctional synonymous mutations of all genes, 7-mer ERV mutation rate model, more rate-adjusting variates, joint mutation rates adjustment model, intercepts and GC effect are study-specific, noXY chromosomes, no Krumm data when jointly adjusting mutation rates [link](analysis/180410_with_div_nonfunctional_syn_mutrate_calibration_adjusted_RR_estimate_ERV_mutrate_additional_covariates_joint_model_noXY_DATA_DeRubeis_ANNO_RR_estimate.html)
 
 ## 1.3 simulation results
 + nonfunctioal synonymous mutations and LoF mutations (logRR as 0 and 3, respectively)[link](analysis/180301_simulation_ANNO_RR_estimate.html).

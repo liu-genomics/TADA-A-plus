@@ -2,10 +2,15 @@
 # Usage sh script.sh [prifix] [mut_files] [mutrate_scaling_file] [sample_size] [nonAS_annotation] [AS_annotation] 
 # [prefix] is a direicoty that contains all the partitioned R and sbatch files for one pair of mutation data and annotation data
 
+#!/usr/bin/env bash
+
 mkdir -p $1
 cd $1
 
-MutratePrefix=${7-../other_annotations/Mark_Daly_mutrate/Example_windows_extended_1bp_for_getting_base_level_mutrate.bed.fasta.tri}
+MutratePrefix=${7:-../other_annotations/Mark_Daly_mutrate/Example_windows_extended_1bp_for_getting_base_level_mutrate.bed.fasta.tri}
+WindowPrefix=${8:-../data/windows_partition/Example_windows_with_div_score_coding_}
+
+
 for i in {00..09} 
 do
 echo "
@@ -21,7 +26,7 @@ source(\"../TADA-A/lib/TADA_Annotation.R\")
 
 
 compact_data_1 <- TADA_A_read_info(mut_files = c(\"$2\"),
-                                 window_file = \"../data/windows_partition/Example_windows_with_div_score_coding_$i.with_header.txt\",
+                                 window_file = \"$WindowPrefix$i.with_header.txt\",
                                  mutrate_scaling_files = c(\"$3\"),
                                  sample_sizes = c($4),
                                  gene_prior_file = \"../data/Example_gene_uniform_prior.txt\",

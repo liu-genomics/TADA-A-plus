@@ -312,15 +312,15 @@ TADA-A-plus<img src="website_materials/research_website_logo.png"  style="float:
 <div id="manuscript-meta-analysis-data" class="section level3">
 <h3>1.1.1 manuscript meta-analysis data</h3>
 <ul>
-<li>coding RR estimation.<a href="analysis/180214_results_summary_manuscript_data_RR_estimation_with_mutrate_adjusted_for_div_coding_features.html">link</a></li>
+<li>coding RR estimation.<a href="analysis/180214_results_summary_manuscript_data_RR_estimation_with_mutrate_adjusted_for_div_coding_features.html">link</a>(Mutation rate adjusted using all mutations of manuscript windows including exons, promoters and promoter-proximal non-coding regions )</li>
 </ul>
 </div>
 <div id="mssng-data" class="section level3">
 <h3>1.1.2 MSSNG data</h3>
 <ul>
-<li><p>coding RR estimation (scaling file doesn’t account for div score).<a href="analysis/180216_RR_estimate_DATA_Yuen_2017_ANNO_RR_estimate.html">link</a></p></li>
+<li><p>coding RR estimation (scaling file doesn’t account for div score).<a href="analysis/180216_RR_estimate_DATA_Yuen_2017_ANNO_RR_estimate.html">link</a>(Mutation rate adjusted using all mutations of manuscript windows including exons, promoters and promoter-proximal non-coding regions )</p></li>
 <li>coding RR estimation (scaling file accounting for div score).<a href="analysis/180216_with_div_adjusted_RR_estimate_DATA_Yuen_2017_ANNO_RR_estimate.html">link</a></li>
-<li><p><a href="analysis/180215_recalibrate_mutation_rate_with_div_score_for_MSSNG_and_Simons_519.html">Adjusting mutation rate accounting for div score</a></p></li>
+<li><p><a href="analysis/180215_recalibrate_mutation_rate_with_div_score_for_MSSNG_and_Simons_519.html">Adjusting mutation rate accounting for div score</a> (Mutation rate adjusted using all mutations of manuscript windows including exons, promoters and promoter-proximal non-coding regions )</p></li>
 <li><p>About 75% of the Yuen et al. data used in the TADA-A manuscript are also found in the denovo-db Yuen data.</p></li>
 </ul>
 <p>Execution code to do data partition and reading-in is <code>code/pipeline00_generate_R_code_for_estimating_RR_using_partitioned_data</code></p>
@@ -328,14 +328,14 @@ TADA-A-plus<img src="website_materials/research_website_logo.png"  style="float:
 <div id="simons-data" class="section level3">
 <h3>1.1.3 Simons data</h3>
 <ul>
-<li>coding RR estimation (scaling file accounting for div score).<a href="analysis/180216_with_div_adjusted_RR_estimate_Simons_519_new_version_ANNO_RR_estimate.html">link</a></li>
-<li><a href="analysis/180215_recalibrate_mutation_rate_with_div_score_for_MSSNG_and_Simons_519.html">Adjusting mutation rate accounting for div score</a></li>
+<li><p><a href="analysis/180215_recalibrate_mutation_rate_with_div_score_for_MSSNG_and_Simons_519.html">Adjusting mutation rate accounting for div score</a> (Mutation rate adjusted using all mutations of manuscript windows including exons, promoters and promoter-proximal non-coding regions )</p></li>
+<li><p>coding RR estimation (scaling file accounting for div score).<a href="analysis/180216_with_div_adjusted_RR_estimate_Simons_519_new_version_ANNO_RR_estimate.html">link</a></p></li>
 </ul>
 </div>
 <div id="wong-nc-et-al.-control-data" class="section level3">
 <h3>1.1.4 Wong NC et al. control data</h3>
 <ul>
-<li>coding RR estimation (scaling factors were calculated accouting for div score, using coding sequences and promoter-proximal non-coding sequences, used in the manuscript). <a href="analysis/180221_with_div_adjusted_RR_estimate_Wong_control_ANNO_RR_estimate.html">link</a></li>
+<li>coding RR estimation (scaling factors were calculated accouting for div score, using coding sequences and promoter-proximal non-coding sequences, used in the manuscript). <a href="analysis/180221_with_div_adjusted_RR_estimate_Wong_control_ANNO_RR_estimate.html">link</a> (Mutation rate adjusted using all mutations of manuscript windows including exons, promoters and promoter-proximal non-coding regions )</li>
 </ul>
 </div>
 <div id="netherland-258-control" class="section level3">
@@ -408,7 +408,14 @@ TADA-A-plus<img src="website_materials/research_website_logo.png"  style="float:
 <li><p><a href="analysis/180315_recalibrate_mutation_rate_with_div_score_for_WES_data_using_nonfunctional_syn_ERV_mutrate.html">Ajust mutation rate using nonfunctional synonymous mutations, using the 7-mer ERV mutation rate</a></p></li>
 <li><p><a href="analysis/180405_recalibrate_mutation_rate_with_div_score_for_WES_data_using_nonfunctional_syn_ERV_mutrate_with_additional_covariates.html">Ajust mutation rate using nonfunctional synonymous mutations, using the 7-mer ERV mutation rate, additional rate-adjusting covariates</a></p></li>
 <li><p><a href="analysis/180405_recalibrate_mutation_rate_with_div_score_for_WES_data_using_nonfunctional_syn_ERV_mutrate_with_additional_covariates_joint_model.html">Ajust mutation rate using nonfunctional synonymous mutations, using the 7-mer ERV mutation rate, additional rate-adjusting covariates, jointly model with data-specific covariates</a></p></li>
+<li><p><a href="analysis/180410_recalibrate_mutation_rate_with_div_score_for_WES_data_using_nonfunctional_syn_ERV_mutrate_with_additional_covariates_noXY_joint_model.html">Adjust mutation rate using nonfunctional synonymous mutations, using the 7-mer ERV mutation rate, additional rate-adjusting covariates, jointly model with data-specific covariates, without using Krumm data, without X or Y chromosomes</a></p></li>
 </ul>
+<blockquote>
+<p>It turns out that Krumm data collects mutations that were not previously discovered by Iossifov (for some major part of SSC data analyzed by Iossifov et al.)</p>
+</blockquote>
+<blockquote>
+<p>The mr-eel pipeline has not been built to retireve mutation rates well on ChrX/Y. In practice, some of the ChrX/Y regions would be recovered but not all of them would.</p>
+</blockquote>
 <div id="iossifov-data-cases" class="section level3">
 <h3>1.2.1 Iossifov data, cases</h3>
 <ul>
@@ -418,6 +425,7 @@ TADA-A-plus<img src="website_materials/research_website_logo.png"  style="float:
 <li><p>Adjust mutation rate using nonfunctional synonymous mutations of all genes, 7-mer ERV mutation rate model. <a href="analysis/180313_with_div_nonfunctional_syn_mutrate_calibration_adjusted_RR_estimate_ERV_mutrate_DATA_Iossifov_ANNO_RR_estimate.html">link</a></p></li>
 <li><p>Adjust mutation rate using nonfunctional synonymous mutations of all genes, 7-mer ERV mutation rate model, more rate-adjusting variates <a href="analysis/180405_with_div_nonfunctional_syn_mutrate_calibration_adjusted_RR_estimate_ERV_mutrate_additional_covariates_DATA_Iossifov_ANNO_RR_estimate.html">link</a></p></li>
 <li><p>Adjust mutation rate using nonfunctional synonymous mutations of all genes, 7-mer ERV mutation rate model, more rate-adjusting variates, joint mutation rates adjustment model, intercepts and GC effect are study-specific <a href="analysis/180405_with_div_nonfunctional_syn_mutrate_calibration_adjusted_RR_estimate_ERV_mutrate_additional_covariates_joint_model_DATA_Iossifov_ANNO_RR_estimate.html">link</a></p></li>
+<li><p>Adjust mutation rate using nonfunctional synonymous mutations of all genes, 7-mer ERV mutation rate model, more rate-adjusting variates, joint mutation rates adjustment model, intercepts and GC effect are study-specific, noXY chromosomes, no Krumm data when jointly adjusting mutation rates <a href="analysis/180410_with_div_nonfunctional_syn_mutrate_calibration_adjusted_RR_estimate_ERV_mutrate_additional_covariates_joint_model_noXY_DATA_Iossifov_ANNO_RR_estimate.html">link</a></p></li>
 </ul>
 </div>
 <div id="iossifov-data-controls" class="section level3">
@@ -428,6 +436,8 @@ TADA-A-plus<img src="website_materials/research_website_logo.png"  style="float:
 <li><p>Use unaffected control data, Adjust mutation rate using nonTADA genes, 7-mer ERV mutation rate model.<a href="analysis/180313_with_div_nonTADA_mutrate_calibration_adjusted_RR_estimate_ERV_mutrate_DATA_Iossifov_control_ANNO_RR_estimate.html">link</a></p></li>
 <li><p>Use unaffected control data, Adjust mutation rate using nonfunctional synonymous mutations, 7-mer ERV mutation rate model.<a href="analysis/180313_with_div_nonfunctional_syn_mutrate_calibration_adjusted_RR_estimate_ERV_mutrate_DATA_Iossifov_control_ANNO_RR_estimate.html">link</a></p></li>
 <li><p>Adjust mutation rate using nonfunctional synonymous mutations of all genes, 7-mer ERV mutation rate model, more rate-adjusting variates <a href="analysis/180405_with_div_nonfunctional_syn_mutrate_calibration_adjusted_RR_estimate_ERV_mutrate_additional_covariates_DATA_Iossifov_control_ANNO_RR_estimate.html">link</a></p></li>
+<li><p>Adjust mutation rate using nonfunctional synonymous mutations of all genes, 7-mer ERV mutation rate model, more rate-adjusting variates, joint mutation rates adjustment model, intercepts and GC effect are study-specific <a href="analysis/180405_with_div_nonfunctional_syn_mutrate_calibration_adjusted_RR_estimate_ERV_mutrate_additional_covariates_joint_model_DATA_Iossifov_control_ANNO_RR_estimate.html">link</a></p></li>
+<li><p>Adjust mutation rate using nonfunctional synonymous mutations of all genes, 7-mer ERV mutation rate model, more rate-adjusting variates, joint mutation rates adjustment model, intercepts and GC effect are study-specific, noXY chromosomes, no Krumm data when jointly adjusting mutation rates <a href="analysis/180410_with_div_nonfunctional_syn_mutrate_calibration_adjusted_RR_estimate_ERV_mutrate_additional_covariates_joint_model_noXY_DATA_Iossifov_control_ANNO_RR_estimate.html">link</a></p></li>
 </ul>
 </div>
 <div id="krumm-data-cases" class="section level3">
@@ -460,6 +470,7 @@ TADA-A-plus<img src="website_materials/research_website_logo.png"  style="float:
 <li><p>Adjust mutation rate using nonfunctional synonymous mutations of all genes, 7-mer ERV mutation rate model. <a href="analysis/180313_with_div_nonfunctional_syn_mutrate_calibration_adjusted_RR_estimate_ERV_mutrate_DATA_DeRubeis_ANNO_RR_estimate.html">link</a></p></li>
 <li><p>Adjust mutation rate using nonfunctional synonymous mutations of all genes, 7-mer ERV mutation rate model, more rate-adjusting variates <a href="analysis/180405_with_div_nonfunctional_syn_mutrate_calibration_adjusted_RR_estimate_ERV_mutrate_additional_covariates_DATA_DeRubeis_ANNO_RR_estimate.html">link</a></p></li>
 <li><p>Adjust mutation rate using nonfunctional synonymous mutations of all genes, 7-mer ERV mutation rate model, more rate-adjusting variates, joint mutation rates adjustment model, intercepts and GC effect are study-specific <a href="analysis/180405_with_div_nonfunctional_syn_mutrate_calibration_adjusted_RR_estimate_ERV_mutrate_additional_covariates_joint_model_DATA_DeRubeis_ANNO_RR_estimate.html">link</a></p></li>
+<li><p>Adjust mutation rate using nonfunctional synonymous mutations of all genes, 7-mer ERV mutation rate model, more rate-adjusting variates, joint mutation rates adjustment model, intercepts and GC effect are study-specific, noXY chromosomes, no Krumm data when jointly adjusting mutation rates <a href="analysis/180410_with_div_nonfunctional_syn_mutrate_calibration_adjusted_RR_estimate_ERV_mutrate_additional_covariates_joint_model_noXY_DATA_DeRubeis_ANNO_RR_estimate.html">link</a></p></li>
 </ul>
 </div>
 </div>

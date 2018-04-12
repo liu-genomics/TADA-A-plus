@@ -54,6 +54,7 @@ Execution code to do data partition and reading-in is `code/pipeline00_generate_
 ### 1.1.4 Wong NC et al. control data
 + coding RR estimation (scaling factors were calculated accouting for div score, using coding sequences and promoter-proximal non-coding sequences, used in the manuscript). [link](analysis/180221_with_div_adjusted_RR_estimate_Wong_control_ANNO_RR_estimate.html) (Mutation rate adjusted using all mutations of manuscript windows including exons, promoters and promoter-proximal non-coding regions )
 
++ coding RR estimation accouting for div score, using the 7-mer ERV mutation rate mode, using all mutations of coding, promoters, promoter-proximal noncoding regions and UTRs to to adjust mutation rates. Each study has its own separate mutation rate adjusting model (The file title is a bit misleading as it contains "joint_model", thought mutation rate adjustment were performed separately here) [link](analysis/180412_with_div_mutrate_calibration_adjusted_RR_estimate_ERV_mutrate_additional_covariates_joint_model_noXY_DATA_Wong_NC_control_ANNO_RR_estimate.html).
 
 ### 1.1.5 Netherland 258 control
 
@@ -68,6 +69,8 @@ Execution code to do data partition and reading-in is `code/pipeline00_generate_
 
 + coding RR estimation accouting for div score, using the 7-mer ERV mutation rate mode, using nonfunctional syn mutations to adjust mutation rates for the coding part [link](analysis/180315_with_div_nonfunctional_syn_mutrate_calibration_adjusted_RR_estimate_ERV_mutrate_DATA_Neitherland_258_control_ANNO_RR_estimate.html).
 
++ coding RR estimation accouting for div score, using the 7-mer ERV mutation rate mode, using all mutations of coding, promoters, promoter-proximal noncoding regions and UTRs to to adjust mutation rates. Each study has its own separate mutation rate adjusting model [link](analysis/180412_with_div_mutrate_calibration_adjusted_RR_estimate_ERV_mutrate_additional_covariates_joint_model_noXY_DATA_Iceland_control_ANNO_RR_estimate.html).
+
 
 
 ### 1.1.5 Iceland 1549 control control
@@ -77,6 +80,8 @@ Execution code to do data partition and reading-in is `code/pipeline00_generate_
 + coding RR estimation accouting for div score, using the 7-mer ERV mutation rate model, using nonTADA genes to adjust mutation rates for the coding part [link](analysis/180315_with_div_nonTADA_mutrate_calibration_adjusted_RR_estimate_ERV_mutrate_DATA_Iceland_1594_control_ANNO_RR_estimate.html).
 
 + coding RR estimation accouting for div score, using the 7-mer ERV mutation rate mode, using nonfunctional syn mutations to adjust mutation rates for the coding part [link](analysis/180315_with_div_nonfunctional_syn_mutrate_calibration_adjusted_RR_estimate_ERV_mutrate_DATA_Iceland_1594_control_ANNO_RR_estimate.html).
+
++ coding RR estimation accouting for div score, using the 7-mer ERV mutation rate mode, using all mutations of coding, promoters, promoter-proximal noncoding regions and UTRs to to adjust mutation rates. Each study has its own separate mutation rate adjusting model (The file title is a bit misleading as it contains "joint_model", thought mutation rate adjustment were performed separately here) [link](analysis/180412_with_div_mutrate_calibration_adjusted_RR_estimate_ERV_mutrate_additional_covariates_joint_model_noXY_DATA_Iceland_control_ANNO_RR_estimate.html).
 
 
 ## 1.2 For WES data

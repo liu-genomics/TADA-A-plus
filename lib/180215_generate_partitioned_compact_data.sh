@@ -5,7 +5,7 @@
 #!/usr/bin/env bash
 
 MutratePrefix=${5:-../other_annotations/Mark_Daly_mutrate/Example_windows_extended_1bp_for_getting_base_level_mutrate.bed.fasta.tri}
-WindowPrefix=${6:-../data/windows_partition/Example_windows_with_div_score_coding}
+WindowPrefix=${6:-../data/windows_partition/Example_windows_with_div_score_coding_}
 
 
 

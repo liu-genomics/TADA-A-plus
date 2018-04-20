@@ -361,6 +361,14 @@ TADA-A-plus<img src="website_materials/research_website_logo.png"  style="float:
 <li><p>coding RR estimation accouting for div score, using the 7-mer ERV mutation rate mode, using all mutations of coding, promoters, promoter-proximal noncoding regions and UTRs to to adjust mutation rates. Each study has its own separate mutation rate adjusting model (The file title is a bit misleading as it contains “joint_model”, thought mutation rate adjustment were performed separately here) <a href="analysis/180412_with_div_mutrate_calibration_adjusted_RR_estimate_ERV_mutrate_additional_covariates_joint_model_noXY_DATA_Iceland_control_ANNO_RR_estimate.html">link</a>.</p></li>
 </ul>
 </div>
+<div id="simons-519-wgs-control" class="section level3">
+<h3>1.1.6 Simons 519 WGS control</h3>
+<ul>
+<li><p><a href="/analysis/180417_recalibrate_mutation_rate_with_div_score_for_WGS_Simons_control_data_coding_part_using_nonfunctional_synonymous_ERV_mutrate_additional_covariates_noXY.html">Recalibrate mutation rates</a>.</p></li>
+<li><p>coding RR estimation accouting for div score, using the 7-mer ERV mutation rate mode, using nonfunctional syn mutations to adjust mutation rates for the coding part <a href="analysis/180417_with_div_mutrate_calibration_adjusted_RR_estimate_nonfunctional_syn_ERV_mutrate_additional_covariates_noXY_DATA_Simons_new_control_cases_ANNO_RR_estimate.html">link</a>.</p></li>
+<li><p>coding RR estimation accouting for div score, using the 7-mer ERV mutation rate mode, using all mutations of coding, promoters, promoter-proximal noncoding regions and UTRs to to adjust mutation rates. Each study has its own separate mutation rate adjusting model (The file title is a bit misleading as it contains “joint_model”, thought mutation rate adjustment were performed separately here) <a href="analysis/180417_with_div_mutrate_calibration_adjusted_RR_estimate_ERV_mutrate_additional_covariates_noXY_DATA_Simons_new_control_cases_ANNO_RR_estimate.html">link</a>.</p></li>
+</ul>
+</div>
 </div>
 <div id="for-wes-data" class="section level2">
 <h2>1.2 For WES data</h2>
@@ -473,6 +481,7 @@ TADA-A-plus<img src="website_materials/research_website_logo.png"  style="float:
 <li><p>Adjust mutation rate using nonfunctional synonymous mutations of all genes, 7-mer ERV mutation rate model, more rate-adjusting variates, joint mutation rates adjustment model, intercepts and GC effect are study-specific <a href="analysis/180405_with_div_nonfunctional_syn_mutrate_calibration_adjusted_RR_estimate_ERV_mutrate_additional_covariates_joint_model_DATA_DeRubeis_ANNO_RR_estimate.html">link</a></p></li>
 <li><p>Adjust mutation rate using nonfunctional synonymous mutations of all genes, 7-mer ERV mutation rate model, more rate-adjusting variates, joint mutation rates adjustment model, intercepts and GC effect are study-specific, noXY chromosomes, no Krumm data when jointly adjusting mutation rates <a href="analysis/180410_with_div_nonfunctional_syn_mutrate_calibration_adjusted_RR_estimate_ERV_mutrate_additional_covariates_joint_model_noXY_DATA_DeRubeis_ANNO_RR_estimate.html">link</a></p></li>
 </ul>
+<p><strong>Some diagnostics of the problem in mutation rate adjustment</strong> 1. The ratio of syn. number and nonsyn. number in different studies.<a href="analysis/180413_diagnostics_of_the_number_of_syn_and_nonsyn_mutations_across_studies.html">link</a></p>
 </div>
 </div>
 <div id="simulation-results" class="section level2">
@@ -501,7 +510,10 @@ TADA-A-plus<img src="website_materials/research_website_logo.png"  style="float:
 <p>Leave out one chromosome during training and calculate the likelihood on the left-out chromosome.</p>
 </blockquote>
 <ul>
-<li>Data analysis for WES data results are <a href="./analysis/180321_compare_mutation_rate_models.html">here</a>.</li>
+<li><p>Data analysis for WES data, using nonTADA genes to adjust for the effects of <code>div_score</code> and <code>GC_content</code><a href="./analysis/180321_compare_mutation_rate_models.html">here</a>.</p></li>
+<li><p>Data analysis for WES data, using nonfunctional synonymous mutatoins to adjust for the effects of <code>div_score</code> and <code>GC_content</code><a href="./analysis/180417_compare_mutation_rate_models.html">here</a>.</p></li>
+<li><p>Data analysis for WES data, using nonfunctional synonymous mutatoins, and addtional covaraites from the ERV model to adjust for the effects of <code>div_score</code> and <code>GC_content</code>, <code>RepT</code>, , <code>RecomboRate</code>, and several other epigenomic annotations<a href="./analysis/180418_compare_mutation_rate_models_with_additional_covariates.html">here</a>.</p></li>
+<li><p>Data analysis for simulated data, data is simulated with the 7-mer ERV model, and fitted with both ERV model and the 3-mer Samocha model separately <a href="./analysis/180419_simulate_mutations_and_fit_mutation_rate_model.html">here</a>.</p></li>
 </ul>
 </div>
 </div>

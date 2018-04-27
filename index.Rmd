@@ -226,4 +226,3 @@ From denovo-db
 + Data analysis for simulated data, data is simulated with the 7-mer ERV model, and fitted with both ERV model and the 3-mer Samocha model separately [here](./analysis/180419_simulate_mutations_and_fit_mutation_rate_model.html). 
 
 
-

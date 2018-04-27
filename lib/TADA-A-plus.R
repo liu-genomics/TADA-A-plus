@@ -1,6 +1,11 @@
-TADA_A_compare_mutrate_model <- function(mut_file, window_file, sample_size, scale_features, validation_chr = "chr1", mutrate_mode = "regular", genes = "all"){
+TADA_A_compare_mutrate_model <- function(mut_file, window_file, sample_size, scale_features, validation_chr = "chr1", mutrate_mode = "regular", genes = "all", validation_level = "window", 
+                                         mutrate_ref_files = c("../other_annotations/ERV_mutrate/Example_windows_coding_noncoding_UTRs_ERV.mutrate.standardized.alt_A.mutrate.bw",
+                                                               "../other_annotations/ERV_mutrate/Example_windows_coding_noncoding_UTRs_ERV.mutrate.standardized.alt_C.mutrate.bw",
+                                                               "../other_annotations/ERV_mutrate/Example_windows_coding_noncoding_UTRs_ERV.mutrate.standardized.alt_G.mutrate.bw",
+                                                               "../other_annotations/ERV_mutrate/Example_windows_coding_noncoding_UTRs_ERV.mutrate.standardized.alt_T.mutrate.bw"),
+                                         node_n = 1){
   # [mut_file] is the file with DNM infomation in a BED format. 0-based start and 1-based end. e.g., "../data/Example_windows.bed"
-  # The first 4 columns must be chr, start, end, and site_index of genomic windows.
+  # The first 4 columns must be chr, start, end, and site_index of genomic windows. if [validation_level] is set to be "base", Then need to have two additional columns as ref and alt alleles.
   # [window_file] is the file with genomic windows. Each line represents one window. The columns are "chr", "start", "end", "genename", and "mutrate", followed by features that might affect local background mutation rate.
   # [sample_size] is the number of individuals. 
   # [scale_features] is a vector of the names of features that need to be scaled, this is recommended to apply to continuous features, such as GC content, to make easier the interpretation of the effect sizes of features. 
@@ -12,6 +17,9 @@ TADA_A_compare_mutrate_model <- function(mut_file, window_file, sample_size, sca
   # not be 0, thus the bases in these windows are informative. If [genes] set to be not "all", then must set [mutrate_mode] to "special".
   # [genes] could be "all", or a list of genes. If set to be "all", all windows will be used to adjust mutation rates. Otherwise, only windows with a gene name that 
   # is included in the list of genes specified by [genes] will be used. 
+  # [validation_level] if "window", ll will be calculated at the window level for the validation chromosome. if "base", likelihood will be calculated at the base level. In this situation, [mutrate_ref_files], which is the 
+  # [node_n] is the number of nodes used to run a certain chunk of the code, default is 1
+  # base level mutation rate ref needs to be provided.
   # the output of this function is the loglikelihood of observing data given the estimated parameters from the training model. THe validation is only performed on the validation
   # chromosome indicated by [validation_chr], the training model didn't use any information from the 
   
@@ -65,8 +73,64 @@ TADA_A_compare_mutrate_model <- function(mut_file, window_file, sample_size, sca
     coverage <- data.table(coverage, scaling_factor = scaling_factor)
     coverage$adjusted_mutrate <- 2 * sample_size * coverage$mutrate * coverage$scaling_factor
     coverage_validation <- coverage[mutrate != 0 & chr == validation_chr & is.element(genename, target_genes)]
-    ll <- sum(mapply(dpois, coverage_validation$mut_count, coverage_validation$adjusted_mutrate, MoreArgs = list(log = TRUE)))
+    if(validation_level == "window"){
+      ll <- sum(mapply(dpois, coverage_validation$mut_count, coverage_validation$adjusted_mutrate, MoreArgs = list(log = TRUE)))
+    }else if(validation_level == "base"){
+      alt_letters <- c("A", "C", "G", "T")
+      window_expansion <- function(table_row){
+        start <- seq(as.numeric(table_row[2]),as.numeric(table_row[3])-1)
+        data.frame(table_row[1], start, start+1, paste(table_row["chr"],table_row["genename"],start,sep = "_"), as.numeric(table_row["scaling_factor.V1"]))
+      }
+      if(node_n != 1){
+        coverage_validation_temp <- rbindlist(parApply(cl, coverage_validation, 1, window_expansion))
+      }else{
+        coverage_validation_temp <- rbindlist(apply(coverage_validation, 1, window_expansion))
+      }
+      system("echo \"Finished window expansion at the validated chromosome\"")
+      system("date")
+      colnames(coverage_validation_temp) <- c("chr","start","end","base_ID", "scaling_factor")  
+      coverage_validation_temp <- coverage_validation_temp[!duplicated(base_ID)]
+      coverage_validation_temp$start <- as.integer(coverage_validation_temp$start)
+      coverage_validation_temp$end <- as.integer(coverage_validation_temp$end)
+      # write out a bed file to get base-level mutation rates
+      fwrite(coverage_validation_temp[,1:4],paste(prefix, "_temp_for_mutrate.bed", sep = ""), col.names = FALSE, row.names = FALSE, sep = "\t", quote = FALSE)
+      # read in allele-specific base-level mutation rate, and record mutations
+      # initialize log-likelihood
+      ll <- 0
+      mut <- fread(mut_file, header = FALSE, sep = "\t", stringsAsFactors = FALSE)
+      for(j in 1:length(mutrate_ref_files)){
+        command <- paste("../external_tools/bigWigAverageOverBed ", mutrate_ref_files[j], " ", paste(prefix, "_temp_for_mutrate.bed", sep = ""), " ", paste(prefix, "_temp_for_mutrate.bed.mutrate", sep = "" ), sep = "")
+        system(command)
+        command <- paste("awk {'print $1\"\t\"$4'} ", paste(prefix, "_temp_for_mutrate.bed.mutrate", sep = ""), " > ", paste(prefix, "_temp_for_mutrate.bed.mutrate.txt", sep = ""), sep = "")
+        system(command)
+        coverage_noncoding_base_mutrate <-fread(paste(prefix, "_temp_for_mutrate.bed.mutrate.txt", sep = ""), header = FALSE, stringsAsFactors = FALSE, sep = "\t")
+        colnames(coverage_noncoding_base_mutrate) <- c("base_ID", "base_mutrate_alt")
+        coverage_validation_temp <- coverage_validation_temp[coverage_noncoding_base_mutrate, on = "base_ID"]
+        system(paste("echo \"Finished obtaining base-level mutation rate for alt allele ", " now ", ".\"", sep = ""))
+        system("date")
+        
+        mut_allele <- mut[V5 == alt_letters[j]]
+        # the subsequent two lines of code are used to prevent a outputing bug when using fwrite. (85000000 to be written as 8.5e7)
+        mut_allele$V2 <- as.integer(mut_allele$V2)
+        mut_allele$V3 <- as.integer(mut_allele$V3)
+        fwrite(mut_allele, paste(prefix, "_temp_mut_allele.bed", sep = ""), col.names = FALSE, row.names = FALSE, quote = FALSE, sep = "\t")
+        command <- paste("../external_tools/bedtools-2.17.0/bin/bedtools coverage -a ", paste(prefix, "_temp_mut_allele.bed", sep = ""), " -b ", paste(prefix, "_temp_for_mutrate.bed", sep = ""),  " > ", paste(prefix,"_temp_for_mutrate_overlap_mut_allele.bed", sep = ""),sep = "")
+        system(command)
+        base_with_mut <- fread(paste(prefix,"_temp_for_mutrate_overlap_mut_allele.bed", sep = ""), header = FALSE, sep = "\t", stringsAsFactors = FALSE)
+        base_with_mut <- base_with_mut[,c("V4","V5"), with = FALSE]
+        colnames(base_with_mut) <- c("base_ID", "mut_count")
+        coverage_validation_temp <- coverage_validation_temp[base_with_mut, on = "base_ID"]
+        
+        # add to ll
+        ll <- ll + sum(mapply(dpois, coverage_validation_temp[base_mutrate_alt != 0]$mut_count, 2 * sample_size * coverage_validation_temp[base_mutrate_alt != 0]$scaling_factor * coverage_validation_temp[base_mutrate_alt != 0]$base_mutrate_alt, list(log = TRUE)))
+        coverage_validation_temp <- coverage_validation_temp[,1:5]
+      }
+    }
   }
+  # remove temporary files
+  system(paste("rm ", prefix, "_temp*", sep = ""))
+  print(paste("echo \"Temp files cleaned and data recording finished!\""))
+  system("date")
   return(list(loglikelihood = ll, expected_count = sum(coverage_validation$adjusted_mutrate), observed_count = sum(coverage_validation$mut_count)))
 }
 

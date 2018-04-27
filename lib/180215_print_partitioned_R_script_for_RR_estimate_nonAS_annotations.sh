@@ -9,7 +9,7 @@ cd $1
 
 MutratePrefix=${7:-../other_annotations/Mark_Daly_mutrate/Example_windows_extended_1bp_for_getting_base_level_mutrate.bed.fasta.tri}
 WindowPrefix=${8:-../data/windows_partition/Example_windows_with_div_score_coding_}
-
+GenePriorFile=${9:-../data/Example_gene_prior.txt}
 
 for i in {00..09} 
 do
@@ -29,7 +29,7 @@ compact_data_1 <- TADA_A_read_info(mut_files = c(\"$2\"),
                                  window_file = \"$WindowPrefix$i.with_header.txt\",
                                  mutrate_scaling_files = c(\"$3\"),
                                  sample_sizes = c($4),
-                                 gene_prior_file = \"../data/Example_gene_uniform_prior.txt\",
+                                 gene_prior_file = \"$GenePriorFile\",
                                  nonAS_noncoding_annotations = c($5),
                                  AS_noncoding_annotations = list($6),
                                  report_proportion = 18665/18665,

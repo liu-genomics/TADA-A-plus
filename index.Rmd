@@ -45,16 +45,29 @@ Use manuscript data/MSSNG/Simons_519, scaling factors are computed using WGS dat
 
 Execution code to do data partition and reading-in is `code/pipeline00_generate_R_code_for_estimating_RR_using_partitioned_data`
 
++ coding RR estimation accouting for div score, using the 7-mer ERV mutation rate mode, using all mutations of coding, promoters, promoter-proximal noncoding regions and UTRs to to adjust mutation rates. Each study has its own separate mutation rate adjusting model [link](analysis/180412_with_div_mutrate_calibration_adjusted_RR_estimate_ERV_mutrate_additional_covariates_joint_model_noXY_DATA_Yuen_2017_cases_ANNO_RR_estimate.html).
+
++  coding RR estimation accouting for div score, using the 7-mer ERV mutation rate mode, using all mutations of coding, promoters, promoter-proximal noncoding regions and UTRs to to adjust mutation rates. Each study has its own separate mutation rate adjusting model, after the 1st round of mutation rate adjustment, also adjust for the effects of the functional annotations on mutation rate, using informative priors from WES data. [link](analysis/180412_with_div_mutrate_calibration_adjusted_RR_estimate_ERV_mutrate_additional_covariates_joint_model_noXY_DATA_Yuen_2017_cases_ANNO_RR_estimate.html).
+
+
 ### 1.1.3 Simons data
 
 * [Adjusting mutation rate accounting for div score](analysis/180215_recalibrate_mutation_rate_with_div_score_for_MSSNG_and_Simons_519.html) (Mutation rate adjusted using all mutations of manuscript windows including exons, promoters and promoter-proximal non-coding regions )
 
 + coding RR estimation (scaling file accounting for div score).[link](analysis/180216_with_div_adjusted_RR_estimate_Simons_519_new_version_ANNO_RR_estimate.html)
 
++ coding RR estimation accouting for div score, using the 7-mer ERV mutation rate mode, using all mutations of coding, promoters, promoter-proximal noncoding regions and UTRs to to adjust mutation rates. Each study has its own separate mutation rate adjusting model [link](analysis/180412_with_div_mutrate_calibration_adjusted_RR_estimate_ERV_mutrate_additional_covariates_joint_model_noXY_DATA_Simons_519_cases_ANNO_RR_estimate.html).
+
++  coding RR estimation accouting for div score, using the 7-mer ERV mutation rate mode, using all mutations of coding, promoters, promoter-proximal noncoding regions and UTRs to to adjust mutation rates. Each study has its own separate mutation rate adjusting model, after the 1st round of mutation rate adjustment, also adjust for the effects of the functional annotations on mutation rate, using informative priors from WES data. [link](analysis/180502_with_div_mutrate_calibration_adjusted_RR_estimate_ERV_mutrate_additional_covariates_joint_model_noXY_DATA_Simons_519_cases_ANNO_RR_estimate_account_for_functional_anno.html).
+
 ### 1.1.4 Wong NC et al. control data
 + coding RR estimation (scaling factors were calculated accouting for div score, using coding sequences and promoter-proximal non-coding sequences, used in the manuscript). [link](analysis/180221_with_div_adjusted_RR_estimate_Wong_control_ANNO_RR_estimate.html) (Mutation rate adjusted using all mutations of manuscript windows including exons, promoters and promoter-proximal non-coding regions )
 
 + coding RR estimation accouting for div score, using the 7-mer ERV mutation rate mode, using all mutations of coding, promoters, promoter-proximal noncoding regions and UTRs to to adjust mutation rates. Each study has its own separate mutation rate adjusting model (The file title is a bit misleading as it contains "joint_model", thought mutation rate adjustment were performed separately here) [link](analysis/180412_with_div_mutrate_calibration_adjusted_RR_estimate_ERV_mutrate_additional_covariates_joint_model_noXY_DATA_Wong_NC_control_ANNO_RR_estimate.html).
+
++  coding RR estimation accouting for div score, using the 7-mer ERV mutation rate mode, using all mutations of coding, promoters, promoter-proximal noncoding regions and UTRs to to adjust mutation rates. Each study has its own separate mutation rate adjusting model (The file title is a bit misleading as it contains "joint_model", thought mutation rate adjustment were performed separately here). Use informative prior [link](./analysis/180425_with_div_mutrate_calibration_adjusted_RR_estimate_ERV_mutrate_additional_covariates_joint_model_noXY_informative_prior_DATA_Wong_NC_control_ANNO_RR_estimate.html).
+
++  coding RR estimation accouting for div score, using the 7-mer ERV mutation rate mode, using all mutations of coding, promoters, promoter-proximal noncoding regions and UTRs to to adjust mutation rates. Each study has its own separate mutation rate adjusting model, after the 1st round of mutation rate adjustment, also adjust for the effects of the functional annotations on mutation rate, using informative priors from WES data. [link](analysis/180502_with_div_mutrate_calibration_adjusted_RR_estimate_ERV_mutrate_additional_covariates_joint_model_noXY_DATA_Wong_NC_control_ANNO_RR_estimate_account_for_functional_anno.html).
 
 ### 1.1.5 Netherland 258 control
 
@@ -69,8 +82,9 @@ Execution code to do data partition and reading-in is `code/pipeline00_generate_
 
 + coding RR estimation accouting for div score, using the 7-mer ERV mutation rate mode, using nonfunctional syn mutations to adjust mutation rates for the coding part [link](analysis/180315_with_div_nonfunctional_syn_mutrate_calibration_adjusted_RR_estimate_ERV_mutrate_DATA_Neitherland_258_control_ANNO_RR_estimate.html).
 
-+ coding RR estimation accouting for div score, using the 7-mer ERV mutation rate mode, using all mutations of coding, promoters, promoter-proximal noncoding regions and UTRs to to adjust mutation rates. Each study has its own separate mutation rate adjusting model [link](analysis/180412_with_div_mutrate_calibration_adjusted_RR_estimate_ERV_mutrate_additional_covariates_joint_model_noXY_DATA_Iceland_control_ANNO_RR_estimate.html).
++ coding RR estimation accouting for div score, using the 7-mer ERV mutation rate mode, using all mutations of coding, promoters, promoter-proximal noncoding regions and UTRs to to adjust mutation rates. Each study has its own separate mutation rate adjusting model [link](analysis/180412_with_div_mutrate_calibration_adjusted_RR_estimate_ERV_mutrate_additional_covariates_joint_model_noXY_DATA_Netherland_258_control_ANNO_RR_estimate.html).
 
++  coding RR estimation accouting for div score, using the 7-mer ERV mutation rate mode, using all mutations of coding, promoters, promoter-proximal noncoding regions and UTRs to to adjust mutation rates. Each study has its own separate mutation rate adjusting model, after the 1st round of mutation rate adjustment, also adjust for the effects of the functional annotations on mutation rate, using informative priors from WES data. [link](analysis/180502_with_div_mutrate_calibration_adjusted_RR_estimate_ERV_mutrate_additional_covariates_joint_model_noXY_DATA_Netherland_258_control_ANNO_RR_estimate_account_for_functional_anno.html).
 
 
 ### 1.1.5 Iceland 1549 control control
@@ -83,6 +97,10 @@ Execution code to do data partition and reading-in is `code/pipeline00_generate_
 
 + coding RR estimation accouting for div score, using the 7-mer ERV mutation rate mode, using all mutations of coding, promoters, promoter-proximal noncoding regions and UTRs to to adjust mutation rates. Each study has its own separate mutation rate adjusting model (The file title is a bit misleading as it contains "joint_model", thought mutation rate adjustment were performed separately here)  [link](analysis/180412_with_div_mutrate_calibration_adjusted_RR_estimate_ERV_mutrate_additional_covariates_joint_model_noXY_DATA_Iceland_control_ANNO_RR_estimate.html).
 
++  coding RR estimation accouting for div score, using the 7-mer ERV mutation rate mode, using all mutations of coding, promoters, promoter-proximal noncoding regions and UTRs to to adjust mutation rates. Each study has its own separate mutation rate adjusting model (The file title is a bit misleading as it contains "joint_model", thought mutation rate adjustment were performed separately here). Use informative prior [link](./analysis/180425_with_div_mutrate_calibration_adjusted_RR_estimate_ERV_mutrate_additional_covariates_joint_model_noXY_informative_prior_DATA_Iceland_control_ANNO_RR_estimate.html).
+
++  coding RR estimation accouting for div score, using the 7-mer ERV mutation rate mode, using all mutations of coding, promoters, promoter-proximal noncoding regions and UTRs to to adjust mutation rates. Each study has its own separate mutation rate adjusting model, after the 1st round of mutation rate adjustment, also adjust for the effects of the functional annotations on mutation rate, using informative priors from WES data. [link](analysis/180502_with_div_mutrate_calibration_adjusted_RR_estimate_ERV_mutrate_additional_covariates_joint_model_noXY_DATA_Iceland_control_ANNO_RR_estimate_account_for_functional_anno.html).
+
 ### 1.1.6 Simons 519 WGS control
 + [Recalibrate mutation rates](/analysis/180417_recalibrate_mutation_rate_with_div_score_for_WGS_Simons_control_data_coding_part_using_nonfunctional_synonymous_ERV_mutrate_additional_covariates_noXY.html).
 
@@ -90,6 +108,7 @@ Execution code to do data partition and reading-in is `code/pipeline00_generate_
 
 + coding RR estimation accouting for div score, using the 7-mer ERV mutation rate mode, using all mutations of coding, promoters, promoter-proximal noncoding regions and UTRs to to adjust mutation rates. Each study has its own separate mutation rate adjusting model (The file title is a bit misleading as it contains "joint_model", thought mutation rate adjustment were performed separately here)  [link](analysis/180417_with_div_mutrate_calibration_adjusted_RR_estimate_ERV_mutrate_additional_covariates_noXY_DATA_Simons_new_control_cases_ANNO_RR_estimate.html).
 
++  coding RR estimation accouting for div score, using the 7-mer ERV mutation rate mode, using all mutations of coding, promoters, promoter-proximal noncoding regions and UTRs to to adjust mutation rates. Each study has its own separate mutation rate adjusting model, after the 1st round of mutation rate adjustment, also adjust for the effects of the functional annotations on mutation rate, using informative priors from WES data. [link](analysis/180502_with_div_mutrate_calibration_adjusted_RR_estimate_ERV_mutrate_additional_covariates_noXY_DATA_Simons_new_control_cases_ANNO_RR_estimate_account_for_functional_anno.html).
 
 
 ## 1.2 For WES data
@@ -223,6 +242,8 @@ From denovo-db
 
 + Data analysis for WES data, using nonfunctional synonymous mutatoins, and addtional covaraites from the ERV model to adjust for the effects of `div_score` and `GC_content`, `RepT`, , `RecomboRate`, and several other epigenomic annotations[here](./analysis/180418_compare_mutation_rate_models_with_additional_covariates.html).
 
-+ Data analysis for simulated data, data is simulated with the 7-mer ERV model, and fitted with both ERV model and the 3-mer Samocha model separately [here](./analysis/180419_simulate_mutations_and_fit_mutation_rate_model.html). 
++ Data analysis for simulated data, data is simulated with the 7-mer ERV model, and fitted with both ERV model and the 3-mer Samocha model separately. Prediction is evaluated at the window level. Consider using other covariates, although the data is simulated without introducing effects from these covariates. [here](./analysis/180419_simulate_mutations_and_fit_mutation_rate_model.html). 
 
++ Data analysis for simulated data, data is simulated with the 7-mer ERV model, and fitted with both ERV model and the 3-mer Samocha model separately. Prediction is evaluated at the base level. Consider using or not using other covariates, although the data is simulated without introducing effects from these covariates. [here](./analysis/180426_mutation_rate_model_comparison_at_base_level.html). 
 
++ Data analysis for WES data, nonfunctional synonymous mutations are used to adust mutation rates. No covariates other than an intercept were used in fit the mutation rate model.  [here](./analysis/180501_prediction_accurary_of_mutation_model_between_ERV_and_3mer_for_WES_nonfunctional_syn_mutations_nocovariates.html). 

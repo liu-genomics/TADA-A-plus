@@ -47,7 +47,7 @@ Execution code to do data partition and reading-in is `code/pipeline00_generate_
 
 + coding RR estimation accouting for div score, using the 7-mer ERV mutation rate mode, using all mutations of coding, promoters, promoter-proximal noncoding regions and UTRs to to adjust mutation rates. Each study has its own separate mutation rate adjusting model [link](analysis/180412_with_div_mutrate_calibration_adjusted_RR_estimate_ERV_mutrate_additional_covariates_joint_model_noXY_DATA_Yuen_2017_cases_ANNO_RR_estimate.html).
 
-+  coding RR estimation accouting for div score, using the 7-mer ERV mutation rate mode, using all mutations of coding, promoters, promoter-proximal noncoding regions and UTRs to to adjust mutation rates. Each study has its own separate mutation rate adjusting model, after the 1st round of mutation rate adjustment, also adjust for the effects of the functional annotations on mutation rate, using informative priors from WES data. [link](analysis/180412_with_div_mutrate_calibration_adjusted_RR_estimate_ERV_mutrate_additional_covariates_joint_model_noXY_DATA_Yuen_2017_cases_ANNO_RR_estimate.html).
++  coding RR estimation accouting for div score, using the 7-mer ERV mutation rate mode, using all mutations of coding, promoters, promoter-proximal noncoding regions and UTRs to to adjust mutation rates. Each study has its own separate mutation rate adjusting model, after the 1st round of mutation rate adjustment, also adjust for the effects of the functional annotations on mutation rate, using informative priors from WES data. [link](analysis/180502_with_div_mutrate_calibration_adjusted_RR_estimate_ERV_mutrate_additional_covariates_joint_model_noXY_DATA_Yuen_2017_cases_ANNO_RR_estimate_account_for_functional_anno.html).
 
 
 ### 1.1.3 Simons data

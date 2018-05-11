@@ -313,7 +313,7 @@ From denovo-db
 
 + Adjust mutation rate using nonfunctional synonymous mutations of all genes, 7-mer ERV mutation rate model, more rate-adjusting variates, joint mutation rates adjustment model, intercepts and GC effect are study-specific, noXY chromosomes, no Krumm data when jointly adjusting mutation rates [link](analysis/180410_with_div_nonfunctional_syn_mutrate_calibration_adjusted_RR_estimate_ERV_mutrate_additional_covariates_joint_model_noXY_DATA_DeRubeis_ANNO_RR_estimate.html)
 
-
++ Adjust mutation rate using nonfunctional synonymous mutations of all genes, 7-mer ERV mutation rate model, more rate-adjusting variates, joint mutation rates adjustment model, intercepts and GC effect are study-specific, noXY chromosomes, no Krumm data when jointly adjusting mutation rates, using LoF prior [link](analysis/180509_with_div_nonfunctional_syn_mutrate_calibration_adjusted_RR_estimate_ERV_mutrate_additional_covariates_joint_model_noXY_informative_prior_DATA_DeRubeis_ANNO_RR_estimate_used_for_LoF_prior.html)
 
 
 **Some diagnostics of the problem in mutation rate adjustment**

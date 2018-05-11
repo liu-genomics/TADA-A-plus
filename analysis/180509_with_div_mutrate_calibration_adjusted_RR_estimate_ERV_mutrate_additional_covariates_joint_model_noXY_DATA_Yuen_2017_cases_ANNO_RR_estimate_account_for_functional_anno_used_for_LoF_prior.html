@@ -390,7 +390,7 @@ report_rr_from_compact_data_in_partitioned_form &lt;-<span class="st"> </span>fu
       further_collapsed_data[[<span class="kw">names</span>(Part_of_data)]][[<span class="dv">1</span>]]$log_fcount &lt;-<span class="st"> </span>further_collapsed_data[[<span class="kw">names</span>(Part_of_data)]][[<span class="dv">1</span>]]$log_fcount +<span class="st"> </span>Part_of_data[[<span class="dv">1</span>]][[<span class="dv">1</span>]]$log_fcount
     }
     
-    temp &lt;-<span class="st"> </span><span class="kw">TADA_A_RR_estimate</span>(<span class="dt">data =</span> further_collapsed_data, <span class="dt">selected_annotations =</span> <span class="kw">c</span>(<span class="dv">1</span>), <span class="dt">gene_prior_file =</span> <span class="st">&quot;../data/Example_gene_prior.txt&quot;</span>, <span class="dt">optimization_iteration =</span> <span class="dv">2000</span>, <span class="dt">mode =</span> <span class="st">&quot;single_fast&quot;</span>)
+    temp &lt;-<span class="st"> </span><span class="kw">TADA_A_RR_estimate</span>(<span class="dt">data =</span> further_collapsed_data, <span class="dt">selected_annotations =</span> <span class="kw">c</span>(<span class="dv">1</span>), <span class="dt">gene_prior_file =</span> <span class="st">&quot;../data/Example_gene_LoF_prior.txt&quot;</span>, <span class="dt">optimization_iteration =</span> <span class="dv">2000</span>, <span class="dt">mode =</span> <span class="st">&quot;single_fast&quot;</span>)
   <span class="kw">print</span>(temp)
   report[i,<span class="dv">1</span>] &lt;-<span class="st"> </span><span class="kw">as.character</span>(prefix_vector[i,<span class="dv">1</span>])
   report[i,<span class="dv">2</span>:<span class="dv">4</span>] &lt;-<span class="st"> </span>temp$rr_report
@@ -427,10 +427,10 @@ report &lt;-<span class="st"> </span><span class="kw">report_rr_from_compact_dat
 ## [1] 798.5809
 ## $mle
 ## $mle$par
-## [1] 0.5120861
+## [1] 0.3694036
 ## 
 ## $mle$value
-## [1] -8920.411
+## [1] -8920.965
 ## 
 ## $mle$counts
 ## function gradient 
@@ -444,12 +444,12 @@ report &lt;-<span class="st"> </span><span class="kw">report_rr_from_compact_dat
 ## 
 ## $mle$hessian
 ##           [,1]
-## [1,] -28.93512
+## [1,] -42.15667
 ## 
 ## 
 ## $rr_report
 ##   relative_risk lower_bound upper_bournd
-## 1     0.5120861   0.1477154    0.8764568
+## 1     0.3694036  0.06753153    0.6712757
 ## 
 ## [1] CLIP
 ## 14 Levels: CADD CLIP CLIP_ribosnitch CLIPdb CLIPdb_ribosnitch GERP ... spidex
@@ -480,10 +480,10 @@ report &lt;-<span class="st"> </span><span class="kw">report_rr_from_compact_dat
 ## [1] 755.0656
 ## $mle
 ## $mle$par
-## [1] 0.5374507
+## [1] 0.3944387
 ## 
 ## $mle$value
-## [1] -8779.534
+## [1] -8780.065
 ## 
 ## $mle$counts
 ## function gradient 
@@ -497,12 +497,12 @@ report &lt;-<span class="st"> </span><span class="kw">report_rr_from_compact_dat
 ## 
 ## $mle$hessian
 ##           [,1]
-## [1,] -28.37197
+## [1,] -42.06785
 ## 
 ## 
 ## $rr_report
 ##   relative_risk lower_bound upper_bournd
-## 1     0.5374507   0.1694817    0.9054198
+## 1     0.3944387  0.09224814    0.6966293
 ## 
 ## [1] CLIPdb
 ## 14 Levels: CADD CLIP CLIP_ribosnitch CLIPdb CLIPdb_ribosnitch GERP ... spidex
@@ -531,10 +531,10 @@ report &lt;-<span class="st"> </span><span class="kw">report_rr_from_compact_dat
 ## [1] 433.774
 ## $mle
 ## $mle$par
-## [1] 0.4792641
+## [1] 0.461302
 ## 
 ## $mle$value
-## [1] -4943.433
+## [1] -4942.654
 ## 
 ## $mle$counts
 ## function gradient 
@@ -548,12 +548,12 @@ report &lt;-<span class="st"> </span><span class="kw">report_rr_from_compact_dat
 ## 
 ## $mle$hessian
 ##           [,1]
-## [1,] -12.87255
+## [1,] -24.94215
 ## 
 ## 
 ## $rr_report
 ##   relative_risk lower_bound upper_bournd
-## 1     0.4792641 -0.06702648     1.025555
+## 1      0.461302  0.06884766    0.8537564
 ## 
 ## [1] CLIPdb_ribosnitch
 ## 14 Levels: CADD CLIP CLIP_ribosnitch CLIPdb CLIPdb_ribosnitch GERP ... spidex
@@ -582,10 +582,10 @@ report &lt;-<span class="st"> </span><span class="kw">report_rr_from_compact_dat
 ## [1] 3.496617
 ## $mle
 ## $mle$par
-## [1] 1.61556
+## [1] 1.288525
 ## 
 ## $mle$value
-## [1] -45.38313
+## [1] -45.59022
 ## 
 ## $mle$counts
 ## function gradient 
@@ -598,13 +598,13 @@ report &lt;-<span class="st"> </span><span class="kw">report_rr_from_compact_dat
 ## NULL
 ## 
 ## $mle$hessian
-##          [,1]
-## [1,] -1.01685
+##           [,1]
+## [1,] -1.121785
 ## 
 ## 
 ## $rr_report
 ##   relative_risk lower_bound upper_bournd
-## 1       1.61556  -0.3281328     3.559253
+## 1      1.288525  -0.5620264     3.139077
 ## 
 ## [1] CLIP_ribosnitch
 ## 14 Levels: CADD CLIP CLIP_ribosnitch CLIPdb CLIPdb_ribosnitch GERP ... spidex
@@ -633,10 +633,10 @@ report &lt;-<span class="st"> </span><span class="kw">report_rr_from_compact_dat
 ## [1] 5.806584
 ## $mle
 ## $mle$par
-## [1] 1.428846
+## [1] 1.170436
 ## 
 ## $mle$value
-## [1] -56.76505
+## [1] -56.90864
 ## 
 ## $mle$counts
 ## function gradient 
@@ -650,12 +650,12 @@ report &lt;-<span class="st"> </span><span class="kw">report_rr_from_compact_dat
 ## 
 ## $mle$hessian
 ##           [,1]
-## [1,] -1.006831
+## [1,] -1.133601
 ## 
 ## 
 ## $rr_report
 ##   relative_risk lower_bound upper_bournd
-## 1      1.428846  -0.5244942     3.382186
+## 1      1.170436  -0.6704457     3.011318
 ## 
 ## [1] GERP
 ## 14 Levels: CADD CLIP CLIP_ribosnitch CLIPdb CLIPdb_ribosnitch GERP ... spidex
@@ -684,10 +684,10 @@ report &lt;-<span class="st"> </span><span class="kw">report_rr_from_compact_dat
 ## [1] 876.2066
 ## $mle
 ## $mle$par
-## [1] 0.5952183
+## [1] 0.445969
 ## 
 ## $mle$value
-## [1] -9769.691
+## [1] -9770.54
 ## 
 ## $mle$counts
 ## function gradient 
@@ -701,12 +701,12 @@ report &lt;-<span class="st"> </span><span class="kw">report_rr_from_compact_dat
 ## 
 ## $mle$hessian
 ##           [,1]
-## [1,] -35.25721
+## [1,] -48.75161
 ## 
 ## 
 ## $rr_report
 ##   relative_risk lower_bound upper_bournd
-## 1     0.5952183   0.2651285    0.9253081
+## 1      0.445969   0.1652566    0.7266814
 ## 
 ## [1] LoF
 ## 14 Levels: CADD CLIP CLIP_ribosnitch CLIPdb CLIPdb_ribosnitch GERP ... spidex
@@ -737,10 +737,10 @@ report &lt;-<span class="st"> </span><span class="kw">report_rr_from_compact_dat
 ## [1] 43.73132
 ## $mle
 ## $mle$par
-## [1] 1.143696
+## [1] 0.9645539
 ## 
 ## $mle$value
-## [1] -594.2477
+## [1] -594.0868
 ## 
 ## $mle$counts
 ## function gradient 
@@ -754,12 +754,12 @@ report &lt;-<span class="st"> </span><span class="kw">report_rr_from_compact_dat
 ## 
 ## $mle$hessian
 ##           [,1]
-## [1,] -5.249528
+## [1,] -7.657235
 ## 
 ## 
 ## $rr_report
 ##   relative_risk lower_bound upper_bournd
-## 1      1.143696   0.2882435     1.999149
+## 1     0.9645539   0.2562493     1.672859
 ## 
 ## [1] Mis3
 ## 14 Levels: CADD CLIP CLIP_ribosnitch CLIPdb CLIPdb_ribosnitch GERP ... spidex
@@ -788,10 +788,10 @@ report &lt;-<span class="st"> </span><span class="kw">report_rr_from_compact_dat
 ## [1] 415.2011
 ## $mle
 ## $mle$par
-## [1] 0.4119579
+## [1] 0.2166396
 ## 
 ## $mle$value
-## [1] -4789.731
+## [1] -4790.289
 ## 
 ## $mle$counts
 ## function gradient 
@@ -805,12 +805,12 @@ report &lt;-<span class="st"> </span><span class="kw">report_rr_from_compact_dat
 ## 
 ## $mle$hessian
 ##           [,1]
-## [1,] -13.68331
+## [1,] -17.95035
 ## 
 ## 
 ## $rr_report
 ##   relative_risk lower_bound upper_bournd
-## 1     0.4119579  -0.1179012    0.9418171
+## 1     0.2166396  -0.2459753    0.6792546
 ## 
 ## [1] Nonfunctional_syn
 ## 14 Levels: CADD CLIP CLIP_ribosnitch CLIPdb CLIPdb_ribosnitch GERP ... spidex
@@ -839,10 +839,10 @@ report &lt;-<span class="st"> </span><span class="kw">report_rr_from_compact_dat
 ## [1] 318.2034
 ## $mle
 ## $mle$par
-## [1] 0.2891675
+## [1] 0.4242977
 ## 
 ## $mle$value
-## [1] -3273.432
+## [1] -3272.708
 ## 
 ## $mle$counts
 ## function gradient 
@@ -855,13 +855,13 @@ report &lt;-<span class="st"> </span><span class="kw">report_rr_from_compact_dat
 ## NULL
 ## 
 ## $mle$hessian
-##          [,1]
-## [1,] -5.89133
+##           [,1]
+## [1,] -13.35063
 ## 
 ## 
 ## $rr_report
 ##   relative_risk lower_bound upper_bournd
-## 1     0.2891675  -0.5183453      1.09668
+## 1     0.4242977  -0.1121225    0.9607179
 ## 
 ## [1] ribosnitch
 ## 14 Levels: CADD CLIP CLIP_ribosnitch CLIPdb CLIPdb_ribosnitch GERP ... spidex
@@ -890,10 +890,10 @@ report &lt;-<span class="st"> </span><span class="kw">report_rr_from_compact_dat
 ## [1] 10.43872
 ## $mle
 ## $mle$par
-## [1] 1.562209
+## [1] 1.094868
 ## 
 ## $mle$value
-## [1] -68.95319
+## [1] -69.28533
 ## 
 ## $mle$counts
 ## function gradient 
@@ -907,12 +907,12 @@ report &lt;-<span class="st"> </span><span class="kw">report_rr_from_compact_dat
 ## 
 ## $mle$hessian
 ##           [,1]
-## [1,] -1.103176
+## [1,] -1.146868
 ## 
 ## 
 ## $rr_report
 ##   relative_risk lower_bound upper_bournd
-## 1      1.562209  -0.3038858     3.428304
+## 1      1.094868  -0.7353355     2.925071
 ## 
 ## [1] spidex
 ## 14 Levels: CADD CLIP CLIP_ribosnitch CLIPdb CLIPdb_ribosnitch GERP ... spidex
@@ -943,10 +943,10 @@ report &lt;-<span class="st"> </span><span class="kw">report_rr_from_compact_dat
 ## [1] 164.0167
 ## $mle
 ## $mle$par
-## [1] 0.8630263
+## [1] 0.6735672
 ## 
 ## $mle$value
-## [1] -2044.033
+## [1] -2044.31
 ## 
 ## $mle$counts
 ## function gradient 
@@ -960,12 +960,12 @@ report &lt;-<span class="st"> </span><span class="kw">report_rr_from_compact_dat
 ## 
 ## $mle$hessian
 ##           [,1]
-## [1,] -11.43199
+## [1,] -15.97908
 ## 
 ## 
 ## $rr_report
 ##   relative_risk lower_bound upper_bournd
-## 1     0.8630263   0.2833371     1.442716
+## 1     0.6735672   0.1832466     1.163888
 ## 
 ## [1] Ray_RBP_motif
 ## 14 Levels: CADD CLIP CLIP_ribosnitch CLIPdb CLIPdb_ribosnitch GERP ... spidex
@@ -997,7 +997,7 @@ report &lt;-<span class="st"> </span><span class="kw">report_rr_from_compact_dat
 ## [1] -1
 ## 
 ## $mle$value
-## [1] -63.10966
+## [1] -63.10257
 ## 
 ## $mle$counts
 ## function gradient 
@@ -1011,12 +1011,12 @@ report &lt;-<span class="st"> </span><span class="kw">report_rr_from_compact_dat
 ## 
 ## $mle$hessian
 ##             [,1]
-## [1,] -0.06379383
+## [1,] -0.06841844
 ## 
 ## 
 ## $rr_report
 ##   relative_risk lower_bound upper_bournd
-## 1            -1   -8.760089     6.760089
+## 1            -1   -8.493237     6.493237
 ## 
 ## [1] RBP_Var_Level2
 ## 14 Levels: CADD CLIP CLIP_ribosnitch CLIPdb CLIPdb_ribosnitch GERP ... spidex
@@ -1045,10 +1045,10 @@ report &lt;-<span class="st"> </span><span class="kw">report_rr_from_compact_dat
 ## [1] 21.56197
 ## $mle
 ## $mle$par
-## [1] 0.5564675
+## [1] 0.6835864
 ## 
 ## $mle$value
-## [1] -207.0168
+## [1] -206.8482
 ## 
 ## $mle$counts
 ## function gradient 
@@ -1062,12 +1062,12 @@ report &lt;-<span class="st"> </span><span class="kw">report_rr_from_compact_dat
 ## 
 ## $mle$hessian
 ##           [,1]
-## [1,] -1.065956
+## [1,] -1.765939
 ## 
 ## 
 ## $rr_report
 ##   relative_risk lower_bound upper_bournd
-## 1     0.5564675   -1.341927     2.454862
+## 1     0.6835864  -0.7913329     2.158506
 ## 
 ## [1] MPC_gt2
 ## 14 Levels: CADD CLIP CLIP_ribosnitch CLIPdb CLIPdb_ribosnitch GERP ... spidex
@@ -1096,10 +1096,10 @@ report &lt;-<span class="st"> </span><span class="kw">report_rr_from_compact_dat
 ## [1] 47.86053
 ## $mle
 ## $mle$par
-## [1] -0.8536744
+## [1] -0.8270057
 ## 
 ## $mle$value
-## [1] -594.7976
+## [1] -594.7073
 ## 
 ## $mle$counts
 ## function gradient 
@@ -1113,12 +1113,12 @@ report &lt;-<span class="st"> </span><span class="kw">report_rr_from_compact_dat
 ## 
 ## $mle$hessian
 ##           [,1]
-## [1,] -0.303572
+## [1,] -0.467875
 ## 
 ## 
 ## $rr_report
 ##   relative_risk lower_bound upper_bournd
-## 1    -0.8536744   -4.411013     2.703664</code></pre>
+## 1    -0.8270057   -3.692445     2.038433</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">knitr::<span class="kw">kable</span>(report)</code></pre></div>
 <table>
 <thead>
@@ -1132,87 +1132,87 @@ report &lt;-<span class="st"> </span><span class="kw">report_rr_from_compact_dat
 <tbody>
 <tr class="odd">
 <td align="left">CADD</td>
-<td align="right">0.5120861</td>
-<td align="right">0.1477154</td>
-<td align="right">0.8764568</td>
+<td align="right">0.3694036</td>
+<td align="right">0.0675315</td>
+<td align="right">0.6712757</td>
 </tr>
 <tr class="even">
 <td align="left">CLIP</td>
-<td align="right">0.5374507</td>
-<td align="right">0.1694817</td>
-<td align="right">0.9054198</td>
+<td align="right">0.3944387</td>
+<td align="right">0.0922481</td>
+<td align="right">0.6966293</td>
 </tr>
 <tr class="odd">
 <td align="left">CLIPdb</td>
-<td align="right">0.4792641</td>
-<td align="right">-0.0670265</td>
-<td align="right">1.0255547</td>
+<td align="right">0.4613020</td>
+<td align="right">0.0688477</td>
+<td align="right">0.8537564</td>
 </tr>
 <tr class="even">
 <td align="left">CLIPdb_ribosnitch</td>
-<td align="right">1.6155603</td>
-<td align="right">-0.3281328</td>
-<td align="right">3.5592535</td>
+<td align="right">1.2885252</td>
+<td align="right">-0.5620264</td>
+<td align="right">3.1390769</td>
 </tr>
 <tr class="odd">
 <td align="left">CLIP_ribosnitch</td>
-<td align="right">1.4288459</td>
-<td align="right">-0.5244942</td>
-<td align="right">3.3821860</td>
+<td align="right">1.1704363</td>
+<td align="right">-0.6704457</td>
+<td align="right">3.0113182</td>
 </tr>
 <tr class="even">
 <td align="left">GERP</td>
-<td align="right">0.5952183</td>
-<td align="right">0.2651285</td>
-<td align="right">0.9253081</td>
+<td align="right">0.4459690</td>
+<td align="right">0.1652566</td>
+<td align="right">0.7266814</td>
 </tr>
 <tr class="odd">
 <td align="left">LoF</td>
-<td align="right">1.1436961</td>
-<td align="right">0.2882435</td>
-<td align="right">1.9991486</td>
+<td align="right">0.9645539</td>
+<td align="right">0.2562493</td>
+<td align="right">1.6728585</td>
 </tr>
 <tr class="even">
 <td align="left">Mis3</td>
-<td align="right">0.4119579</td>
-<td align="right">-0.1179012</td>
-<td align="right">0.9418171</td>
+<td align="right">0.2166396</td>
+<td align="right">-0.2459753</td>
+<td align="right">0.6792546</td>
 </tr>
 <tr class="odd">
 <td align="left">Nonfunctional_syn</td>
-<td align="right">0.2891675</td>
-<td align="right">-0.5183453</td>
-<td align="right">1.0966802</td>
+<td align="right">0.4242977</td>
+<td align="right">-0.1121225</td>
+<td align="right">0.9607179</td>
 </tr>
 <tr class="even">
 <td align="left">ribosnitch</td>
-<td align="right">1.5622091</td>
-<td align="right">-0.3038858</td>
-<td align="right">3.4283039</td>
+<td align="right">1.0948678</td>
+<td align="right">-0.7353355</td>
+<td align="right">2.9250711</td>
 </tr>
 <tr class="odd">
 <td align="left">spidex</td>
-<td align="right">0.8630263</td>
-<td align="right">0.2833371</td>
-<td align="right">1.4427156</td>
+<td align="right">0.6735672</td>
+<td align="right">0.1832466</td>
+<td align="right">1.1638878</td>
 </tr>
 <tr class="even">
 <td align="left">Ray_RBP_motif</td>
 <td align="right">-1.0000000</td>
-<td align="right">-8.7600893</td>
-<td align="right">6.7600893</td>
+<td align="right">-8.4932374</td>
+<td align="right">6.4932374</td>
 </tr>
 <tr class="odd">
 <td align="left">RBP_Var_Level2</td>
-<td align="right">0.5564675</td>
-<td align="right">-1.3419268</td>
-<td align="right">2.4548619</td>
+<td align="right">0.6835864</td>
+<td align="right">-0.7913329</td>
+<td align="right">2.1585057</td>
 </tr>
 <tr class="even">
 <td align="left">MPC_gt2</td>
-<td align="right">-0.8536744</td>
-<td align="right">-4.4110129</td>
-<td align="right">2.7036642</td>
+<td align="right">-0.8270057</td>
+<td align="right">-3.6924445</td>
+<td align="right">2.0384331</td>
 </tr>
 </tbody>
 </table>

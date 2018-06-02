@@ -334,7 +334,7 @@ div.tocify {
                                                 <span class="st">&quot;DLPFC_H3K27AC&quot;</span>,
                                                 <span class="st">&quot;Encode_DHS&quot;</span>,
                                                 <span class="st">&quot;E081_E082_intersection&quot;</span>,
-                                                <span class="st">&quot;Turner_Cell_DNase&quot;</span>), 
+                                                <span class="st">&quot;Turner_Cell_DNase&quot;</span>) ,
                             <span class="dt">prefix =</span> <span class="kw">c</span>(<span class="st">&quot;180520_promoter_5kb_with_div_mutrate_calibration_adjusted_RR_estimate_ERV_mutrate_additional_covariates_joint_model_noXY_informative_prior_DATA_Iceland_control_ANNO_CADD/180520_promoter_5kb_with_div_mutrate_calibration_adjusted_RR_estimate_ERV_mutrate_additional_covariates_joint_model_noXY_informative_prior_DATA_Iceland_control_ANNO_CADD_&quot;</span>,
                                        <span class="st">&quot;180520_promoter_5kb_with_div_mutrate_calibration_adjusted_RR_estimate_ERV_mutrate_additional_covariates_joint_model_noXY_informative_prior_DATA_Iceland_control_ANNO_GERP/180520_promoter_5kb_with_div_mutrate_calibration_adjusted_RR_estimate_ERV_mutrate_additional_covariates_joint_model_noXY_informative_prior_DATA_Iceland_control_ANNO_GERP_&quot;</span>,
                                        <span class="st">&quot;180520_promoter_5kb_with_div_mutrate_calibration_adjusted_RR_estimate_ERV_mutrate_additional_covariates_joint_model_noXY_informative_prior_DATA_Iceland_control_ANNO_E081_DeepSEA_gt0.4/180520_promoter_5kb_with_div_mutrate_calibration_adjusted_RR_estimate_ERV_mutrate_additional_covariates_joint_model_noXY_informative_prior_DATA_Iceland_control_ANNO_E081_DeepSEA_gt0.4_&quot;</span>,
@@ -364,7 +364,7 @@ report_rr_from_compact_data_in_partitioned_form &lt;-<span class="st"> </span>fu
       temp &lt;-<span class="st"> </span><span class="kw">readRDS</span>(<span class="kw">paste</span>(prefix_vector[i,<span class="dv">2</span>], test[j], <span class="st">&quot;.RDS&quot;</span>, <span class="dt">sep =</span> <span class="st">&quot;&quot;</span>))
       data_partition &lt;-<span class="st"> </span><span class="kw">append</span>(data_partition, temp$base_info)
     }
-  
+
     data_temp &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">mut_count =</span> <span class="kw">numeric</span>(), <span class="dt">mut_rate =</span> <span class="kw">numeric</span>(), <span class="dt">feature =</span> <span class="kw">numeric</span>())
     cal_logP_Zg1 &lt;-<span class="st"> </span>function(data_partition_element){
       cal_logP_Zg1_level2 &lt;-function(data_partition_element_level2){
@@ -394,12 +394,12 @@ report_rr_from_compact_data_in_partitioned_form &lt;-<span class="st"> </span>fu
     for(n in <span class="dv">1</span>:<span class="kw">length</span>(data_partition)){
       Part_of_data =<span class="st"> </span>data_partition[n]
       further_collapsed_data[[<span class="kw">names</span>(Part_of_data)]][[<span class="dv">1</span>]]$sum_mut_rate_count &lt;-<span class="st"> </span>further_collapsed_data[[<span class="kw">names</span>(Part_of_data)]][[<span class="dv">1</span>]]$sum_mut_rate_count +<span class="st"> </span>Part_of_data[[<span class="dv">1</span>]][[<span class="dv">1</span>]]$sum_mut_rate_count
-      <span class="co"># correct mutation rates for functional annotations. </span>
+      <span class="co"># correct mutation rates for functional annotations.</span>
       further_collapsed_data[[<span class="kw">names</span>(Part_of_data)]][[<span class="dv">1</span>]]$sum_mut_rate &lt;-<span class="st"> </span>further_collapsed_data[[<span class="kw">names</span>(Part_of_data)]][[<span class="dv">1</span>]]$sum_mut_rate +<span class="st">   </span>Part_of_data[[<span class="dv">1</span>]][[<span class="dv">1</span>]]$sum_mut_rate *<span class="kw">exp</span>(<span class="kw">sum</span>(out.offset$coefficients))
       further_collapsed_data[[<span class="kw">names</span>(Part_of_data)]][[<span class="dv">1</span>]]$sum_mut_count &lt;-<span class="st"> </span>further_collapsed_data[[<span class="kw">names</span>(Part_of_data)]][[<span class="dv">1</span>]]$sum_mut_count +<span class="st"> </span>Part_of_data[[<span class="dv">1</span>]][[<span class="dv">1</span>]]$sum_mut_count
       further_collapsed_data[[<span class="kw">names</span>(Part_of_data)]][[<span class="dv">1</span>]]$log_fcount &lt;-<span class="st"> </span>further_collapsed_data[[<span class="kw">names</span>(Part_of_data)]][[<span class="dv">1</span>]]$log_fcount +<span class="st"> </span>Part_of_data[[<span class="dv">1</span>]][[<span class="dv">1</span>]]$log_fcount
     }
-    
+
     temp &lt;-<span class="st"> </span><span class="kw">TADA_A_RR_estimate</span>(<span class="dt">data =</span> data_partition, <span class="dt">selected_annotations =</span> <span class="kw">c</span>(<span class="dv">1</span>), <span class="dt">gene_prior_file =</span> <span class="st">&quot;../data/Example_gene_prior.txt&quot;</span>, <span class="dt">optimization_iteration =</span> <span class="dv">2000</span>, <span class="dt">mode =</span> <span class="st">&quot;single_fast&quot;</span>)
   <span class="kw">print</span>(temp)
   report[i,<span class="dv">1</span>] &lt;-<span class="st"> </span><span class="kw">as.character</span>(prefix_vector[i,<span class="dv">1</span>])
@@ -419,28 +419,28 @@ report &lt;-<span class="st"> </span><span class="kw">report_rr_from_compact_dat
 ## 
 ## Deviance Residuals: 
 ##     Min       1Q   Median       3Q      Max  
-## -0.2202  -0.0425  -0.0247  -0.0137   4.7794  
+## -0.3590  -0.0599  -0.0387  -0.0235   4.4790  
 ## 
 ## Coefficients:
 ##             Estimate Std. Error z value Pr(&gt;|z|)
-## (Intercept)  -0.1881     0.1508  -1.248    0.212
+## (Intercept) -0.07434    0.09901  -0.751    0.453
 ## 
 ## (Dispersion parameter for poisson family taken to be 1)
 ## 
-##     Null deviance: 580.16  on 53008  degrees of freedom
-## Residual deviance: 580.16  on 53008  degrees of freedom
-## AIC: 668.78
+##     Null deviance: 1178.7  on 63300  degrees of freedom
+## Residual deviance: 1178.7  on 63300  degrees of freedom
+## AIC: 1381.9
 ## 
-## Number of Fisher Scoring iterations: 10
+## Number of Fisher Scoring iterations: 9
 ## 
-## [1] 44
-## [1] 53.10432
+## [1] 102
+## [1] 109.8719
 ## $mle
 ## $mle$par
-## [1] -0.04429098
+## [1] -0.4684416
 ## 
 ## $mle$value
-## [1] -538.2873
+## [1] -1234.088
 ## 
 ## $mle$counts
 ## function gradient 
@@ -453,13 +453,13 @@ report &lt;-<span class="st"> </span><span class="kw">report_rr_from_compact_dat
 ## NULL
 ## 
 ## $mle$hessian
-##          [,1]
-## [1,] -1.16475
+##           [,1]
+## [1,] -1.292125
 ## 
 ## 
 ## $rr_report
 ##   relative_risk lower_bound upper_bournd
-## 1   -0.04429098   -1.860391     1.771809
+## 1    -0.4684416   -2.192706     1.255822
 ## 
 ## [1] GERP
 ## 19 Levels: ACC_H3K27AC CADD DLPFC_ATAC_seq ... Turner_Cell_DNase
@@ -1403,9 +1403,9 @@ report &lt;-<span class="st"> </span><span class="kw">report_rr_from_compact_dat
 <tbody>
 <tr class="odd">
 <td align="left">CADD</td>
-<td align="right">-0.0442910</td>
-<td align="right">-1.860391</td>
-<td align="right">1.7718088</td>
+<td align="right">-0.4684416</td>
+<td align="right">-2.192706</td>
+<td align="right">1.2558225</td>
 </tr>
 <tr class="even">
 <td align="left">GERP</td>

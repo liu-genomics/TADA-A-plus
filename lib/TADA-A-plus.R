@@ -897,7 +897,8 @@ TADA_A_read_info_pair_test <- function(mut_files_1 = c("../data/table.ASCWGS_201
   # function to get effective information of each element of partition_by_gene
   # These information are those necessary to compute log-likelihood in the optimization function, without doing categorization, as we have continuous variables
   # to adjust mutation rates and the number of mutations is not bit. 
-  partition_feature_no_cate <- function(pbg){
+  # These information are those necessary to compute log-likelihood in the optimization function
+  partition_feature <- function(pbg){
     # input is one element of the list of partition_by_gene
     pbg_split <- split(pbg, pbg[,3:(3 + feature_number - 1)],drop = TRUE)
     feature_combination_number <- length(pbg_split)

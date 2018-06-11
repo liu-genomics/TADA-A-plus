@@ -1004,8 +1004,9 @@ TADA_A_read_info_pair_test <- function(mut_files_1 = c("../data/table.ASCWGS_201
         mutrate_adj_2 <- fread(mutation_mutrate_adjusting_features_file_2[m], header = TRUE, sep = "\t", stringsAsFactors = FALSE)
         mutrate_adj <- mutrate_adj_1[mutrate_adj_2, on = c("chr", "start", "end")]
         mutrate_adj_feature_num <- ncol(mutrate_adj_1) - 5
-        mutrate_adj <- mutrate_adj[,c(1:3, 6:(5+mutrate_adj_feature_num), ((8+mutrate_adj_feature_num) : (9+mutrate_adj_feature_num))), with = FALSE]
+        mutrate_adj <- mutrate_adj[,c(1:3, 6:(5+mutrate_adj_feature_num), ((8+mutrate_adj_feature_num) : (7+2*mutrate_adj_feature_num))), with = FALSE]
         coverage_temp <- mutrate_adj[coverage_temp, on = c("chr", "start", "end")]
+        coverage_temp <- unique(coverage_temp)
         coverage_temp <- coverage_temp[,c(-1,-2,-3), with = FALSE]
         # add compact data
         data_partition <- append(data_partition, list(coverage_temp))
@@ -1108,9 +1109,9 @@ TADA_A_RR_estimate_binom_v3 <-function(data, selected_annotations, gene_prior_fi
   gene_prior$genename = as.character(gene_prior$genename)
   
   # get the number of mutrate_adjusting_featurs
-  mut_adj_feature_num <- (which(colnames(data[[1]]) == "genename") - 1)/2
+  mut_adj_feature_num <- (which(colnames(data[[1]]) == "genename") - 1)/2 # there is only one parameter for a pair of covariates that are perfectly correlated. 
   # get the number of total functional annotations that need to have RR estimated. 
-  functional_feature_num <- ncol(data[[1]]) - 2 -2 - mut_adj_feature_num
+  functional_feature_num <- ncol(data[[1]]) - 2 -2 - (which(colnames(data[[1]]) == "genename") - 1)
   data <- rbindlist(data)
   data <- data[gene_prior, on = "genename"]
   data <- data[complete.cases(data)]

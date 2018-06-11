@@ -453,6 +453,7 @@ From denovo-db
 + Mis3 mutations (logRR as 1)[link](analysis/180301_simulation_ANNO_RR_estimate_Mis3.html).
 
 + Simulation of the new mixture-binomial based model [link](analysis/180530_simulate_a_pair_of_cases_and_controls_1_time.html)
+> This model may have overestimated the signal. I simulated the dataset with a RR = 3, but after 20 rounds of simulations, the average RR is 3.17
 
 
 # 2. Further refining mutation rates

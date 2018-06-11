@@ -789,3 +789,363 @@ TADA_A_RR_estimate_binom <-function(data, selected_annotations, gene_prior_file,
   
   list(mle = mle, rr_report = rr_report)
 }
+
+
+TADA_A_read_info_pair_test <- function(mut_files_1 = c("../data/table.ASCWGS_20180504.WGS1902_hg19_cases_SNV_remove_recurrent_mutations_with_allele_info.txt"),
+                                       mut_files_2 = c("../data/table.ASCWGS_20180504.WGS1902_hg19_controls_SNV_remove_recurrent_mutations_with_allele_info.txt"),
+                                       window_file = "../data/windows_partition/Example_windows_with_div_score_no_header.bed.temp.partition00.with_header.txt",
+                                       gene_prior_file = "../data/Example_gene_prior.txt",
+                                       nonAS_noncoding_annotations = c("../data/Noonan_brain_roadmap_union_within_10kb_and_promoter_no_utr.bed","../data/Epigenome_E081_E082_intersection__within_10kb_and_promoter_no_utr.bed","../data/Encode_DHS_union_within_10kb_and_promoter_no_utr.bed"),
+                                       AS_noncoding_annotations = list(c("../other_annotations/coding/171121_coding_nonsynonymous_SNV_altA.bed.merge.bed", "../other_annotations/coding/171121_coding_nonsynonymous_SNV_altC.bed.merge.bed", "../other_annotations/coding/171121_coding_nonsynonymous_SNV_altG.bed.merge.bed", "../other_annotations/coding/171121_coding_nonsynonymous_SNV_altT.bed.merge.bed")),
+                                       mutation_mutrate_adjusting_features_file_1 = NA,
+                                       mutation_mutrate_adjusting_features_file_2 = NA,
+                                       report_proportion = 100/18665,
+                                       MPI = 1){
+  
+  # [mut_files_1] is a vector of files with cases DNM infomation in a txt format. The first three columns are chromosome, 0-based start and 1-based end, followed by two columns of ref and alt alleles.
+  # The code currently only works for SNVs. 
+  # The first 4 columns must be chr, start, end, and site_index of genomic windows. The rest of the columns are features that might affect baseline background mutation rates and that need to be adjusted for.
+  # [mut_files_2] is a vector of files with controls DNM infomation in a txt format. The first three columns are chromosome, 0-based start and 1-based end, followed by two columns of ref and alt alleles.
+  # The ordering of files in [mut_files_1] and [mut_files_2] should be consistent.
+  # [window_file] is the file with genomic windows. Each line represents one window. The columns are "chr", "start", "end" followed by features that might affect local background mutation rate.
+  # [nonAS_noncoding_annotations] a vector of non-allele-specific non-coding annotations. Each element is a name of the file that has one non-coding annotation in BED format. Non-coding annotations that are not overlapped with regions in [window_file] will not be used in model fitting. 
+  # [AS_noncoding_annotations] ia NA or a list of vectors of allele specific annotations. i.e., Each type of noncoding annotation is an element in the list. An element is comprised of 4 different bed files, corresponding to noncoding annotatins of 
+  # this type based on the alternative allele, A, T, C, or G. e.g., "spidex_lower10pct_alt_A.bed" is a bed file that has genomic intervals representing the union of all bases which, if mutated to an A allele, have a spidex score lower than 10pct of all
+  # possible spidex scores. 
+  # [gene_prior_file], a file that has prior (derived from posterior and prior)for a gene as a risk gene. 
+  # [mutation_mutrate_adjusting_features_file_1] is a file each row of which is a mutation bed file, followed by continuous features that might affect mutation rate. The file needs to have
+  # features for all the mutations in [mut_files1] and [mut_files2].The variables (e.g. sequencing depth) should come from studies generating the corresponding DNM file in [mut_files1]
+  # [mutation_mutrate_adjusting_features_file_2] is a file each row of which is a mutation bed file, followed by continuous features that might affect mutation rate. The file needs to have
+  # features for all the mutations in [mut_files1] and [mut_files2].The variables (e.g. sequencing depth) should come from studies generating the corresponding DNM file in [mut_files1]
+  # [report_proportion] Choose the top X% TADA genes to estimate RR. 
+  # [MPI] is the index that will add to temp files, useful when running multipe processes at one time
+  # prefix for temporary files that will be deleted at the end of the pipeline
+  prefix <- as.integer((as.double(Sys.time())*1000+Sys.getpid()) %% 2^31) # prefix for temporary files that will be deleted at the end of the pipeline
+  prefix <- paste("tmp/", prefix, MPI, sep = "")
+  
+  # make a tmp folder for tmp files
+  system("mkdir -p tmp")
+  
+  #mut <- fread(mut_file, header = FALSE, sep = "\t", stringsAsFactors = FALSE)
+  windows <- fread(window_file, header = TRUE, sep = "\t", stringsAsFactors = FALSE)
+  
+  fwrite(windows[,c("chr","start","end","genename")], paste(prefix, "_temp_windows_bed.bed", sep = ""), col.names = FALSE, row.names = FALSE, quote = FALSE, sep = "\t")
+  
+  # only keep bases that have overlap with DNMs, this step will reduce the computation time significantly (If the DNM dataset is relatively smaller compared to the number of bases under consideration). 
+  # write a big file that has contains all the DNMs
+  command <- paste("echo -n > ", paste(prefix, "_temp_DNM_union.bed", sep = ""), sep = "")
+  system(command)
+  
+  command <- paste("cat", paste(mut_files_1, collapse = " "), paste(mut_files_2, collapse = " "), ">", paste(prefix, "_temp_DNM_union.bed", sep = ""), sep = " ")
+  system(command)
+  
+  command <- paste("../external_tools/bedtools-2.17.0/bin/bedtools intersect -b ", paste(prefix, "_temp_DNM_union.bed", sep = ""), " -a ", paste(prefix, "_temp_windows_bed.bed", sep = ""),
+                   " -wa -wb > ", paste(prefix, "_temp_windows_bed_overlap_DNMs.bed", sep = ""), sep = "")
+  system(command)
+  
+  # Read in windows that have DNM overlapped.
+  coverage <- fread(paste(prefix, "_temp_windows_bed_overlap_DNMs.bed", sep = ""), header = FALSE, sep = "\t", stringsAsFactors = FALSE)
+  coverage <- coverage[,c("V5", "V6", "V7", "V4")]
+  colnames(coverage) <- c("chr", "start", "end", "genename")
+  coverage <- unique(coverage)
+  coverage <- data.table(coverage, ID = paste("base_", seq(1,nrow(coverage)), sep = ""))
+  
+  
+  # # the number of genomic windows in [mutrate_scaling] is less than the number of windows in [windows] because there are a few windows with mutration rate equal to 0, and thus removed.
+  # for(i in 1:length(mut_files)){
+  #   mutrate_scaling <- fread(mutrate_scaling_files[i], header = TRUE, sep = "\t", stringsAsFactors = FALSE)
+  #   system(paste("echo \"Finished reading mutrate scaling file ", mutrate_scaling_files[i], ".\"", sep = ""))
+  #   system("date")
+  #   coverage <- coverage[mutrate_scaling, on = "site_index"]
+  #   coverage <- coverage[complete.cases(coverage)] # release memory
+  #   colnames(coverage)[length(colnames(coverage))] <- paste("scaling_factor_study_", i, sep = "")
+  #   rm(mutrate_scaling) # release memory
+  # }
+  # 
+  # get the piror probability of genes.
+  gene_prior <- fread(gene_prior_file, header = TRUE, sep = "\t", stringsAsFactors = FALSE)
+  
+  # merge gene prior info
+  coverage <- coverage[gene_prior, on = "genename"]
+  coverage <-coverage[complete.cases(coverage)]
+  
+  # select genes based on TADA prior probability and [report_proportion]
+  if(report_proportion !=1){
+    genes_for_report <- gene_prior[order(gene_prior[,2],decreasing = TRUE),1]
+    genes_for_report <- genes_for_report[1:floor(nrow(genes_for_report)*report_proportion)]
+    coverage <- coverage[genes_for_report, on = "genename"]
+    coverage <-coverage[complete.cases(coverage)]
+  }else{
+    genes_for_report  <- gene_prior[,1] # choose all the genes in TADA coding table 
+  }
+  
+  # get nonAS feature number
+  if(is.na(nonAS_noncoding_annotations[1])){
+    nonAS_feature_number <- 0 
+  }else{
+    nonAS_feature_number <- length(nonAS_noncoding_annotations)
+  }
+  # get AS feature number
+  if(is.na(AS_noncoding_annotations[1])){
+    AS_feature_number <- 0 
+  }else{
+    AS_feature_number <- length(AS_noncoding_annotations)
+  }
+  
+  # get total feature number
+  feature_number = nonAS_feature_number + AS_feature_number
+  # function to get effective information of each element of partition_by_gene
+  # These information are those necessary to compute log-likelihood in the optimization function, without doing categorization, as we have continuous variables
+  # to adjust mutation rates and the number of mutations is not bit. 
+  partition_feature_no_cate <- function(pbg){
+    # input is one element of the list of partition_by_gene
+    pbg_split <- split(pbg, pbg[,3:(3 + feature_number - 1)],drop = TRUE)
+    feature_combination_number <- length(pbg_split)
+    # this function below is different from the function used in dealing with dataset without reading by chunk. Here, prior is not incoporated at this step.
+    info_for_each_feature <- function(feature_set){
+      list(feature_vector = c(as.numeric(feature_set[1,3:(3 + feature_number - 1)])), sum_cases = sum(feature_set$mut_count_1), sum_controls = sum(feature_set$mut_count_2))
+    }
+    sapply(pbg_split, info_for_each_feature,simplify = FALSE)
+  }
+  
+  # generae a window file to get base level annotations.
+  fwrite(coverage[,c(1:3,5)],paste(prefix, "_temp_for_mutrate.bed", sep = ""), col.names = FALSE, row.names = FALSE, sep = "\t", quote = FALSE)
+  
+  # read in non allele-specific epigenomic annotations
+  epi_ID = 1
+  if (!is.na(nonAS_noncoding_annotations)[1]){ # then epigenomic_marks must be a vector of epigenomic bed files that need to be compard with the mutation data
+    for(epi in nonAS_noncoding_annotations){
+      command <- paste("../external_tools/bedtools-2.17.0/bin/bedtools coverage -a ", epi, " -b ", paste(prefix, "_temp_for_mutrate.bed", sep = ""),  " > ", paste(prefix,"_temp_for_mutrate_overlap_epi.bed", sep = ""),sep = "")
+      system(command)
+      base_in_epi <- fread(paste(prefix,"_temp_for_mutrate_overlap_epi.bed", sep = ""), header = FALSE, sep = "\t", stringsAsFactors = FALSE)
+      base_in_epi <- base_in_epi[,c("V4","V5"), with = FALSE]
+      colnames(base_in_epi) <- c("ID", paste("Anno",epi_ID, sep = "_"))
+      coverage <- coverage[base_in_epi, on = "ID"]
+      system(paste("echo \"Finished reading non-allele specific noncoding annotations ", epi_ID, ".\"", sep = ""))
+      system("date")
+      epi_ID <- epi_ID + 1
+    }
+  }
+  
+  alt_letters <- c("A","C","G","T")
+  
+  # read in non-AS annotations
+  if (!is.na(AS_noncoding_annotations)[1]){ # then epigenomic_marks must be a vector of epigenomic bed files that need to be compard with the mutation data
+    for(epi in AS_noncoding_annotations){
+      for(k in 1:length(epi)){
+        command <- paste("../external_tools/bedtools-2.17.0/bin/bedtools coverage -a ", epi[k], " -b ", paste(prefix, "_temp_for_mutrate.bed", sep = ""),  " > ", paste(prefix,"_temp_for_mutrate_overlap_epi.bed", sep = ""),sep = "")
+        system(command)
+        base_in_epi <- fread(paste(prefix,"_temp_for_mutrate_overlap_epi.bed", sep = ""), header = FALSE, sep = "\t", stringsAsFactors = FALSE)
+        base_in_epi <- base_in_epi[,c("V4","V5"), with = FALSE]
+        colnames(base_in_epi) <- c("ID", paste("Anno",epi_ID, alt_letters[k], sep = "_"))
+        coverage <- coverage[base_in_epi, on = "ID"]
+      }
+      system(paste("echo \"Finished reading allele specific noncoding annotations ", epi_ID, ".\"", sep = ""))
+      system("date")
+      epi_ID <- epi_ID + 1
+    }
+  }
+  
+  
+  # build a list to store data
+  data_partition <-list()
+  
+  
+  # now for each study, read in data, and collapse data based on noncoding annotation configuration
+  for(m in 1:length(mut_files_1)){
+    mut_1 <- fread(mut_files_1[m], header = FALSE, sep = "\t", stringsAsFactors = FALSE)
+    mut_2 <- fread(mut_files_2[m], header = FALSE, sep = "\t", stringsAsFactors = FALSE)
+    for(letter in alt_letters){
+      if(!is.na(mutation_mutrate_adjusting_features_file_1) & !is.na(mutation_mutrate_adjusting_features_file_2)){
+        if(!is.na(nonAS_noncoding_annotations)[1] & !is.na(AS_noncoding_annotations)[1]){
+          coverage_temp <- coverage[, c("genename", "ID", "chr", "start", "end", paste("Anno_", seq(1, nonAS_feature_number), sep = ""), paste("Anno_", seq(nonAS_feature_number +1, nonAS_feature_number + AS_feature_number), "_", letter ,sep = "")), with = FALSE]
+        }else if(!is.na(nonAS_noncoding_annotations)[1] & is.na(AS_noncoding_annotations)[1]){
+          coverage_temp <- coverage[, c("genename", "ID", "chr", "start", "end", paste("Anno_", seq(1, nonAS_feature_number), sep = "")), with = FALSE]
+        }else if(is.na(nonAS_noncoding_annotations)[1] & !is.na(AS_noncoding_annotations)[1]){
+          coverage_temp <- coverage[, c("genename", "ID", "chr", "start", "end", paste("Anno_", seq(nonAS_feature_number +1, nonAS_feature_number + AS_feature_number), "_", letter ,sep = "")), with = FALSE]
+        }
+      }else{
+        if(!is.na(nonAS_noncoding_annotations)[1] & !is.na(AS_noncoding_annotations)[1]){
+          coverage_temp <- coverage[, c("genename", "ID", paste("Anno_", seq(1, nonAS_feature_number), sep = ""), paste("Anno_", seq(nonAS_feature_number +1, nonAS_feature_number + AS_feature_number), "_", letter ,sep = "")), with = FALSE]
+        }else if(!is.na(nonAS_noncoding_annotations)[1] & is.na(AS_noncoding_annotations)[1]){
+          coverage_temp <- coverage[, c("genename", "ID", paste("Anno_", seq(1, nonAS_feature_number), sep = "")), with = FALSE]
+        }else if(is.na(nonAS_noncoding_annotations)[1] & !is.na(AS_noncoding_annotations)[1]){
+          coverage_temp <- coverage[, c("genename", "ID", paste("Anno_", seq(nonAS_feature_number +1, nonAS_feature_number + AS_feature_number), "_", letter ,sep = "")), with = FALSE]
+        }
+      }
+      mut_allele_1 <- mut_1[V5 == letter]
+      mut_allele_2 <- mut_2[V5 == letter]
+      # the subsequent two lines of code are used to prevent a outputing bug when using fwrite. (85000000 to be written as 8.5e7)
+      mut_allele_1$V2 <- as.integer(mut_allele_1$V2)
+      mut_allele_1$V3 <- as.integer(mut_allele_1$V3)
+      mut_allele_2$V2 <- as.integer(mut_allele_2$V2)
+      mut_allele_2$V3 <- as.integer(mut_allele_2$V3)
+      fwrite(mut_allele_1, paste(prefix, "_temp_mut_allele_1.bed", sep = ""), col.names = FALSE, row.names = FALSE, quote = FALSE, sep = "\t")
+      fwrite(mut_allele_2, paste(prefix, "_temp_mut_allele_2.bed", sep = ""), col.names = FALSE, row.names = FALSE, quote = FALSE, sep = "\t")
+      command_1 <- paste("../external_tools/bedtools-2.17.0/bin/bedtools coverage -a ", paste(prefix, "_temp_mut_allele_1.bed", sep = ""), " -b ", paste(prefix, "_temp_for_mutrate.bed", sep = ""),  " > ", paste(prefix,"_temp_for_mutrate_overlap_mut_allele_1.bed", sep = ""),sep = "")
+      command_2 <- paste("../external_tools/bedtools-2.17.0/bin/bedtools coverage -a ", paste(prefix, "_temp_mut_allele_2.bed", sep = ""), " -b ", paste(prefix, "_temp_for_mutrate.bed", sep = ""),  " > ", paste(prefix,"_temp_for_mutrate_overlap_mut_allele_2.bed", sep = ""),sep = "")
+      system(command_1)
+      system(command_2)
+      base_with_mut_1 <- fread(paste(prefix,"_temp_for_mutrate_overlap_mut_allele_1.bed", sep = ""), header = FALSE, sep = "\t", stringsAsFactors = FALSE)
+      base_with_mut_1 <- base_with_mut_1[,c("V4","V5"), with = FALSE]
+      colnames(base_with_mut_1) <- c("ID", "mut_count_1")
+      coverage_temp <- coverage_temp[base_with_mut_1, on = "ID"]
+      base_with_mut_2 <- fread(paste(prefix,"_temp_for_mutrate_overlap_mut_allele_2.bed", sep = ""), header = FALSE, sep = "\t", stringsAsFactors = FALSE)
+      base_with_mut_2 <- base_with_mut_2[,c("V4","V5"), with = FALSE]
+      colnames(base_with_mut_2) <- c("ID", "mut_count_2")
+      coverage_temp <- coverage_temp[base_with_mut_2, on = "ID"]
+      # For binomial test, can't just remove bases without any annotations
+      # By contrast, need to remove bases that don't have any mutations either in cases or controls.
+      coverage_temp <- coverage_temp[mut_count_1 > 0 | mut_count_2 > 0]  
+      
+      if(!is.na(mutation_mutrate_adjusting_features_file_1) & !is.na(mutation_mutrate_adjusting_features_file_2)){# if base-level mutation adjusting features are provided
+        # read in mutrate adjusting variables
+        mutrate_adj_1 <- fread(mutation_mutrate_adjusting_features_file_1[m], header = TRUE, sep = "\t", stringsAsFactors = FALSE)
+        mutrate_adj_2 <- fread(mutation_mutrate_adjusting_features_file_2[m], header = TRUE, sep = "\t", stringsAsFactors = FALSE)
+        mutrate_adj <- mutrate_adj_1[mutrate_adj_2, on = c("chr", "start", "end")]
+        mutrate_adj_feature_num <- ncol(mutrate_adj_1) - 5
+        mutrate_adj <- mutrate_adj[,c(1:3, 6:(5+mutrate_adj_feature_num), ((8+mutrate_adj_feature_num) : (9+mutrate_adj_feature_num))), with = FALSE]
+        coverage_temp <- mutrate_adj[coverage_temp, on = c("chr", "start", "end")]
+        coverage_temp <- coverage_temp[,c(-1,-2,-3), with = FALSE]
+        # add compact data
+        data_partition <- append(data_partition, list(coverage_temp))
+      }else{
+        coverage_temp<- split(coverage_temp, coverage_temp$genename)
+        # then partition by feature configuration for each gene in the current chunk
+        coverage_temp <- sapply(coverage_temp, partition_feature, simplify = FALSE)
+        # add compact data
+        data_partition <- append(data_partition, coverage_temp)
+      }
+      
+      rm(coverage_temp) # release memory
+      system(paste("echo \"Finished read in mutation data and make them into the compact format for Study ", m, " and allele ", letter, ".\"", sep = ""))
+      system("date")
+    }
+  }
+  
+  # remove temporary files
+  system(paste("rm ", prefix, "_temp*", sep = ""))
+  print(paste("echo \"Temp files cleaned and data recording finished!\""))
+  system("date")
+  return(list(base_info = data_partition))
+}
+
+
+
+# TADA_A_RR_estimate_binom_v2 is used when base-level mutation rate adjusting featurs were used. 
+TADA_A_RR_estimate_binom_v2 <-function(data, selected_annotations, gene_prior_file, optimization_iteration = 2000, mode = "regular"){
+  #[data] is the [base_info] returned from [TADA_A_reading_info_pair], which contains all the allele specific data across all studies. [mutation_mutrate_adjusting_features_file_1] and [mutation_mutrate_adjusting_features_file_2]
+  # need to b non-NAs. Otherwise, [TADA_A_RR_estimat_binom] needs to be used. 
+  #[selected_annotations] is a vector indicating non-coding annotations whose RRs need to be estimated. e.g., c(2,3) means that the 2nd and 3rd annotations in the [noncoding_annotations] argument of [TADA_A_reading_in_annotations] will have their RRs estimated.
+  #[gene_prior_file], #[gene_prior_file], a file that has the prior probability of each gene as a risk gene. e.g., "../data/Example_gene_prior.txt".
+  #[optimization_iteration] is the number of iterations that optim() will perform to estimate RRs.
+  #[mode] is "regular", or "single_fast". "single_fast" is used when estimating RR from only one annotation ([data] only recoreded one annotation) of lots of genes (e.g., all genes), would be 5 times faster.
+  
+  # get the piror probability of genes.
+  gene_prior = fread(gene_prior_file, header = TRUE, sep = "\t", stringsAsFactors = FALSE)
+  colnames(gene_prior) = c("genename", "prior")
+  gene_prior$prior <- as.numeric(gene_prior$prior)
+  gene_prior$genename = as.character(gene_prior$genename)
+  
+  # get the number of mutrate_adjusting_featurs
+  mut_adj_feature_num <- which(colnames(data[[1]]) == "genename") - 1
+  # get the number of total functional annotations that need to have RR estimated. 
+  functional_feature_num <- ncol(data[[1]]) - 2 -2 - mut_adj_feature_num
+  data <- rbindlist(data)
+  data <- data[gene_prior, on = "genename"]
+  data <- data[complete.cases(data)]
+  
+  data <- data[, c(c(1 : mut_adj_feature_num), mut_adj_feature_num + 2 + selected_annotations, (ncol(data) -2) : ncol(data), (mut_adj_feature_num + 1)) ,with = FALSE] 
+  data <- split(data, data$genename)
+  # notice the fr function is different from the function that deals with dataset without partition, needs to consider splicing mutation together
+  fr <-function(x){ # x is the RRs of selected noncoding annotations. 
+    beta0 <- x[1]
+    mut_par <- x[2:(mut_adj_feature_num + 1)] * rep( c(1, -1), each = (mut_adj_feature_num/2))
+    all_rr <- x[(mut_adj_feature_num + 2): (mut_adj_feature_num + length(selected_annotations) + 1)] # has an intercept for this case, as mutation rates haven't been adjusted for each dataset. 
+    
+    
+    cal_logP <- function(data_partition_element){
+      K1 <- exp(beta0 + as.matrix(data_partition_element[, 1:(ncol(data_partition_element) -4), with = FALSE]) %*% c(mut_par, all_rr))
+      K1_logP <- data_partition_element$mut_count_1 * (log(K1) - log(K1+1)) - data_partition_element$mut_count_2 * log(1+K1)
+      K0 <- exp(beta0 + as.matrix(data_partition_element[, 1:(ncol(data_partition_element) -4), with = FALSE]) %*% c(mut_par, rep(0, length(selected_annotations))))
+      K0_logP <- data_partition_element$mut_count_1 * (log(K0) - log(K0+1)) - data_partition_element$mut_count_2 * log(1+K0)
+      log(exp(log(data_partition_element[1,]$prior) + sum(K1_logP)) + exp(log((1 - data_partition_element[1,]$prior)) + sum(K0_logP))) 
+    }
+    
+    sum(sapply(data, cal_logP))
+  }
+  # Use [optim] to do optimization, for non-splicing_mutations
+  feature_number <- length(selected_annotations) + mut_adj_feature_num
+  
+  mle <- optim(rep(0.1, (feature_number + 1)), fr ,control=list("fnscale"=-1, "maxit" = optimization_iteration), hessian = TRUE)
+  
+  # get confidence intervals of RR estimates
+  fisher_info <- solve(-mle$hessian)
+  prop_sigma <- sqrt(c(diag(fisher_info)))
+  rr_estimate <- c(mle$par)
+  upper<-rr_estimate+1.96*prop_sigma
+  lower<-rr_estimate-1.96*prop_sigma
+  rr_report <-data.frame(relative_risk = rr_estimate, lower_bound = lower, upper_bournd = upper)
+  
+  list(mle = mle, rr_report = rr_report)
+}
+
+
+
+# TADA_A_RR_estimate_binom_v3 is used when base-level mutation rate adjusting featurs were used and the features for cases and controls are exactly the same. 
+TADA_A_RR_estimate_binom_v3 <-function(data, selected_annotations, gene_prior_file, optimization_iteration = 2000, mode = "regular"){
+  #[data] is the [base_info] returned from [TADA_A_reading_info_pair], which contains all the allele specific data across all studies. [mutation_mutrate_adjusting_features_file_1] and [mutation_mutrate_adjusting_features_file_2]
+  # need to b non-NAs. Otherwise, [TADA_A_RR_estimat_binom] needs to be used. 
+  #[selected_annotations] is a vector indicating non-coding annotations whose RRs need to be estimated. e.g., c(2,3) means that the 2nd and 3rd annotations in the [noncoding_annotations] argument of [TADA_A_reading_in_annotations] will have their RRs estimated.
+  #[gene_prior_file], #[gene_prior_file], a file that has the prior probability of each gene as a risk gene. e.g., "../data/Example_gene_prior.txt".
+  #[optimization_iteration] is the number of iterations that optim() will perform to estimate RRs.
+  #[mode] is "regular", or "single_fast". "single_fast" is used when estimating RR from only one annotation ([data] only recoreded one annotation) of lots of genes (e.g., all genes), would be 5 times faster.
+  
+  # get the piror probability of genes.
+  gene_prior = fread(gene_prior_file, header = TRUE, sep = "\t", stringsAsFactors = FALSE)
+  colnames(gene_prior) = c("genename", "prior")
+  gene_prior$prior <- as.numeric(gene_prior$prior)
+  gene_prior$genename = as.character(gene_prior$genename)
+  
+  # get the number of mutrate_adjusting_featurs
+  mut_adj_feature_num <- (which(colnames(data[[1]]) == "genename") - 1)/2
+  # get the number of total functional annotations that need to have RR estimated. 
+  functional_feature_num <- ncol(data[[1]]) - 2 -2 - mut_adj_feature_num
+  data <- rbindlist(data)
+  data <- data[gene_prior, on = "genename"]
+  data <- data[complete.cases(data)]
+  
+  data <- data[, c(c(1 : mut_adj_feature_num), mut_adj_feature_num + 2 + selected_annotations, (ncol(data) -2) : ncol(data), (mut_adj_feature_num + 1)) ,with = FALSE] 
+  data <- split(data, data$genename)
+  # notice the fr function is different from the function that deals with dataset without partition, needs to consider splicing mutation together
+  fr <-function(x){ # x is the RRs of selected noncoding annotations. 
+    beta0 <- x[1]
+    mut_par <- x[2:(mut_adj_feature_num + 1)] * rep( c(1, -1), each = (mut_adj_feature_num/2))
+    all_rr <- x[(mut_adj_feature_num + 2): (mut_adj_feature_num + length(selected_annotations) + 1)] # has an intercept for this case, as mutation rates haven't been adjusted for each dataset. 
+    
+    
+    cal_logP <- function(data_partition_element){
+      K1 <- exp(beta0 + as.matrix(data_partition_element[, 1:(ncol(data_partition_element) -4), with = FALSE]) %*% c(mut_par, all_rr))
+      K1_logP <- data_partition_element$mut_count_1 * (log(K1) - log(K1+1)) - data_partition_element$mut_count_2 * log(1+K1)
+      K0 <- exp(beta0 + as.matrix(data_partition_element[, 1:(ncol(data_partition_element) -4), with = FALSE]) %*% c(mut_par, rep(0, length(selected_annotations))))
+      K0_logP <- data_partition_element$mut_count_1 * (log(K0) - log(K0+1)) - data_partition_element$mut_count_2 * log(1+K0)
+      log(exp(log(data_partition_element[1,]$prior) + sum(K1_logP)) + exp(log((1 - data_partition_element[1,]$prior)) + sum(K0_logP))) 
+    }
+    
+    sum(sapply(data, cal_logP))
+  }
+  # Use [optim] to do optimization, for non-splicing_mutations
+  feature_number <- length(selected_annotations) + mut_adj_feature_num
+  
+  mle <- optim(rep(0.1, (feature_number + 1)), fr ,control=list("fnscale"=-1, "maxit" = optimization_iteration), hessian = TRUE)
+  
+  # get confidence intervals of RR estimates
+  fisher_info <- solve(-mle$hessian)
+  prop_sigma <- sqrt(c(diag(fisher_info)))
+  rr_estimate <- c(mle$par)
+  upper<-rr_estimate+1.96*prop_sigma
+  lower<-rr_estimate-1.96*prop_sigma
+  rr_report <-data.frame(relative_risk = rr_estimate, lower_bound = lower, upper_bournd = upper)
+  
+  list(mle = mle, rr_report = rr_report)
+}

@@ -1034,6 +1034,7 @@ TADA_A_read_info_pair_test <- function(mut_files_1 = c("../data/table.ASCWGS_201
 
 
 # TADA_A_RR_estimate_binom_v2 is used when base-level mutation rate adjusting featurs were used. 
+# base_level mutation mutation-rate adjusting features are different among cases and controls. Otherwise, use [TADA_A_RR_estimate_binom_v3]
 TADA_A_RR_estimate_binom_v2 <-function(data, selected_annotations, gene_prior_file, optimization_iteration = 2000, mode = "regular"){
   #[data] is the [base_info] returned from [TADA_A_reading_info_pair], which contains all the allele specific data across all studies. [mutation_mutrate_adjusting_features_file_1] and [mutation_mutrate_adjusting_features_file_2]
   # need to b non-NAs. Otherwise, [TADA_A_RR_estimat_binom] needs to be used. 
@@ -1116,12 +1117,12 @@ TADA_A_RR_estimate_binom_v3 <-function(data, selected_annotations, gene_prior_fi
   data <- data[gene_prior, on = "genename"]
   data <- data[complete.cases(data)]
   
-  data <- data[, c(c(1 : mut_adj_feature_num), mut_adj_feature_num + 2 + selected_annotations, (ncol(data) -2) : ncol(data), (mut_adj_feature_num + 1)) ,with = FALSE] 
+  data <- data[, c(c(1 : mut_adj_feature_num), 2* mut_adj_feature_num + 2 + selected_annotations, (ncol(data) -2) : ncol(data), (2* mut_adj_feature_num + 1)) ,with = FALSE] 
   data <- split(data, data$genename)
   # notice the fr function is different from the function that deals with dataset without partition, needs to consider splicing mutation together
   fr <-function(x){ # x is the RRs of selected noncoding annotations. 
     beta0 <- x[1]
-    mut_par <- x[2:(mut_adj_feature_num + 1)] * rep( c(1, -1), each = (mut_adj_feature_num/2))
+    mut_par <- x[2:(mut_adj_feature_num + 1)]
     all_rr <- x[(mut_adj_feature_num + 2): (mut_adj_feature_num + length(selected_annotations) + 1)] # has an intercept for this case, as mutation rates haven't been adjusted for each dataset. 
     
     

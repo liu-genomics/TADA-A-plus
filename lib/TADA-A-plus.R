@@ -948,3 +948,61 @@ TADA_A_RR_estimate_binom_v3 <-function(data, selected_annotations, gene_prior_fi
   
   list(mle = mle, rr_report = rr_report)
 }
+
+
+# Function to do simple burden analysis using Fisher exact test. 
+simple_burden <- function(file1, file2, annotation){
+  # [file1] is the name of cases, in bed format, as long as having the first three columns
+  # [file2] is the name of controls in bed format, as long as having the first three columns
+  # [annotation] is the name of annotation bed files, need to has four columns, chr, start, end, name. 
+  # prefix for temporary files that will be deleted at the end of the pipeline
+  prefix <- as.integer((as.double(Sys.time())*1000+Sys.getpid()) %% 2^31) # prefix for temporary files that will be deleted at the end of the pipeline
+  prefix <- paste("tmp/", prefix, sep = "")
+  
+  command <- paste("../external_tools/bedtools-2.17.0/bin/bedtools coverage -a ", file1, " -b ", annotation, " > ", prefix, ".temp.file1.coverageBed", sep = "")
+  system(command)
+  command <- paste("../external_tools/bedtools-2.17.0/bin/bedtools coverage -a ", file2, " -b ", annotation, " > ", prefix, ".temp.file2.coverageBed", sep = "")
+  system(command)
+  file1_coverage <- fread(paste(prefix, ".temp.file1.coverageBed", sep = ""), header = FALSE, sep = "\t", stringsAsFactors = FALSE)
+  file2_coverage <- fread(paste(prefix, ".temp.file2.coverageBed", sep = ""), header = FALSE, sep = "\t", stringsAsFactors = FALSE)
+  file1_DNM <- read.delim(file1, header = FALSE, sep = "\t", stringsAsFactors = FALSE)
+  file2_DNM <- read.delim(file2, header = FALSE, sep = "\t", stringsAsFactors = FALSE)
+  burden <- (sum(file1_coverage$V5)/sum(file2_coverage$V5))/(nrow(file1_DNM)/nrow(file2_DNM))
+  p.value <- fisher.test(matrix(c(sum(file1_coverage$V5), sum(file2_coverage$V5), (nrow(file1_DNM) - sum(file1_coverage$V5)), (nrow(file2_DNM) - sum(file2_coverage$V5))), 2, 2), alternative = "greater")$p.value
+  system(paste("rm ", prefix, ".temp.file1.coverageBed", sep = ""))
+  system(paste("rm ", prefix, ".temp.file2.coverageBed", sep = ""))
+  return(list(burden = burden, p.value = p.value, cases_count = sum(file1_coverage$V5), controls_count = sum(file2_coverage$V5)))
+}
+
+# Use output from [TADA_A_read_info_pair] when mutation rate adjusting features were used, under this situation, the output will be a list of data.tables, would be easier 
+# to calculate burden signal.
+
+TADA_A_RR_estimate_simple_burden<-function(data, gene_list = "all", background = c(117685, 114849)){
+  #[data] is the [base_info] returned from [TADA_A_reading_info_pair], which contains all the allele specific data across all studies. [mutation_mutrate_adjusting_features_file_1] and [mutation_mutrate_adjusting_features_file_2]
+  # need to b non-NAs. Otherwise, [TADA_A_RR_estimat_binom] needs to be used. 
+  #[gene_list],could be "all", or a vector that has a list of genenames from which mutations will be used to calculate burden.
+  #[backgroun] is a vector of two numbers, the first is the total number of mutations in cases while the second is the total number of mutations in controls. 
+  #[optimization_iteration] is the number of iterations that optim() will perform to estimate RRs.
+  #[mode] is "regular", or "single_fast". "single_fast" is used when estimating RR from only one annotation ([data] only recoreded one annotation) of lots of genes (e.g., all genes), would be 5 times faster.
+  
+  
+  data <- rbindlist(data)
+  if(gene_list != "all"){
+    data <- data[is.element(data$genename, gene_list)]
+  }
+  # get the number of mutrate_adjusting_featurs
+  mut_adj_feature_num <- which(colnames(data) == "genename") - 1
+  # get the number of total functional annotations that need to have RR estimated. 
+  functional_feature_num <- ncol(data) - 2 -2 - mut_adj_feature_num
+  output <- data.table(burden = rep(-1, functional_feature_num), p.value = rep(-1, functional_feature_num), case_count = rep(-1, functional_feature_num), control_count = rep(-1, functional_feature_num))
+  for(i in 1:functional_feature_num){
+    mut_count_1_with_anno <- sum(data[data[[(mut_adj_feature_num + 2 + i)]] == 1]$mut_count_1)
+    mut_count_2_with_anno <- sum(data[data[[(mut_adj_feature_num + 2 + i)]] == 1]$mut_count_2)
+    output[i,]$burden <- (mut_count_1_with_anno/mut_count_2_with_anno)/(background[1]/background[2])
+    output[i,]$p.value <- fisher.test(matrix(c(mut_count_1_with_anno, mut_count_2_with_anno, (background[1] - mut_count_1_with_anno), (background[2] - mut_count_2_with_anno)),2,2), alternative = "greater")$p.value
+    output[i,]$case_count <- mut_count_1_with_anno
+    output[i,]$control_count <- mut_count_2_with_anno
+  }
+  
+  list(rr_report = output)
+}

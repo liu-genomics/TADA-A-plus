@@ -512,15 +512,15 @@ TADA_A_read_info_temp <- function(mut_files = c("../data/Yuen_NM2015_cases_DNM_w
 
 # functions to read in mutation data that has matched cases and controls. Binomial tests instead of Poisson tests will be performed to estimte the RR of annotations.
 TADA_A_read_info_pair <- function(mut_files_1 = c("../data/table.ASCWGS_20180504.WGS1902_hg19_cases_SNV_remove_recurrent_mutations_with_allele_info.txt"),
-                                       mut_files_2 = c("../data/table.ASCWGS_20180504.WGS1902_hg19_controls_SNV_remove_recurrent_mutations_with_allele_info.txt"),
-                                       window_file = "../data/windows_partition/Example_windows_with_div_score_no_header.bed.temp.partition00.with_header.txt",
-                                       gene_prior_file = "../data/Example_gene_prior.txt",
-                                       nonAS_noncoding_annotations = c("../data/Noonan_brain_roadmap_union_within_10kb_and_promoter_no_utr.bed","../data/Epigenome_E081_E082_intersection__within_10kb_and_promoter_no_utr.bed","../data/Encode_DHS_union_within_10kb_and_promoter_no_utr.bed"),
-                                       AS_noncoding_annotations = list(c("../other_annotations/coding/171121_coding_nonsynonymous_SNV_altA.bed.merge.bed", "../other_annotations/coding/171121_coding_nonsynonymous_SNV_altC.bed.merge.bed", "../other_annotations/coding/171121_coding_nonsynonymous_SNV_altG.bed.merge.bed", "../other_annotations/coding/171121_coding_nonsynonymous_SNV_altT.bed.merge.bed")),
-                                       mutation_mutrate_adjusting_features_file_1 = NA,
-                                       mutation_mutrate_adjusting_features_file_2 = NA,
-                                       report_proportion = 100/18665,
-                                       MPI = 1){
+                                  mut_files_2 = c("../data/table.ASCWGS_20180504.WGS1902_hg19_controls_SNV_remove_recurrent_mutations_with_allele_info.txt"),
+                                  window_file = "../data/windows_partition/Example_windows_with_div_score_no_header.bed.temp.partition00.with_header.txt",
+                                  gene_prior_file = "../data/Example_gene_prior.txt",
+                                  nonAS_noncoding_annotations = c("../data/Noonan_brain_roadmap_union_within_10kb_and_promoter_no_utr.bed","../data/Epigenome_E081_E082_intersection__within_10kb_and_promoter_no_utr.bed","../data/Encode_DHS_union_within_10kb_and_promoter_no_utr.bed"),
+                                  AS_noncoding_annotations = list(c("../other_annotations/coding/171121_coding_nonsynonymous_SNV_altA.bed.merge.bed", "../other_annotations/coding/171121_coding_nonsynonymous_SNV_altC.bed.merge.bed", "../other_annotations/coding/171121_coding_nonsynonymous_SNV_altG.bed.merge.bed", "../other_annotations/coding/171121_coding_nonsynonymous_SNV_altT.bed.merge.bed")),
+                                  mutation_mutrate_adjusting_features_file_1 = NA,
+                                  mutation_mutrate_adjusting_features_file_2 = NA,
+                                  report_proportion = 100/18665,
+                                  MPI = 1){
   
   # [mut_files_1] is a vector of files with cases DNM infomation in a txt format. The first three columns are chromosome, 0-based start and 1-based end, followed by two columns of ref and alt alleles.
   # The code currently only works for SNVs. 
@@ -636,12 +636,17 @@ TADA_A_read_info_pair <- function(mut_files_1 = c("../data/table.ASCWGS_20180504
   epi_ID = 1
   if (!is.na(nonAS_noncoding_annotations)[1]){ # then epigenomic_marks must be a vector of epigenomic bed files that need to be compard with the mutation data
     for(epi in nonAS_noncoding_annotations){
-      command <- paste("../external_tools/bedtools-2.17.0/bin/bedtools coverage -a ", epi, " -b ", paste(prefix, "_temp_for_mutrate.bed", sep = ""),  " > ", paste(prefix,"_temp_for_mutrate_overlap_epi.bed", sep = ""),sep = "")
-      system(command)
-      base_in_epi <- fread(paste(prefix,"_temp_for_mutrate_overlap_epi.bed", sep = ""), header = FALSE, sep = "\t", stringsAsFactors = FALSE)
-      base_in_epi <- base_in_epi[,c("V4","V5"), with = FALSE]
-      colnames(base_in_epi) <- c("ID", paste("Anno",epi_ID, sep = "_"))
-      coverage <- coverage[base_in_epi, on = "ID"]
+      if(file.info(epi)$size != 0){# if the annotation file is not empty
+        command <- paste("../external_tools/bedtools-2.17.0/bin/bedtools coverage -a ", epi, " -b ", paste(prefix, "_temp_for_mutrate.bed", sep = ""),  " > ", paste(prefix,"_temp_for_mutrate_overlap_epi.bed", sep = ""),sep = "")
+        system(command)
+        base_in_epi <- fread(paste(prefix,"_temp_for_mutrate_overlap_epi.bed", sep = ""), header = FALSE, sep = "\t", stringsAsFactors = FALSE)
+        base_in_epi <- base_in_epi[,c("V4","V5"), with = FALSE]
+        colnames(base_in_epi) <- c("ID", paste("Anno",epi_ID, sep = "_"))
+        coverage <- coverage[base_in_epi, on = "ID"]
+      }else{
+        coverage <- data.table(coverage, rep(0,nrow(coverage)))
+        colnames(coverage)[length(colnames(coverage))] <- paste("Anno",epi_ID, sep = "_")
+      }
       system(paste("echo \"Finished reading non-allele specific noncoding annotations ", epi_ID, ".\"", sep = ""))
       system("date")
       epi_ID <- epi_ID + 1
@@ -650,16 +655,21 @@ TADA_A_read_info_pair <- function(mut_files_1 = c("../data/table.ASCWGS_20180504
   
   alt_letters <- c("A","C","G","T")
   
-  # read in non-AS annotations
+  # read in AS annotations
   if (!is.na(AS_noncoding_annotations)[1]){ # then epigenomic_marks must be a vector of epigenomic bed files that need to be compard with the mutation data
     for(epi in AS_noncoding_annotations){
       for(k in 1:length(epi)){
-        command <- paste("../external_tools/bedtools-2.17.0/bin/bedtools coverage -a ", epi[k], " -b ", paste(prefix, "_temp_for_mutrate.bed", sep = ""),  " > ", paste(prefix,"_temp_for_mutrate_overlap_epi.bed", sep = ""),sep = "")
-        system(command)
-        base_in_epi <- fread(paste(prefix,"_temp_for_mutrate_overlap_epi.bed", sep = ""), header = FALSE, sep = "\t", stringsAsFactors = FALSE)
-        base_in_epi <- base_in_epi[,c("V4","V5"), with = FALSE]
-        colnames(base_in_epi) <- c("ID", paste("Anno",epi_ID, alt_letters[k], sep = "_"))
-        coverage <- coverage[base_in_epi, on = "ID"]
+        if(file.info(epi[k])$size != 0){# if the annotation file is not empty
+          command <- paste("../external_tools/bedtools-2.17.0/bin/bedtools coverage -a ", epi[k], " -b ", paste(prefix, "_temp_for_mutrate.bed", sep = ""),  " > ", paste(prefix,"_temp_for_mutrate_overlap_epi.bed", sep = ""),sep = "")
+          system(command)
+          base_in_epi <- fread(paste(prefix,"_temp_for_mutrate_overlap_epi.bed", sep = ""), header = FALSE, sep = "\t", stringsAsFactors = FALSE)
+          base_in_epi <- base_in_epi[,c("V4","V5"), with = FALSE]
+          colnames(base_in_epi) <- c("ID", paste("Anno",epi_ID, alt_letters[k], sep = "_"))
+          coverage <- coverage[base_in_epi, on = "ID"]
+        }else{
+          coverage <- data.table(coverage, rep(0,nrow(coverage)))
+          colnames(coverage)[length(colnames(coverage))] <- paste("Anno",epi_ID, alt_letters[k], sep = "_")
+        }
       }
       system(paste("echo \"Finished reading allele specific noncoding annotations ", epi_ID, ".\"", sep = ""))
       system("date")

@@ -312,28 +312,32 @@ source(&quot;../lib/TADA-A-plus.R&quot;)</code></pre>
                                   window_file = &quot;../data/Example_windows_coding_noncoding_UTRs_updated_for_mutation_rate_adjustment_ERV_mutrate_noXY_with_additional_covariates.bed&quot;,
                                   gene_prior_file = &quot;../data/Example_gene_prior.txt&quot;,
                                   nonAS_noncoding_annotations = NA,
-                                  AS_noncoding_annotations = list(c(&quot;../other_annotations/deepsea_annotations/web_retrieved_HGMD_scores/Simons_wgs_1902/Simons1902_HGMD_0.7_cutoff_altA.bed&quot;, &quot;../other_annotations/deepsea_annotations/web_retrieved_HGMD_scores/Simons_wgs_1902/Simons1902_HGMD_0.7_cutoff_altC.bed&quot;, &quot;../other_annotations/deepsea_annotations/web_retrieved_HGMD_scores/Simons_wgs_1902/Simons1902_HGMD_0.7_cutoff_altG.bed&quot;, &quot;../other_annotations/deepsea_annotations/web_retrieved_HGMD_scores/Simons_wgs_1902/Simons1902_HGMD_0.7_cutoff_altT.bed&quot;)),
+                                  AS_noncoding_annotations = list(c(&quot;../other_annotations/deepsea_annotations/web_retrieved_HGMD_scores/Simons_wgs_1902/Simons1902_HGMD_0.7_cutoff_altA.bed&quot;, &quot;../other_annotations/deepsea_annotations/web_retrieved_HGMD_scores/Simons_wgs_1902/Simons1902_HGMD_0.7_cutoff_altC.bed&quot;, &quot;../other_annotations/deepsea_annotations/web_retrieved_HGMD_scores/Simons_wgs_1902/Simons1902_HGMD_0.7_cutoff_altG.bed&quot;, &quot;../other_annotations/deepsea_annotations/web_retrieved_HGMD_scores/Simons_wgs_1902/Simons1902_HGMD_0.7_cutoff_altT.bed&quot;),
+                                                                  c(&quot;../other_annotations/deepsea_annotations/web_retrieved_HGMD_scores/Simons_wgs_1902/Simons1902_HGMD_0.7_cutoff_altA.bed_overlap_with_coding.bed&quot;, &quot;../other_annotations/deepsea_annotations/web_retrieved_HGMD_scores/Simons_wgs_1902/Simons1902_HGMD_0.7_cutoff_altC.bed_overlap_with_coding.bed&quot;, &quot;../other_annotations/deepsea_annotations/web_retrieved_HGMD_scores/Simons_wgs_1902/Simons1902_HGMD_0.7_cutoff_altG.bed_overlap_with_coding.bed&quot;, &quot;../other_annotations/deepsea_annotations/web_retrieved_HGMD_scores/Simons_wgs_1902/Simons1902_HGMD_0.7_cutoff_altT.bed_overlap_with_coding.bed&quot;),                                                                  c(&quot;../other_annotations/deepsea_annotations/web_retrieved_HGMD_scores/Simons_wgs_1902/Simons1902_HGMD_0.7_cutoff_altA.bed_overlap_with_5kb_promoter.bed&quot;, &quot;../other_annotations/deepsea_annotations/web_retrieved_HGMD_scores/Simons_wgs_1902/Simons1902_HGMD_0.7_cutoff_altC.bed_overlap_with_5kb_promoter.bed&quot;, &quot;../other_annotations/deepsea_annotations/web_retrieved_HGMD_scores/Simons_wgs_1902/Simons1902_HGMD_0.7_cutoff_altG.bed_overlap_with_5kb_promoter.bed&quot;, &quot;../other_annotations/deepsea_annotations/web_retrieved_HGMD_scores/Simons_wgs_1902/Simons1902_HGMD_0.7_cutoff_altT.bed_overlap_with_5kb_promoter.bed&quot;),
+                                                                  c(&quot;../other_annotations/deepsea_annotations/web_retrieved_HGMD_scores/Simons_wgs_1902/Simons1902_HGMD_0.7_cutoff_altA.bed_overlap_with_UTRs.bed&quot;, &quot;../other_annotations/deepsea_annotations/web_retrieved_HGMD_scores/Simons_wgs_1902/Simons1902_HGMD_0.7_cutoff_altC.bed_overlap_with_UTRs.bed&quot;, &quot;../other_annotations/deepsea_annotations/web_retrieved_HGMD_scores/Simons_wgs_1902/Simons1902_HGMD_0.7_cutoff_altG.bed_overlap_with_UTRs.bed&quot;, &quot;../other_annotations/deepsea_annotations/web_retrieved_HGMD_scores/Simons_wgs_1902/Simons1902_HGMD_0.7_cutoff_altT.bed_overlap_with_UTRs.bed&quot;),
+                                                                  c(&quot;../other_annotations/deepsea_annotations/web_retrieved_HGMD_scores/Simons_wgs_1902/Simons1902_HGMD_0.7_cutoff_altA.bed_overlap_with_spidex_introns.bed&quot;, &quot;../other_annotations/deepsea_annotations/web_retrieved_HGMD_scores/Simons_wgs_1902/Simons1902_HGMD_0.7_cutoff_altC.bed_overlap_with_spidex_introns.bed&quot;, &quot;../other_annotations/deepsea_annotations/web_retrieved_HGMD_scores/Simons_wgs_1902/Simons1902_HGMD_0.7_cutoff_altG.bed_overlap_with_spidex_introns.bed&quot;, &quot;../other_annotations/deepsea_annotations/web_retrieved_HGMD_scores/Simons_wgs_1902/Simons1902_HGMD_0.7_cutoff_altT.bed_overlap_with_spidex_introns.bed&quot;)),
                               mutation_mutrate_adjusting_features_file_1 = NA,
                                   mutation_mutrate_adjusting_features_file_2 = NA,
                                   report_proportion = 1,
                                   MPI = 1)</code></pre>
 <pre><code>## 
-Read 5.9% of 8574715 rows
-Read 12.5% of 8574715 rows
-Read 20.3% of 8574715 rows
-Read 27.4% of 8574715 rows
-Read 32.9% of 8574715 rows
+Read 4.4% of 8574715 rows
+Read 10.5% of 8574715 rows
+Read 15.6% of 8574715 rows
+Read 21.7% of 8574715 rows
+Read 28.2% of 8574715 rows
+Read 33.0% of 8574715 rows
 Read 40.4% of 8574715 rows
 Read 49.9% of 8574715 rows
-Read 60.3% of 8574715 rows
-Read 64.1% of 8574715 rows
-Read 74.2% of 8574715 rows
-Read 76.7% of 8574715 rows
-Read 85.3% of 8574715 rows
+Read 59.5% of 8574715 rows
+Read 62.9% of 8574715 rows
+Read 72.1% of 8574715 rows
+Read 75.1% of 8574715 rows
+Read 82.5% of 8574715 rows
 Read 91.5% of 8574715 rows
-Read 8574715 rows and 21 (of 21) columns from 0.932 GB file in 00:00:17
+Read 8574715 rows and 21 (of 21) columns from 0.932 GB file in 00:00:18
 ## [1] &quot;echo \&quot;Temp files cleaned and data recording finished!\&quot;&quot;</code></pre>
-<pre class="r"><code>report &lt;- data.frame(annotation = c(&quot;HGMD gt 0.7&quot;), 
+<pre class="r"><code>report &lt;- data.frame(annotation = c(&quot;HGMD gt 0.7&quot;, &quot;HGMD gt 0.7 in coding&quot;, &quot;HGMD gt 0.7 in 5kb promoter&quot;, &quot;HGMD gt 0.7 in UTRs&quot;, &quot;HGMD gt 0.7 in spidex introns&quot;), 
                      log_RR = NA, lower_bound = NA, upper_bound = NA)</code></pre>
 </div>
 <div id="wes-prior" class="section level3">
@@ -368,6 +372,169 @@ print(temp)</code></pre>
 ## 1    0.04324258   0.0227091   0.06377607
 ## 2    0.91836212  -0.4664967   2.30322092</code></pre>
 <pre class="r"><code>report[1,2:4] &lt;- temp$rr_report[2,]</code></pre>
+<pre class="r"><code>temp &lt;- TADA_A_RR_estimate_binom(data = data$base_info, selected_annotations = c(2), gene_prior_file = &quot;../data/Example_gene_prior.txt&quot;, optimization_iteration = 2000, mode = &quot;regular&quot;)
+print(temp)</code></pre>
+<pre><code>## $mle
+## $mle$par
+## [1] 0.04348925 9.17440986
+## 
+## $mle$value
+## [1] -25308.03
+## 
+## $mle$counts
+## function gradient 
+##       85       NA 
+## 
+## $mle$convergence
+## [1] 0
+## 
+## $mle$message
+## NULL
+## 
+## $mle$hessian
+##               [,1]          [,2]
+## [1,] -9.125494e+03 -0.0004029062
+## [2,] -4.029062e-04 -0.0001246008
+## 
+## 
+## $rr_report
+##   relative_risk   lower_bound upper_bournd
+## 1    0.04348925    0.02297159   0.06400692
+## 2    9.17440986 -166.41395399 184.76277371</code></pre>
+<pre class="r"><code>report[1,2:4] &lt;- temp$rr_report[2,]</code></pre>
+<pre class="r"><code>temp &lt;- TADA_A_RR_estimate_binom(data = data$base_info, selected_annotations = c(3), gene_prior_file = &quot;../data/Example_gene_prior.txt&quot;, optimization_iteration = 2000, mode = &quot;regular&quot;)
+print(temp)</code></pre>
+<pre><code>## $mle
+## $mle$par
+## [1] 0.04367366 9.36502969
+## 
+## $mle$value
+## [1] -25308.23
+## 
+## $mle$counts
+## function gradient 
+##       81       NA 
+## 
+## $mle$convergence
+## [1] 0
+## 
+## $mle$message
+## NULL
+## 
+## $mle$hessian
+##               [,1]          [,2]
+## [1,] -9.124388e+03 -5.056791e-04
+## [2,] -5.056791e-04 -9.094947e-05
+## 
+## 
+## $rr_report
+##   relative_risk   lower_bound upper_bournd
+## 1    0.04367366    0.02315475   0.06419256
+## 2    9.36502969 -196.15589797 214.88595736</code></pre>
+<pre class="r"><code>report[1,2:4] &lt;- temp$rr_report[2,]</code></pre>
+<pre class="r"><code>temp &lt;- TADA_A_RR_estimate_binom(data = data$base_info, selected_annotations = c(4), gene_prior_file = &quot;../data/Example_gene_prior.txt&quot;, optimization_iteration = 2000, mode = &quot;regular&quot;)
+print(temp)</code></pre>
+<pre><code>## $mle
+## $mle$par
+## [1] 0.04410503 0.68293479
+## 
+## $mle$value
+## [1] -25308.93
+## 
+## $mle$counts
+## function gradient 
+##       67       NA 
+## 
+## $mle$convergence
+## [1] 0
+## 
+## $mle$message
+## NULL
+## 
+## $mle$hessian
+##              [,1]       [,2]
+## [1,] -9126.794489 -1.2317823
+## [2,]    -1.231782 -0.6256987
+## 
+## 
+## $rr_report
+##   relative_risk lower_bound upper_bournd
+## 1    0.04410503   0.0235861   0.06462396
+## 2    0.68293479  -1.7952355   3.16110508</code></pre>
+<pre class="r"><code>report[1,2:4] &lt;- temp$rr_report[2,]</code></pre>
+<pre class="r"><code>temp &lt;- TADA_A_RR_estimate_binom(data = data$base_info, selected_annotations = c(5), gene_prior_file = &quot;../data/Example_gene_prior.txt&quot;, optimization_iteration = 2000, mode = &quot;regular&quot;)
+print(temp)</code></pre>
+<pre><code>## $mle
+## $mle$par
+## [1]  0.04387294 10.50124034
+## 
+## $mle$value
+## [1] -25308.43
+## 
+## $mle$counts
+## function gradient 
+##       81       NA 
+## 
+## $mle$convergence
+## [1] 0
+## 
+## $mle$message
+## NULL
+## 
+## $mle$hessian
+##               [,1]          [,2]
+## [1,] -9.126438e+03 -5.093170e-05
+## [2,] -5.093170e-05 -3.183231e-05
+## 
+## 
+## $rr_report
+##   relative_risk   lower_bound upper_bournd
+## 1    0.04387294    0.02335634   0.06438955
+## 2   10.50124034 -336.89248059 357.89496127</code></pre>
+<pre class="r"><code>report[1,2:4] &lt;- temp$rr_report[2,]</code></pre>
+<pre class="r"><code>knitr::kable(report)</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">annotation</th>
+<th align="right">log_RR</th>
+<th align="right">lower_bound</th>
+<th align="right">upper_bound</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">HGMD gt 0.7</td>
+<td align="right">10.50124</td>
+<td align="right">-336.8925</td>
+<td align="right">357.895</td>
+</tr>
+<tr class="even">
+<td align="left">HGMD gt 0.7 in coding</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+</tr>
+<tr class="odd">
+<td align="left">HGMD gt 0.7 in 5kb promoter</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+</tr>
+<tr class="even">
+<td align="left">HGMD gt 0.7 in UTRs</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+</tr>
+<tr class="odd">
+<td align="left">HGMD gt 0.7 in spidex introns</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div id="wes-lof-prior" class="section level3">
 <h3><span class="header-section-number">0.0.3</span> WES LoF prior</h3>
@@ -450,6 +617,30 @@ print(temp)</code></pre>
 <td align="right">8.229677</td>
 <td align="right">-182.5945</td>
 <td align="right">199.0539</td>
+</tr>
+<tr class="even">
+<td align="left">HGMD gt 0.7 in coding</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+</tr>
+<tr class="odd">
+<td align="left">HGMD gt 0.7 in 5kb promoter</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+</tr>
+<tr class="even">
+<td align="left">HGMD gt 0.7 in UTRs</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+</tr>
+<tr class="odd">
+<td align="left">HGMD gt 0.7 in spidex introns</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
 </tr>
 </tbody>
 </table>

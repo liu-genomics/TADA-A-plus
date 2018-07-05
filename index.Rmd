@@ -520,7 +520,7 @@ From denovo-db
 
 + Perform 20 times of simulations. For each round, generate a pair of case and control data, and estimate the relative risk. [Details](./analysis/180530_simulate_a_pair_of_cases_and_controls_1_time.html) 
 
-4. A summary of the burden analysis of non-coding regions for DeepSEA related annotations.
+# 4. A summary of the burden analysis of non-coding regions for DeepSEA related annotations.
 
 | Annotation + method | 2kb promoter | 5kb promoter | UTR | 
 |------------------|------------------|--------------------|-------------------|

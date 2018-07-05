@@ -307,10 +307,8 @@ div.tocify {
 library(parallel)
 source(&quot;../TADA-A/lib/TADA_Annotation.R&quot;)
 source(&quot;../lib/TADA-A-plus.R&quot;)</code></pre>
-<pre class="r"><code>setwd(&quot;../../ASD/analysis/&quot;)
-source(&quot;../lib/170117_gene_list_definition.R&quot;)</code></pre>
-<div id="simons-dataset-hgmd-score-0.7-all-windows" class="section level2">
-<h2><span class="header-section-number">0.1</span> Simons dataset, HGMD score &gt; 0.7, all windows</h2>
+<div id="simons-dataset-hgmd-score-0.7-all-windows" class="section level3">
+<h3><span class="header-section-number">0.0.1</span> Simons dataset, HGMD score &gt; 0.7, all windows</h3>
 <pre class="r"><code>data &lt;- TADA_A_read_info_pair(mut_files_1 = c(&quot;../data/table.ASCWGS_20180504.WGS1902_hg19_cases_SNV_remove_recurrent_mutations_with_allele_info.txt&quot;),
                                   mut_files_2 = c(&quot;../data/table.ASCWGS_20180504.WGS1902_hg19_controls_SNV_remove_recurrent_mutations_with_allele_info.txt&quot;),
                                   window_file = &quot;../data/Example_windows_coding_noncoding_UTRs_updated_for_mutation_rate_adjustment_ERV_mutrate_noXY_with_additional_covariates.bed&quot;,
@@ -319,572 +317,578 @@ source(&quot;../lib/170117_gene_list_definition.R&quot;)</code></pre>
                                   AS_noncoding_annotations = list(c(&quot;../other_annotations/deepsea_annotations/web_retrieved_HGMD_scores/Simons_wgs_1902/Simons1902_HGMD_0.7_cutoff_altA.bed&quot;, &quot;../other_annotations/deepsea_annotations/web_retrieved_HGMD_scores/Simons_wgs_1902/Simons1902_HGMD_0.7_cutoff_altC.bed&quot;, &quot;../other_annotations/deepsea_annotations/web_retrieved_HGMD_scores/Simons_wgs_1902/Simons1902_HGMD_0.7_cutoff_altG.bed&quot;, &quot;../other_annotations/deepsea_annotations/web_retrieved_HGMD_scores/Simons_wgs_1902/Simons1902_HGMD_0.7_cutoff_altT.bed&quot;),
                                                                   c(&quot;../other_annotations/deepsea_annotations/web_retrieved_HGMD_scores/Simons_wgs_1902/Simons1902_HGMD_0.7_cutoff_altA.bed_overlap_with_coding.bed&quot;, &quot;../other_annotations/deepsea_annotations/web_retrieved_HGMD_scores/Simons_wgs_1902/Simons1902_HGMD_0.7_cutoff_altC.bed_overlap_with_coding.bed&quot;, &quot;../other_annotations/deepsea_annotations/web_retrieved_HGMD_scores/Simons_wgs_1902/Simons1902_HGMD_0.7_cutoff_altG.bed_overlap_with_coding.bed&quot;, &quot;../other_annotations/deepsea_annotations/web_retrieved_HGMD_scores/Simons_wgs_1902/Simons1902_HGMD_0.7_cutoff_altT.bed_overlap_with_coding.bed&quot;),                                                                  c(&quot;../other_annotations/deepsea_annotations/web_retrieved_HGMD_scores/Simons_wgs_1902/Simons1902_HGMD_0.7_cutoff_altA.bed_overlap_with_5kb_promoter.bed&quot;, &quot;../other_annotations/deepsea_annotations/web_retrieved_HGMD_scores/Simons_wgs_1902/Simons1902_HGMD_0.7_cutoff_altC.bed_overlap_with_5kb_promoter.bed&quot;, &quot;../other_annotations/deepsea_annotations/web_retrieved_HGMD_scores/Simons_wgs_1902/Simons1902_HGMD_0.7_cutoff_altG.bed_overlap_with_5kb_promoter.bed&quot;, &quot;../other_annotations/deepsea_annotations/web_retrieved_HGMD_scores/Simons_wgs_1902/Simons1902_HGMD_0.7_cutoff_altT.bed_overlap_with_5kb_promoter.bed&quot;),
                                                                   c(&quot;../other_annotations/deepsea_annotations/web_retrieved_HGMD_scores/Simons_wgs_1902/Simons1902_HGMD_0.7_cutoff_altA.bed_overlap_with_UTRs.bed&quot;, &quot;../other_annotations/deepsea_annotations/web_retrieved_HGMD_scores/Simons_wgs_1902/Simons1902_HGMD_0.7_cutoff_altC.bed_overlap_with_UTRs.bed&quot;, &quot;../other_annotations/deepsea_annotations/web_retrieved_HGMD_scores/Simons_wgs_1902/Simons1902_HGMD_0.7_cutoff_altG.bed_overlap_with_UTRs.bed&quot;, &quot;../other_annotations/deepsea_annotations/web_retrieved_HGMD_scores/Simons_wgs_1902/Simons1902_HGMD_0.7_cutoff_altT.bed_overlap_with_UTRs.bed&quot;),
-                                                                  c(&quot;../other_annotations/deepsea_annotations/web_retrieved_HGMD_scores/Simons_wgs_1902/Simons1902_HGMD_0.7_cutoff_altA.bed_overlap_with_spidex_introns.bed&quot;, &quot;../other_annotations/deepsea_annotations/web_retrieved_HGMD_scores/Simons_wgs_1902/Simons1902_HGMD_0.7_cutoff_altC.bed_overlap_with_spidex_introns.bed&quot;, &quot;../other_annotations/deepsea_annotations/web_retrieved_HGMD_scores/Simons_wgs_1902/Simons1902_HGMD_0.7_cutoff_altG.bed_overlap_with_spidex_introns.bed&quot;, &quot;../other_annotations/deepsea_annotations/web_retrieved_HGMD_scores/Simons_wgs_1902/Simons1902_HGMD_0.7_cutoff_altT.bed_overlap_with_spidex_introns.bed&quot;),c(&quot;../other_annotations/deepsea_annotations/web_retrieved_HGMD_scores/Simons_wgs_1902/Simons1902_HGMD_0.7_cutoff_altA.bed_overlap_with_2kb_promoter.bed&quot;,&quot;../other_annotations/deepsea_annotations/web_retrieved_HGMD_scores/Simons_wgs_1902/Simons1902_HGMD_0.7_cutoff_altC.bed_overlap_with_2kb_promoter.bed&quot;,&quot;../other_annotations/deepsea_annotations/web_retrieved_HGMD_scores/Simons_wgs_1902/Simons1902_HGMD_0.7_cutoff_altG.bed_overlap_with_2kb_promoter.bed&quot;,&quot;../other_annotations/deepsea_annotations/web_retrieved_HGMD_scores/Simons_wgs_1902/Simons1902_HGMD_0.7_cutoff_altT.bed_overlap_with_2kb_promoter.bed&quot;)),
-                              mutation_mutrate_adjusting_features_file_1 = c(&quot;../data/180607_test_1_mutation_rate_adjustment_for_GC_contents_normalized.txt&quot;),
-                              mutation_mutrate_adjusting_features_file_2 = c(&quot;../data/180607_test_1_mutation_rate_adjustment_for_GC_contents_normalized.txt&quot;),
+                                                                  c(&quot;../other_annotations/deepsea_annotations/web_retrieved_HGMD_scores/Simons_wgs_1902/Simons1902_HGMD_0.7_cutoff_altA.bed_overlap_with_spidex_introns.bed&quot;, &quot;../other_annotations/deepsea_annotations/web_retrieved_HGMD_scores/Simons_wgs_1902/Simons1902_HGMD_0.7_cutoff_altC.bed_overlap_with_spidex_introns.bed&quot;, &quot;../other_annotations/deepsea_annotations/web_retrieved_HGMD_scores/Simons_wgs_1902/Simons1902_HGMD_0.7_cutoff_altG.bed_overlap_with_spidex_introns.bed&quot;, &quot;../other_annotations/deepsea_annotations/web_retrieved_HGMD_scores/Simons_wgs_1902/Simons1902_HGMD_0.7_cutoff_altT.bed_overlap_with_spidex_introns.bed&quot;)),
+                              mutation_mutrate_adjusting_features_file_1 = NA,
+                                  mutation_mutrate_adjusting_features_file_2 = NA,
                                   report_proportion = 1,
                                   MPI = 1)</code></pre>
 <pre><code>## 
-Read 0.5% of 8574715 rows
-Read 8.2% of 8574715 rows
-Read 13.2% of 8574715 rows
-Read 18.2% of 8574715 rows
-Read 22.4% of 8574715 rows
-Read 28.7% of 8574715 rows
-Read 36.6% of 8574715 rows
-Read 45.1% of 8574715 rows
-Read 47.1% of 8574715 rows
-Read 55.4% of 8574715 rows
-Read 57.6% of 8574715 rows
-Read 65.8% of 8574715 rows
-Read 71.4% of 8574715 rows
-Read 77.0% of 8574715 rows
-Read 85.4% of 8574715 rows
-Read 87.8% of 8574715 rows
-Read 96.3% of 8574715 rows
+Read 0.9% of 8574715 rows
+Read 7.2% of 8574715 rows
+Read 12.9% of 8574715 rows
+Read 18.9% of 8574715 rows
+Read 24.4% of 8574715 rows
+Read 31.0% of 8574715 rows
+Read 38.8% of 8574715 rows
+Read 42.3% of 8574715 rows
+Read 48.4% of 8574715 rows
+Read 56.8% of 8574715 rows
+Read 59.8% of 8574715 rows
+Read 68.0% of 8574715 rows
+Read 73.6% of 8574715 rows
+Read 79.8% of 8574715 rows
+Read 88.3% of 8574715 rows
+Read 90.0% of 8574715 rows
+Read 98.4% of 8574715 rows
 Read 8574715 rows and 21 (of 21) columns from 0.932 GB file in 00:00:22
 ## [1] &quot;echo \&quot;Temp files cleaned and data recording finished!\&quot;&quot;</code></pre>
-<div id="use-all-genes" class="section level3">
-<h3><span class="header-section-number">0.1.1</span> Use all genes</h3>
-<pre class="r"><code>output_table &lt;- TADA_A_RR_estimate_simple_burden(data = data$base_info, gene_list = &quot;all&quot;, background = c(117685, 114849))$rr_report
-
-report &lt;- cbind(data.table(annotation = c(&quot;HGMD gt 0.7&quot;, &quot;HGMD gt 0.7 in coding&quot;, &quot;HGMD gt 0.7 in 5kb promoter&quot;, &quot;HGMD gt 0.7 in UTRs&quot;, &quot;HGMD gt 0.7 in spidex introns&quot;, &quot;HGMD gt 0.7 in 2kb promoter&quot;)), output_table)
-
-knitr::kable(report)</code></pre>
+<pre class="r"><code>report &lt;- data.frame(annotation = c(&quot;HGMD gt 0.7&quot;, &quot;HGMD gt 0.7 in coding&quot;, &quot;HGMD gt 0.7 in 5kb promoter&quot;, &quot;HGMD gt 0.7 in UTRs&quot;, &quot;HGMD gt 0.7 in spidex introns&quot;), 
+                     log_RR = NA, lower_bound = NA, upper_bound = NA)</code></pre>
+</div>
+<div id="wes-prior" class="section level3">
+<h3><span class="header-section-number">0.0.2</span> WES prior</h3>
+<pre class="r"><code>temp &lt;- TADA_A_RR_estimate_binom(data = data$base_info, selected_annotations = c(1), gene_prior_file = &quot;../data/Example_gene_prior.txt&quot;, optimization_iteration = 2000, mode = &quot;regular&quot;)
+print(temp)</code></pre>
+<pre><code>## $mle
+## $mle$par
+## [1] 0.04324258 0.91836212
+## 
+## $mle$value
+## [1] -25308.09
+## 
+## $mle$counts
+## function gradient 
+##       69       NA 
+## 
+## $mle$convergence
+## [1] 0
+## 
+## $mle$message
+## NULL
+## 
+## $mle$hessian
+##              [,1]      [,2]
+## [1,] -9125.132120 -5.241835
+## [2,]    -5.241835 -2.006104
+## 
+## 
+## $rr_report
+##   relative_risk lower_bound upper_bournd
+## 1    0.04324258   0.0227091   0.06377607
+## 2    0.91836212  -0.4664967   2.30322092</code></pre>
+<pre class="r"><code>report[1,2:4] &lt;- temp$rr_report[2,]</code></pre>
+<pre class="r"><code>temp &lt;- TADA_A_RR_estimate_binom(data = data$base_info, selected_annotations = c(2), gene_prior_file = &quot;../data/Example_gene_prior.txt&quot;, optimization_iteration = 2000, mode = &quot;regular&quot;)
+print(temp)</code></pre>
+<pre><code>## $mle
+## $mle$par
+## [1] 0.04348925 9.17440986
+## 
+## $mle$value
+## [1] -25308.03
+## 
+## $mle$counts
+## function gradient 
+##       85       NA 
+## 
+## $mle$convergence
+## [1] 0
+## 
+## $mle$message
+## NULL
+## 
+## $mle$hessian
+##               [,1]          [,2]
+## [1,] -9.125494e+03 -0.0004029062
+## [2,] -4.029062e-04 -0.0001246008
+## 
+## 
+## $rr_report
+##   relative_risk   lower_bound upper_bournd
+## 1    0.04348925    0.02297159   0.06400692
+## 2    9.17440986 -166.41395399 184.76277371</code></pre>
+<pre class="r"><code>report[2,2:4] &lt;- temp$rr_report[2,]</code></pre>
+<pre class="r"><code>temp &lt;- TADA_A_RR_estimate_binom(data = data$base_info, selected_annotations = c(3), gene_prior_file = &quot;../data/Example_gene_prior.txt&quot;, optimization_iteration = 2000, mode = &quot;regular&quot;)
+print(temp)</code></pre>
+<pre><code>## $mle
+## $mle$par
+## [1] 0.04367366 9.36502969
+## 
+## $mle$value
+## [1] -25308.23
+## 
+## $mle$counts
+## function gradient 
+##       81       NA 
+## 
+## $mle$convergence
+## [1] 0
+## 
+## $mle$message
+## NULL
+## 
+## $mle$hessian
+##               [,1]          [,2]
+## [1,] -9.124388e+03 -5.056791e-04
+## [2,] -5.056791e-04 -9.094947e-05
+## 
+## 
+## $rr_report
+##   relative_risk   lower_bound upper_bournd
+## 1    0.04367366    0.02315475   0.06419256
+## 2    9.36502969 -196.15589797 214.88595736</code></pre>
+<pre class="r"><code>report[3,2:4] &lt;- temp$rr_report[2,]</code></pre>
+<pre class="r"><code>temp &lt;- TADA_A_RR_estimate_binom(data = data$base_info, selected_annotations = c(4), gene_prior_file = &quot;../data/Example_gene_prior.txt&quot;, optimization_iteration = 2000, mode = &quot;regular&quot;)
+print(temp)</code></pre>
+<pre><code>## $mle
+## $mle$par
+## [1] 0.04410503 0.68293479
+## 
+## $mle$value
+## [1] -25308.93
+## 
+## $mle$counts
+## function gradient 
+##       67       NA 
+## 
+## $mle$convergence
+## [1] 0
+## 
+## $mle$message
+## NULL
+## 
+## $mle$hessian
+##              [,1]       [,2]
+## [1,] -9126.794489 -1.2317823
+## [2,]    -1.231782 -0.6256987
+## 
+## 
+## $rr_report
+##   relative_risk lower_bound upper_bournd
+## 1    0.04410503   0.0235861   0.06462396
+## 2    0.68293479  -1.7952355   3.16110508</code></pre>
+<pre class="r"><code>report[4,2:4] &lt;- temp$rr_report[2,]</code></pre>
+<pre class="r"><code>temp &lt;- TADA_A_RR_estimate_binom(data = data$base_info, selected_annotations = c(5), gene_prior_file = &quot;../data/Example_gene_prior.txt&quot;, optimization_iteration = 2000, mode = &quot;regular&quot;)
+print(temp)</code></pre>
+<pre><code>## $mle
+## $mle$par
+## [1]  0.04387294 10.50124034
+## 
+## $mle$value
+## [1] -25308.43
+## 
+## $mle$counts
+## function gradient 
+##       81       NA 
+## 
+## $mle$convergence
+## [1] 0
+## 
+## $mle$message
+## NULL
+## 
+## $mle$hessian
+##               [,1]          [,2]
+## [1,] -9.126438e+03 -5.093170e-05
+## [2,] -5.093170e-05 -3.183231e-05
+## 
+## 
+## $rr_report
+##   relative_risk   lower_bound upper_bournd
+## 1    0.04387294    0.02335634   0.06438955
+## 2   10.50124034 -336.89248059 357.89496127</code></pre>
+<pre class="r"><code>report[5,2:4] &lt;- temp$rr_report[2,]</code></pre>
+<pre class="r"><code>knitr::kable(report)</code></pre>
 <table>
 <thead>
 <tr class="header">
 <th align="left">annotation</th>
-<th align="right">burden</th>
-<th align="right">p.value</th>
-<th align="right">case_count</th>
-<th align="right">control_count</th>
+<th align="right">log_RR</th>
+<th align="right">lower_bound</th>
+<th align="right">upper_bound</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
 <td align="left">HGMD gt 0.7</td>
-<td align="right">1.142379</td>
-<td align="right">0.1103539</td>
-<td align="right">199</td>
-<td align="right">170</td>
+<td align="right">0.9183621</td>
+<td align="right">-0.4664967</td>
+<td align="right">2.303221</td>
 </tr>
 <tr class="even">
 <td align="left">HGMD gt 0.7 in coding</td>
-<td align="right">1.013437</td>
-<td align="right">0.5355472</td>
-<td align="right">27</td>
-<td align="right">26</td>
+<td align="right">9.1744099</td>
+<td align="right">-166.4139540</td>
+<td align="right">184.762774</td>
 </tr>
 <tr class="odd">
 <td align="left">HGMD gt 0.7 in 5kb promoter</td>
-<td align="right">1.211464</td>
-<td align="right">0.1583000</td>
-<td align="right">72</td>
-<td align="right">58</td>
+<td align="right">9.3650297</td>
+<td align="right">-196.1558980</td>
+<td align="right">214.885957</td>
 </tr>
 <tr class="even">
 <td align="left">HGMD gt 0.7 in UTRs</td>
-<td align="right">1.357776</td>
-<td align="right">0.1614841</td>
-<td align="right">32</td>
-<td align="right">23</td>
+<td align="right">0.6829348</td>
+<td align="right">-1.7952355</td>
+<td align="right">3.161105</td>
 </tr>
 <tr class="odd">
 <td align="left">HGMD gt 0.7 in spidex introns</td>
-<td align="right">1.626503</td>
-<td align="right">0.1684079</td>
-<td align="right">15</td>
-<td align="right">9</td>
-</tr>
-<tr class="even">
-<td align="left">HGMD gt 0.7 in 2kb promoter</td>
-<td align="right">1.214898</td>
-<td align="right">0.1785231</td>
-<td align="right">61</td>
-<td align="right">49</td>
+<td align="right">10.5012403</td>
+<td align="right">-336.8924806</td>
+<td align="right">357.894961</td>
 </tr>
 </tbody>
 </table>
 </div>
-<div id="use-strigent-asd-genes" class="section level3">
-<h3><span class="header-section-number">0.1.2</span> Use strigent ASD genes</h3>
-<pre class="r"><code>output_table &lt;- TADA_A_RR_estimate_simple_burden(data = data$base_info, gene_list = stringent_ASD, background = c(117685, 114849))$rr_report</code></pre>
-<pre><code>## Warning in if (gene_list != &quot;all&quot;) {: the condition has length &gt; 1 and only
-## the first element will be used</code></pre>
-<pre class="r"><code>report &lt;- cbind(data.table(annotation = c(&quot;HGMD gt 0.7&quot;, &quot;HGMD gt 0.7 in coding&quot;, &quot;HGMD gt 0.7 in 5kb promoter&quot;, &quot;HGMD gt 0.7 in UTRs&quot;, &quot;HGMD gt 0.7 in spidex introns&quot;, &quot;HGMD gt 0.7 in 2kb promoter&quot;)), output_table)
-
-knitr::kable(report)</code></pre>
+<div id="wes-lof-prior" class="section level3">
+<h3><span class="header-section-number">0.0.3</span> WES LoF prior</h3>
+<pre class="r"><code>temp &lt;- TADA_A_RR_estimate_binom(data = data$base_info, selected_annotations = c(1), gene_prior_file = &quot;../data/Example_gene_LoF_prior.txt&quot;, optimization_iteration = 2000, mode = &quot;regular&quot;)
+print(temp)</code></pre>
+<pre><code>## $mle
+## $mle$par
+## [1] 0.04306522 0.67299259
+## 
+## $mle$value
+## [1] -25308.49
+## 
+## $mle$counts
+## function gradient 
+##       61       NA 
+## 
+## $mle$convergence
+## [1] 0
+## 
+## $mle$message
+## NULL
+## 
+## $mle$hessian
+##              [,1]      [,2]
+## [1,] -9125.092524 -9.334775
+## [2,]    -9.334775 -2.145316
+## 
+## 
+## $rr_report
+##   relative_risk lower_bound upper_bournd
+## 1    0.04306522  0.02250129   0.06362916
+## 2    0.67299259 -0.66816296   2.01414815</code></pre>
+<pre class="r"><code>report[1,2:4] &lt;- temp$rr_report[2,]</code></pre>
+<pre class="r"><code>temp &lt;- TADA_A_RR_estimate_binom(data = data$base_info, selected_annotations = c(1), gene_prior_file = &quot;../data/Example_gene_LoF_prior.txt&quot;, optimization_iteration = 2000, mode = &quot;regular&quot;)
+print(temp)</code></pre>
+<pre><code>## $mle
+## $mle$par
+## [1] 0.04306522 0.67299259
+## 
+## $mle$value
+## [1] -25308.49
+## 
+## $mle$counts
+## function gradient 
+##       61       NA 
+## 
+## $mle$convergence
+## [1] 0
+## 
+## $mle$message
+## NULL
+## 
+## $mle$hessian
+##              [,1]      [,2]
+## [1,] -9125.092524 -9.334775
+## [2,]    -9.334775 -2.145316
+## 
+## 
+## $rr_report
+##   relative_risk lower_bound upper_bournd
+## 1    0.04306522  0.02250129   0.06362916
+## 2    0.67299259 -0.66816296   2.01414815</code></pre>
+<pre class="r"><code>report[2,2:4] &lt;- temp$rr_report[2,]</code></pre>
+<pre class="r"><code>temp &lt;- TADA_A_RR_estimate_binom(data = data$base_info, selected_annotations = c(1), gene_prior_file = &quot;../data/Example_gene_LoF_prior.txt&quot;, optimization_iteration = 2000, mode = &quot;regular&quot;)
+print(temp)</code></pre>
+<pre><code>## $mle
+## $mle$par
+## [1] 0.04306522 0.67299259
+## 
+## $mle$value
+## [1] -25308.49
+## 
+## $mle$counts
+## function gradient 
+##       61       NA 
+## 
+## $mle$convergence
+## [1] 0
+## 
+## $mle$message
+## NULL
+## 
+## $mle$hessian
+##              [,1]      [,2]
+## [1,] -9125.092524 -9.334775
+## [2,]    -9.334775 -2.145316
+## 
+## 
+## $rr_report
+##   relative_risk lower_bound upper_bournd
+## 1    0.04306522  0.02250129   0.06362916
+## 2    0.67299259 -0.66816296   2.01414815</code></pre>
+<pre class="r"><code>report[3,2:4] &lt;- temp$rr_report[2,]</code></pre>
+<pre class="r"><code>temp &lt;- TADA_A_RR_estimate_binom(data = data$base_info, selected_annotations = c(1), gene_prior_file = &quot;../data/Example_gene_LoF_prior.txt&quot;, optimization_iteration = 2000, mode = &quot;regular&quot;)
+print(temp)</code></pre>
+<pre><code>## $mle
+## $mle$par
+## [1] 0.04306522 0.67299259
+## 
+## $mle$value
+## [1] -25308.49
+## 
+## $mle$counts
+## function gradient 
+##       61       NA 
+## 
+## $mle$convergence
+## [1] 0
+## 
+## $mle$message
+## NULL
+## 
+## $mle$hessian
+##              [,1]      [,2]
+## [1,] -9125.092524 -9.334775
+## [2,]    -9.334775 -2.145316
+## 
+## 
+## $rr_report
+##   relative_risk lower_bound upper_bournd
+## 1    0.04306522  0.02250129   0.06362916
+## 2    0.67299259 -0.66816296   2.01414815</code></pre>
+<pre class="r"><code>report[4,2:4] &lt;- temp$rr_report[2,]</code></pre>
+<pre class="r"><code>temp &lt;- TADA_A_RR_estimate_binom(data = data$base_info, selected_annotations = c(1), gene_prior_file = &quot;../data/Example_gene_LoF_prior.txt&quot;, optimization_iteration = 2000, mode = &quot;regular&quot;)
+print(temp)</code></pre>
+<pre><code>## $mle
+## $mle$par
+## [1] 0.04306522 0.67299259
+## 
+## $mle$value
+## [1] -25308.49
+## 
+## $mle$counts
+## function gradient 
+##       61       NA 
+## 
+## $mle$convergence
+## [1] 0
+## 
+## $mle$message
+## NULL
+## 
+## $mle$hessian
+##              [,1]      [,2]
+## [1,] -9125.092524 -9.334775
+## [2,]    -9.334775 -2.145316
+## 
+## 
+## $rr_report
+##   relative_risk lower_bound upper_bournd
+## 1    0.04306522  0.02250129   0.06362916
+## 2    0.67299259 -0.66816296   2.01414815</code></pre>
+<pre class="r"><code>report[5,2:4] &lt;- temp$rr_report[2,]</code></pre>
+</div>
+<div id="wes-uniform-prior" class="section level3">
+<h3><span class="header-section-number">0.0.4</span> WES uniform prior</h3>
+<pre class="r"><code>temp &lt;- TADA_A_RR_estimate_binom(data = data$base_info, selected_annotations = c(1), gene_prior_file = &quot;../data/Example_gene_uniform_prior.txt&quot;, optimization_iteration = 2000, mode = &quot;regular&quot;)
+print(temp)</code></pre>
+<pre><code>## $mle
+## $mle$par
+## [1] 0.04276115 8.22967732
+## 
+## $mle$value
+## [1] -25308.49
+## 
+## $mle$counts
+## function gradient 
+##      123       NA 
+## 
+## $mle$convergence
+## [1] 0
+## 
+## $mle$message
+## NULL
+## 
+## $mle$hessian
+##               [,1]          [,2]
+## [1,] -9.117061e+03 -0.0053505573
+## [2,] -5.350557e-03 -0.0001055014
+## 
+## 
+## $rr_report
+##   relative_risk   lower_bound upper_bournd
+## 1    0.04276115    0.02223369    0.0632886
+## 2    8.22967732 -182.59452394  199.0538786</code></pre>
+<pre class="r"><code>report[1,2:4] &lt;- temp$rr_report[2,]</code></pre>
+<pre class="r"><code>temp &lt;- TADA_A_RR_estimate_binom(data = data$base_info, selected_annotations = c(1), gene_prior_file = &quot;../data/Example_gene_uniform_prior.txt&quot;, optimization_iteration = 2000, mode = &quot;regular&quot;)
+print(temp)</code></pre>
+<pre><code>## $mle
+## $mle$par
+## [1] 0.04276115 8.22967732
+## 
+## $mle$value
+## [1] -25308.49
+## 
+## $mle$counts
+## function gradient 
+##      123       NA 
+## 
+## $mle$convergence
+## [1] 0
+## 
+## $mle$message
+## NULL
+## 
+## $mle$hessian
+##               [,1]          [,2]
+## [1,] -9.117061e+03 -0.0053505573
+## [2,] -5.350557e-03 -0.0001055014
+## 
+## 
+## $rr_report
+##   relative_risk   lower_bound upper_bournd
+## 1    0.04276115    0.02223369    0.0632886
+## 2    8.22967732 -182.59452394  199.0538786</code></pre>
+<pre class="r"><code>report[2,2:4] &lt;- temp$rr_report[2,]</code></pre>
+<pre class="r"><code>temp &lt;- TADA_A_RR_estimate_binom(data = data$base_info, selected_annotations = c(1), gene_prior_file = &quot;../data/Example_gene_uniform_prior.txt&quot;, optimization_iteration = 2000, mode = &quot;regular&quot;)
+print(temp)</code></pre>
+<pre><code>## $mle
+## $mle$par
+## [1] 0.04276115 8.22967732
+## 
+## $mle$value
+## [1] -25308.49
+## 
+## $mle$counts
+## function gradient 
+##      123       NA 
+## 
+## $mle$convergence
+## [1] 0
+## 
+## $mle$message
+## NULL
+## 
+## $mle$hessian
+##               [,1]          [,2]
+## [1,] -9.117061e+03 -0.0053505573
+## [2,] -5.350557e-03 -0.0001055014
+## 
+## 
+## $rr_report
+##   relative_risk   lower_bound upper_bournd
+## 1    0.04276115    0.02223369    0.0632886
+## 2    8.22967732 -182.59452394  199.0538786</code></pre>
+<pre class="r"><code>report[3,2:4] &lt;- temp$rr_report[2,]</code></pre>
+<pre class="r"><code>temp &lt;- TADA_A_RR_estimate_binom(data = data$base_info, selected_annotations = c(1), gene_prior_file = &quot;../data/Example_gene_uniform_prior.txt&quot;, optimization_iteration = 2000, mode = &quot;regular&quot;)
+print(temp)</code></pre>
+<pre><code>## $mle
+## $mle$par
+## [1] 0.04276115 8.22967732
+## 
+## $mle$value
+## [1] -25308.49
+## 
+## $mle$counts
+## function gradient 
+##      123       NA 
+## 
+## $mle$convergence
+## [1] 0
+## 
+## $mle$message
+## NULL
+## 
+## $mle$hessian
+##               [,1]          [,2]
+## [1,] -9.117061e+03 -0.0053505573
+## [2,] -5.350557e-03 -0.0001055014
+## 
+## 
+## $rr_report
+##   relative_risk   lower_bound upper_bournd
+## 1    0.04276115    0.02223369    0.0632886
+## 2    8.22967732 -182.59452394  199.0538786</code></pre>
+<pre class="r"><code>report[4,2:4] &lt;- temp$rr_report[2,]</code></pre>
+<pre class="r"><code>temp &lt;- TADA_A_RR_estimate_binom(data = data$base_info, selected_annotations = c(1), gene_prior_file = &quot;../data/Example_gene_uniform_prior.txt&quot;, optimization_iteration = 2000, mode = &quot;regular&quot;)
+print(temp)</code></pre>
+<pre><code>## $mle
+## $mle$par
+## [1] 0.04276115 8.22967732
+## 
+## $mle$value
+## [1] -25308.49
+## 
+## $mle$counts
+## function gradient 
+##      123       NA 
+## 
+## $mle$convergence
+## [1] 0
+## 
+## $mle$message
+## NULL
+## 
+## $mle$hessian
+##               [,1]          [,2]
+## [1,] -9.117061e+03 -0.0053505573
+## [2,] -5.350557e-03 -0.0001055014
+## 
+## 
+## $rr_report
+##   relative_risk   lower_bound upper_bournd
+## 1    0.04276115    0.02223369    0.0632886
+## 2    8.22967732 -182.59452394  199.0538786</code></pre>
+<pre class="r"><code>report[5,2:4] &lt;- temp$rr_report[2,]</code></pre>
+<pre class="r"><code>knitr::kable(report)</code></pre>
 <table>
 <thead>
 <tr class="header">
 <th align="left">annotation</th>
-<th align="right">burden</th>
-<th align="right">p.value</th>
-<th align="right">case_count</th>
-<th align="right">control_count</th>
+<th align="right">log_RR</th>
+<th align="right">lower_bound</th>
+<th align="right">upper_bound</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
 <td align="left">HGMD gt 0.7</td>
-<td align="right">1.789153</td>
-<td align="right">0.1791202</td>
-<td align="right">11</td>
-<td align="right">6</td>
+<td align="right">8.229677</td>
+<td align="right">-182.5945</td>
+<td align="right">199.0539</td>
 </tr>
 <tr class="even">
 <td align="left">HGMD gt 0.7 in coding</td>
-<td align="right">2.927705</td>
-<td align="right">0.3217008</td>
-<td align="right">3</td>
-<td align="right">1</td>
+<td align="right">8.229677</td>
+<td align="right">-182.5945</td>
+<td align="right">199.0539</td>
 </tr>
 <tr class="odd">
 <td align="left">HGMD gt 0.7 in 5kb promoter</td>
-<td align="right">Inf</td>
-<td align="right">0.1296279</td>
-<td align="right">3</td>
-<td align="right">0</td>
+<td align="right">8.229677</td>
+<td align="right">-182.5945</td>
+<td align="right">199.0539</td>
 </tr>
 <tr class="even">
 <td align="left">HGMD gt 0.7 in UTRs</td>
-<td align="right">1.951804</td>
-<td align="right">0.5091466</td>
-<td align="right">2</td>
-<td align="right">1</td>
+<td align="right">8.229677</td>
+<td align="right">-182.5945</td>
+<td align="right">199.0539</td>
 </tr>
 <tr class="odd">
 <td align="left">HGMD gt 0.7 in spidex introns</td>
-<td align="right">NaN</td>
-<td align="right">1.0000000</td>
-<td align="right">0</td>
-<td align="right">0</td>
-</tr>
-<tr class="even">
-<td align="left">HGMD gt 0.7 in 2kb promoter</td>
-<td align="right">Inf</td>
-<td align="right">0.1296279</td>
-<td align="right">3</td>
-<td align="right">0</td>
+<td align="right">8.229677</td>
+<td align="right">-182.5945</td>
+<td align="right">199.0539</td>
 </tr>
 </tbody>
 </table>
-</div>
-<div id="use-relaxed-asd-genes" class="section level3">
-<h3><span class="header-section-number">0.1.3</span> Use relaxed ASD genes</h3>
-<pre class="r"><code>output_table &lt;- TADA_A_RR_estimate_simple_burden(data = data$base_info, gene_list = relaxed_ASD, background = c(117685, 114849))$rr_report</code></pre>
-<pre><code>## Warning in if (gene_list != &quot;all&quot;) {: the condition has length &gt; 1 and only
-## the first element will be used</code></pre>
-<pre class="r"><code>report &lt;- cbind(data.table(annotation = c(&quot;HGMD gt 0.7&quot;, &quot;HGMD gt 0.7 in coding&quot;, &quot;HGMD gt 0.7 in 5kb promoter&quot;, &quot;HGMD gt 0.7 in UTRs&quot;, &quot;HGMD gt 0.7 in spidex introns&quot;, &quot;HGMD gt 0.7 in 2kb promoter&quot;)), output_table)
-
-knitr::kable(report)</code></pre>
-<table>
-<thead>
-<tr class="header">
-<th align="left">annotation</th>
-<th align="right">burden</th>
-<th align="right">p.value</th>
-<th align="right">case_count</th>
-<th align="right">control_count</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td align="left">HGMD gt 0.7</td>
-<td align="right">1.3777437</td>
-<td align="right">0.0922787</td>
-<td align="right">48</td>
-<td align="right">34</td>
-</tr>
-<tr class="even">
-<td align="left">HGMD gt 0.7 in coding</td>
-<td align="right">0.8674682</td>
-<td align="right">0.7033475</td>
-<td align="right">8</td>
-<td align="right">9</td>
-</tr>
-<tr class="odd">
-<td align="left">HGMD gt 0.7 in 5kb promoter</td>
-<td align="right">1.8123890</td>
-<td align="right">0.1436578</td>
-<td align="right">13</td>
-<td align="right">7</td>
-</tr>
-<tr class="even">
-<td align="left">HGMD gt 0.7 in UTRs</td>
-<td align="right">1.5614428</td>
-<td align="right">0.3060345</td>
-<td align="right">8</td>
-<td align="right">5</td>
-</tr>
-<tr class="odd">
-<td align="left">HGMD gt 0.7 in spidex introns</td>
-<td align="right">4.8795089</td>
-<td align="right">0.0213355</td>
-<td align="right">10</td>
-<td align="right">2</td>
-</tr>
-<tr class="even">
-<td align="left">HGMD gt 0.7 in 2kb promoter</td>
-<td align="right">1.6729745</td>
-<td align="right">0.1940397</td>
-<td align="right">12</td>
-<td align="right">7</td>
-</tr>
-</tbody>
-</table>
-</div>
-<div id="use-constrained-genes" class="section level3">
-<h3><span class="header-section-number">0.1.4</span> Use constrained genes</h3>
-<pre class="r"><code>output_table &lt;- TADA_A_RR_estimate_simple_burden(data = data$base_info, gene_list = constraint_union, background = c(117685, 114849))$rr_report</code></pre>
-<pre><code>## Warning in if (gene_list != &quot;all&quot;) {: the condition has length &gt; 1 and only
-## the first element will be used</code></pre>
-<pre class="r"><code>report &lt;- cbind(data.table(annotation = c(&quot;HGMD gt 0.7&quot;, &quot;HGMD gt 0.7 in coding&quot;, &quot;HGMD gt 0.7 in 5kb promoter&quot;, &quot;HGMD gt 0.7 in UTRs&quot;, &quot;HGMD gt 0.7 in spidex introns&quot;, &quot;HGMD gt 0.7 in 2kb promoter&quot;)), output_table)
-
-knitr::kable(report)</code></pre>
-<table>
-<thead>
-<tr class="header">
-<th align="left">annotation</th>
-<th align="right">burden</th>
-<th align="right">p.value</th>
-<th align="right">case_count</th>
-<th align="right">control_count</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td align="left">HGMD gt 0.7</td>
-<td align="right">1.5614428</td>
-<td align="right">0.0501982</td>
-<td align="right">40</td>
-<td align="right">25</td>
-</tr>
-<tr class="even">
-<td align="left">HGMD gt 0.7 in coding</td>
-<td align="right">1.1153163</td>
-<td align="right">0.5191545</td>
-<td align="right">8</td>
-<td align="right">7</td>
-</tr>
-<tr class="odd">
-<td align="left">HGMD gt 0.7 in 5kb promoter</td>
-<td align="right">2.4397544</td>
-<td align="right">0.0441395</td>
-<td align="right">15</td>
-<td align="right">6</td>
-</tr>
-<tr class="even">
-<td align="left">HGMD gt 0.7 in UTRs</td>
-<td align="right">0.7807214</td>
-<td align="right">0.7579560</td>
-<td align="right">4</td>
-<td align="right">5</td>
-</tr>
-<tr class="odd">
-<td align="left">HGMD gt 0.7 in spidex introns</td>
-<td align="right">2.9277053</td>
-<td align="right">0.1526775</td>
-<td align="right">6</td>
-<td align="right">2</td>
-</tr>
-<tr class="even">
-<td align="left">HGMD gt 0.7 in 2kb promoter</td>
-<td align="right">2.2771041</td>
-<td align="right">0.0642365</td>
-<td align="right">14</td>
-<td align="right">6</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<div id="simons-dataset-hgmd-score-0.8-all-windows" class="section level2">
-<h2><span class="header-section-number">0.2</span> Simons dataset, HGMD score &gt; 0.8, all windows</h2>
-<pre class="r"><code>data &lt;- TADA_A_read_info_pair(mut_files_1 = c(&quot;../data/table.ASCWGS_20180504.WGS1902_hg19_cases_SNV_remove_recurrent_mutations_with_allele_info.txt&quot;),
-                              mut_files_2 = c(&quot;../data/table.ASCWGS_20180504.WGS1902_hg19_controls_SNV_remove_recurrent_mutations_with_allele_info.txt&quot;),
-                              window_file = &quot;../data/Example_windows_coding_noncoding_UTRs_updated_for_mutation_rate_adjustment_ERV_mutrate_noXY_with_additional_covariates.bed&quot;,
-                              gene_prior_file = &quot;../data/Example_gene_prior.txt&quot;,
-                              nonAS_noncoding_annotations = NA,
-                              AS_noncoding_annotations = list(c(&quot;../other_annotations/deepsea_annotations/web_retrieved_HGMD_scores/Simons_wgs_1902/Simons1902_HGMD_0.8_cutoff_altA.bed&quot;, &quot;../other_annotations/deepsea_annotations/web_retrieved_HGMD_scores/Simons_wgs_1902/Simons1902_HGMD_0.8_cutoff_altC.bed&quot;, &quot;../other_annotations/deepsea_annotations/web_retrieved_HGMD_scores/Simons_wgs_1902/Simons1902_HGMD_0.8_cutoff_altG.bed&quot;, &quot;../other_annotations/deepsea_annotations/web_retrieved_HGMD_scores/Simons_wgs_1902/Simons1902_HGMD_0.8_cutoff_altT.bed&quot;),
-                                                              c(&quot;../other_annotations/deepsea_annotations/web_retrieved_HGMD_scores/Simons_wgs_1902/Simons1902_HGMD_0.8_cutoff_altA.bed_overlap_with_coding.bed&quot;, &quot;../other_annotations/deepsea_annotations/web_retrieved_HGMD_scores/Simons_wgs_1902/Simons1902_HGMD_0.8_cutoff_altC.bed_overlap_with_coding.bed&quot;, &quot;../other_annotations/deepsea_annotations/web_retrieved_HGMD_scores/Simons_wgs_1902/Simons1902_HGMD_0.8_cutoff_altG.bed_overlap_with_coding.bed&quot;, &quot;../other_annotations/deepsea_annotations/web_retrieved_HGMD_scores/Simons_wgs_1902/Simons1902_HGMD_0.8_cutoff_altT.bed_overlap_with_coding.bed&quot;),                                                                  c(&quot;../other_annotations/deepsea_annotations/web_retrieved_HGMD_scores/Simons_wgs_1902/Simons1902_HGMD_0.8_cutoff_altA.bed_overlap_with_5kb_promoter.bed&quot;, &quot;../other_annotations/deepsea_annotations/web_retrieved_HGMD_scores/Simons_wgs_1902/Simons1902_HGMD_0.8_cutoff_altC.bed_overlap_with_5kb_promoter.bed&quot;, &quot;../other_annotations/deepsea_annotations/web_retrieved_HGMD_scores/Simons_wgs_1902/Simons1902_HGMD_0.8_cutoff_altG.bed_overlap_with_5kb_promoter.bed&quot;, &quot;../other_annotations/deepsea_annotations/web_retrieved_HGMD_scores/Simons_wgs_1902/Simons1902_HGMD_0.8_cutoff_altT.bed_overlap_with_5kb_promoter.bed&quot;),
-                                                              c(&quot;../other_annotations/deepsea_annotations/web_retrieved_HGMD_scores/Simons_wgs_1902/Simons1902_HGMD_0.8_cutoff_altA.bed_overlap_with_UTRs.bed&quot;, &quot;../other_annotations/deepsea_annotations/web_retrieved_HGMD_scores/Simons_wgs_1902/Simons1902_HGMD_0.8_cutoff_altC.bed_overlap_with_UTRs.bed&quot;, &quot;../other_annotations/deepsea_annotations/web_retrieved_HGMD_scores/Simons_wgs_1902/Simons1902_HGMD_0.8_cutoff_altG.bed_overlap_with_UTRs.bed&quot;, &quot;../other_annotations/deepsea_annotations/web_retrieved_HGMD_scores/Simons_wgs_1902/Simons1902_HGMD_0.8_cutoff_altT.bed_overlap_with_UTRs.bed&quot;),
-                                                              c(&quot;../other_annotations/deepsea_annotations/web_retrieved_HGMD_scores/Simons_wgs_1902/Simons1902_HGMD_0.8_cutoff_altA.bed_overlap_with_spidex_introns.bed&quot;, &quot;../other_annotations/deepsea_annotations/web_retrieved_HGMD_scores/Simons_wgs_1902/Simons1902_HGMD_0.8_cutoff_altC.bed_overlap_with_spidex_introns.bed&quot;, &quot;../other_annotations/deepsea_annotations/web_retrieved_HGMD_scores/Simons_wgs_1902/Simons1902_HGMD_0.8_cutoff_altG.bed_overlap_with_spidex_introns.bed&quot;, &quot;../other_annotations/deepsea_annotations/web_retrieved_HGMD_scores/Simons_wgs_1902/Simons1902_HGMD_0.8_cutoff_altT.bed_overlap_with_spidex_introns.bed&quot;), c(&quot;../other_annotations/deepsea_annotations/web_retrieved_HGMD_scores/Simons_wgs_1902/Simons1902_HGMD_0.8_cutoff_altA.bed_overlap_with_2kb_promoter.bed&quot;,&quot;../other_annotations/deepsea_annotations/web_retrieved_HGMD_scores/Simons_wgs_1902/Simons1902_HGMD_0.8_cutoff_altC.bed_overlap_with_2kb_promoter.bed&quot;,&quot;../other_annotations/deepsea_annotations/web_retrieved_HGMD_scores/Simons_wgs_1902/Simons1902_HGMD_0.8_cutoff_altG.bed_overlap_with_2kb_promoter.bed&quot;,&quot;../other_annotations/deepsea_annotations/web_retrieved_HGMD_scores/Simons_wgs_1902/Simons1902_HGMD_0.8_cutoff_altT.bed_overlap_with_2kb_promoter.bed&quot;)),
-                              mutation_mutrate_adjusting_features_file_1 = c(&quot;../data/180607_test_1_mutation_rate_adjustment_for_GC_contents_normalized.txt&quot;),
-                              mutation_mutrate_adjusting_features_file_2 = c(&quot;../data/180607_test_1_mutation_rate_adjustment_for_GC_contents_normalized.txt&quot;),
-                              report_proportion = 1,
-                              MPI = 1)</code></pre>
-<pre><code>## 
-Read 7.0% of 8574715 rows
-Read 16.1% of 8574715 rows
-Read 25.1% of 8574715 rows
-Read 33.9% of 8574715 rows
-Read 42.7% of 8574715 rows
-Read 51.4% of 8574715 rows
-Read 60.2% of 8574715 rows
-Read 68.5% of 8574715 rows
-Read 76.6% of 8574715 rows
-Read 83.3% of 8574715 rows
-Read 91.4% of 8574715 rows
-Read 99.4% of 8574715 rows
-Read 8574715 rows and 21 (of 21) columns from 0.932 GB file in 00:00:15
-## [1] &quot;echo \&quot;Temp files cleaned and data recording finished!\&quot;&quot;</code></pre>
-<div id="use-all-genes-1" class="section level3">
-<h3><span class="header-section-number">0.2.1</span> Use all genes</h3>
-<pre class="r"><code>output_table &lt;- TADA_A_RR_estimate_simple_burden(data = data$base_info, gene_list = &quot;all&quot;, background = c(117685, 114849))$rr_report
-
-report &lt;- cbind(data.table(annotation = c(&quot;HGMD gt 0.8&quot;, &quot;HGMD gt 0.8 in coding&quot;, &quot;HGMD gt 0.8 in 5kb promoter&quot;, &quot;HGMD gt 0.8 in UTRs&quot;, &quot;HGMD gt 0.8 in spidex introns&quot;, &quot;HGMD gt 0.8 in 2kb promoter&quot;)), output_table)
-
-knitr::kable(report)</code></pre>
-<table>
-<thead>
-<tr class="header">
-<th align="left">annotation</th>
-<th align="right">burden</th>
-<th align="right">p.value</th>
-<th align="right">case_count</th>
-<th align="right">control_count</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td align="left">HGMD gt 0.8</td>
-<td align="right">1.378992</td>
-<td align="right">0.0567278</td>
-<td align="right">65</td>
-<td align="right">46</td>
-</tr>
-<tr class="even">
-<td align="left">HGMD gt 0.8 in coding</td>
-<td align="right">1.707828</td>
-<td align="right">0.2883314</td>
-<td align="right">7</td>
-<td align="right">4</td>
-</tr>
-<tr class="odd">
-<td align="left">HGMD gt 0.8 in 5kb promoter</td>
-<td align="right">1.153339</td>
-<td align="right">0.3641052</td>
-<td align="right">26</td>
-<td align="right">22</td>
-</tr>
-<tr class="even">
-<td align="left">HGMD gt 0.8 in UTRs</td>
-<td align="right">3.171681</td>
-<td align="right">0.0275393</td>
-<td align="right">13</td>
-<td align="right">4</td>
-</tr>
-<tr class="odd">
-<td align="left">HGMD gt 0.8 in spidex introns</td>
-<td align="right">3.415656</td>
-<td align="right">0.0959898</td>
-<td align="right">7</td>
-<td align="right">2</td>
-</tr>
-<tr class="even">
-<td align="left">HGMD gt 0.8 in 2kb promoter</td>
-<td align="right">1.335444</td>
-<td align="right">0.2084007</td>
-<td align="right">26</td>
-<td align="right">19</td>
-</tr>
-</tbody>
-</table>
-</div>
-<div id="use-strigent-asd-genes-1" class="section level3">
-<h3><span class="header-section-number">0.2.2</span> Use strigent ASD genes</h3>
-<pre class="r"><code>output_table &lt;- TADA_A_RR_estimate_simple_burden(data = data$base_info, gene_list = stringent_ASD, background = c(117685, 114849))$rr_report</code></pre>
-<pre><code>## Warning in if (gene_list != &quot;all&quot;) {: the condition has length &gt; 1 and only
-## the first element will be used</code></pre>
-<pre class="r"><code>report &lt;- cbind(data.table(annotation = c(&quot;HGMD gt 0.8&quot;, &quot;HGMD gt 0.8 in coding&quot;, &quot;HGMD gt 0.8 in 5kb promoter&quot;, &quot;HGMD gt 0.8 in UTRs&quot;, &quot;HGMD gt 0.8 in spidex introns&quot;, &quot;HGMD gt 0.8 in 2kb promoter&quot;)), output_table)
-
-knitr::kable(report)</code></pre>
-<table>
-<thead>
-<tr class="header">
-<th align="left">annotation</th>
-<th align="right">burden</th>
-<th align="right">p.value</th>
-<th align="right">case_count</th>
-<th align="right">control_count</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td align="left">HGMD gt 0.8</td>
-<td align="right">2.927705</td>
-<td align="right">0.3217008</td>
-<td align="right">3</td>
-<td align="right">1</td>
-</tr>
-<tr class="even">
-<td align="left">HGMD gt 0.8 in coding</td>
-<td align="right">Inf</td>
-<td align="right">0.5060980</td>
-<td align="right">1</td>
-<td align="right">0</td>
-</tr>
-<tr class="odd">
-<td align="left">HGMD gt 0.8 in 5kb promoter</td>
-<td align="right">Inf</td>
-<td align="right">0.2561341</td>
-<td align="right">2</td>
-<td align="right">0</td>
-</tr>
-<tr class="even">
-<td align="left">HGMD gt 0.8 in UTRs</td>
-<td align="right">NaN</td>
-<td align="right">1.0000000</td>
-<td align="right">0</td>
-<td align="right">0</td>
-</tr>
-<tr class="odd">
-<td align="left">HGMD gt 0.8 in spidex introns</td>
-<td align="right">NaN</td>
-<td align="right">1.0000000</td>
-<td align="right">0</td>
-<td align="right">0</td>
-</tr>
-<tr class="even">
-<td align="left">HGMD gt 0.8 in 2kb promoter</td>
-<td align="right">Inf</td>
-<td align="right">0.2561341</td>
-<td align="right">2</td>
-<td align="right">0</td>
-</tr>
-</tbody>
-</table>
-</div>
-<div id="use-relaxed-asd-genes-1" class="section level3">
-<h3><span class="header-section-number">0.2.3</span> Use relaxed ASD genes</h3>
-<pre class="r"><code>output_table &lt;- TADA_A_RR_estimate_simple_burden(data = data$base_info, gene_list = relaxed_ASD, background = c(117685, 114849))$rr_report</code></pre>
-<pre><code>## Warning in if (gene_list != &quot;all&quot;) {: the condition has length &gt; 1 and only
-## the first element will be used</code></pre>
-<pre class="r"><code>report &lt;- cbind(data.table(annotation = c(&quot;HGMD gt 0.8&quot;, &quot;HGMD gt 0.8 in coding&quot;, &quot;HGMD gt 0.8 in 5kb promoter&quot;, &quot;HGMD gt 0.8 in UTRs&quot;, &quot;HGMD gt 0.8 in spidex introns&quot;, &quot;HGMD gt 0.8 in 2kb promoter&quot;)), output_table)
-
-knitr::kable(report)</code></pre>
-<table>
-<thead>
-<tr class="header">
-<th align="left">annotation</th>
-<th align="right">burden</th>
-<th align="right">p.value</th>
-<th align="right">case_count</th>
-<th align="right">control_count</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td align="left">HGMD gt 0.8</td>
-<td align="right">1.5858404</td>
-<td align="right">0.2074023</td>
-<td align="right">13</td>
-<td align="right">8</td>
-</tr>
-<tr class="even">
-<td align="left">HGMD gt 0.8 in coding</td>
-<td align="right">0.9759018</td>
-<td align="right">0.7560619</td>
-<td align="right">1</td>
-<td align="right">1</td>
-</tr>
-<tr class="odd">
-<td align="left">HGMD gt 0.8 in 5kb promoter</td>
-<td align="right">1.9518035</td>
-<td align="right">0.2660528</td>
-<td align="right">6</td>
-<td align="right">3</td>
-</tr>
-<tr class="even">
-<td align="left">HGMD gt 0.8 in UTRs</td>
-<td align="right">Inf</td>
-<td align="right">0.5060980</td>
-<td align="right">1</td>
-<td align="right">0</td>
-</tr>
-<tr class="odd">
-<td align="left">HGMD gt 0.8 in spidex introns</td>
-<td align="right">3.9036071</td>
-<td align="right">0.1952128</td>
-<td align="right">4</td>
-<td align="right">1</td>
-</tr>
-<tr class="even">
-<td align="left">HGMD gt 0.8 in 2kb promoter</td>
-<td align="right">1.9518035</td>
-<td align="right">0.2660528</td>
-<td align="right">6</td>
-<td align="right">3</td>
-</tr>
-</tbody>
-</table>
-</div>
-<div id="use-constrained-genes-1" class="section level3">
-<h3><span class="header-section-number">0.2.4</span> Use constrained genes</h3>
-<pre class="r"><code>output_table &lt;- TADA_A_RR_estimate_simple_burden(data = data$base_info, gene_list = constraint_union, background = c(117685, 114849))$rr_report</code></pre>
-<pre><code>## Warning in if (gene_list != &quot;all&quot;) {: the condition has length &gt; 1 and only
-## the first element will be used</code></pre>
-<pre class="r"><code>report &lt;- cbind(data.table(annotation = c(&quot;HGMD gt 0.8&quot;, &quot;HGMD gt 0.8 in coding&quot;, &quot;HGMD gt 0.8 in 5kb promoter&quot;, &quot;HGMD gt 0.8 in UTRs&quot;, &quot;HGMD gt 0.8 in spidex introns&quot;, &quot;HGMD gt 0.8 in 2kb promoter&quot;)), output_table)
-
-knitr::kable(report)</code></pre>
-<table>
-<thead>
-<tr class="header">
-<th align="left">annotation</th>
-<th align="right">burden</th>
-<th align="right">p.value</th>
-<th align="right">case_count</th>
-<th align="right">control_count</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td align="left">HGMD gt 0.8</td>
-<td align="right">3.171681</td>
-<td align="right">0.0275393</td>
-<td align="right">13</td>
-<td align="right">4</td>
-</tr>
-<tr class="even">
-<td align="left">HGMD gt 0.8 in coding</td>
-<td align="right">Inf</td>
-<td align="right">0.1296279</td>
-<td align="right">3</td>
-<td align="right">0</td>
-</tr>
-<tr class="odd">
-<td align="left">HGMD gt 0.8 in 5kb promoter</td>
-<td align="right">2.439754</td>
-<td align="right">0.2366851</td>
-<td align="right">5</td>
-<td align="right">2</td>
-</tr>
-<tr class="even">
-<td align="left">HGMD gt 0.8 in UTRs</td>
-<td align="right">Inf</td>
-<td align="right">0.5060980</td>
-<td align="right">1</td>
-<td align="right">0</td>
-</tr>
-<tr class="odd">
-<td align="left">HGMD gt 0.8 in spidex introns</td>
-<td align="right">2.927705</td>
-<td align="right">0.3217008</td>
-<td align="right">3</td>
-<td align="right">1</td>
-</tr>
-<tr class="even">
-<td align="left">HGMD gt 0.8 in 2kb promoter</td>
-<td align="right">2.439754</td>
-<td align="right">0.2366851</td>
-<td align="right">5</td>
-<td align="right">2</td>
-</tr>
-</tbody>
-</table>
-</div>
 </div>
 
 

@@ -51,6 +51,9 @@ Execution code to do data partition and reading-in is `code/pipeline00_generate_
 
 + coding RR estimation accouting for div score, using the 7-mer ERV mutation rate mode, using all mutations of coding, promoters, promoter-proximal noncoding regions and UTRs to to adjust mutation rates. Each study has its own separate mutation rate adjusting model, using LoF prior [link](analysis/180509_with_div_mutrate_calibration_adjusted_RR_estimate_ERV_mutrate_additional_covariates_joint_model_noXY_DATA_Yuen_2017_cases_ANNO_RR_estimate_account_for_functional_anno_used_for_LoF_prior.html).
 
++ coding RR, using mixture binomial model, LoF prior, [link](analysis/180620_focusing_coding_annotations_for_MSSNG_WGS_data_using_a_mixture_binom_model_NOT_adjusting_for_baselevel_mutrate.html). The significant annotations are in generall similar to using the mutation rate based Poisson model. 
+
++ coding RR, using mixture binomial model LoF prior, adjusting base-level mutation rate using all mutations in the windows used in the AJHG manuscript. [link](analysis/180620_focusing_coding_annotations_for_MSSNG_WGS_data_using_a_mixture_binom_model_adjusting_for_baselevel_mutrate.html). The significant annotations are in generall similar to using the mutation rate based Poisson model. 
 
 + UTR RR estimation accouting for div score, using the 7-mer ERV mutation rate mode, using all mutations of coding, promoters, promoter-proximal noncoding regions and UTRs to to adjust mutation rates. Each study has its own separate mutation rate adjusting model, using informative prior [link](analysis/180509_UTR__with_div_mutrate_calibration_adjusted_RR_estimate_ERV_mutrate_additional_covariates_joint_model_noXY_informative_prior_DATA_Yuen_2017_cases_ANNO_RR_estimate.html).
 
@@ -225,11 +228,17 @@ Execution code to do data partition and reading-in is `code/pipeline00_generate_
 
 + coding RR estimation accouting for div score, using the 7-mer ERV mutation rate mode, using all mutations of coding, promoters, promoter-proximal noncoding regions and UTRs to to adjust mutation rates. Each study has its own separate mutation rate adjusting model, using LoF prior, account for functional annotation in mutaion rate adjustment [link](analysis/180509_with_div_mutrate_calibration_adjusted_RR_estimate_ERV_mutrate_additional_covariates_joint_model_noXY_informative_prior_DATA_Simons_1902_WGS_cases_ANNO_RR_estimate_account_for_functional_anno_used_for_LoF_prior.html).
 
++ coding RR, using mixture binomial model, LoF prior, [link](analysis/180603_focusing_coding_annotations_for_Simons_WGS_data_using_a_mixture_binom_model.html). The significant annotations are in generall similar to using the mutation rate based Poisson model. 
+
++ coding RR, using mixture binomial model LoF prior, adjusting base-level mutation rate using all mutations in the windows used in the AJHG manuscript. [link](analysis/180612_focusing_coding_annotations_for_Simons_WGS_data_using_a_mixture_binom_model_adjusting_for_baselevel_mutrate.html). The significant annotations are in generall similar to using the mutation rate based Poisson model. 
+
 + UTR RR estimation accouting for div score, using the 7-mer ERV mutation rate mode, using all mutations of coding, promoters, promoter-proximal noncoding regions and UTRs to to adjust mutation rates. Each study has its own separate mutation rate adjusting model, using informative prior [link](analysis/180509_UTR_with_div_mutrate_calibration_adjusted_RR_estimate_ERV_mutrate_additional_covariates_joint_model_noXY_informative_prior_DATA_Simons_1902_WGS_cases_ANNO_RR_estimate_account_for_functional_anno.html).
 
 + UTR RR estimation accouting for div score, using the 7-mer ERV mutation rate mode, using all mutations of coding, promoters, promoter-proximal noncoding regions and UTRs to to adjust mutation rates. Each study has its own separate mutation rate adjusting model, after the 1st round of mutation rate adjustment, also adjust for the effects of the functional annotations on mutation rate, using informative priors from WES data. [link](analysis/180509_UTR_with_div_mutrate_calibration_adjusted_RR_estimate_ERV_mutrate_additional_covariates_joint_model_noXY_informative_prior_DATA_Simons_1902_WGS_cases_ANNO_RR_estimate_account_for_functional_anno.html).
 
 + UTR RR estimation accouting for div score, using the 7-mer ERV mutation rate mode, using all mutations of coding, promoters, promoter-proximal noncoding regions and UTRs to to adjust mutation rates. Each study has its own separate mutation rate adjusting model, Using uniform prior. [link](analysis/180509_UTR_with_div_mutrate_calibration_adjusted_RR_estimate_ERV_mutrate_additional_covariates_joint_model_noXY_informative_prior_DATA_Simons_1902_WGS_cases_ANNO_RR_estimate_used_for_uniform_prior.html).
+
++ UTR RR estimation, using the mixture binomial model LoF prior [link](analysis/180603_focusing_UTR_annotations_for_Simons_WGS_data_using_a_mixture_binom_model.html). Nothing reaches statistical significance. 
 
 + Promoter RR estmation accouting for div score, using the 7-mer ERV mutation rate mode, using all mutations of coding, promoters, promoter-proximal noncoding regions and UTRs to to adjust mutation rates. Each study has its own separate mutation rate adjusting model, Using informative prior [link](analysis/180510_promoter_with_div_mutrate_calibration_adjusted_RR_estimate_ERV_mutrate_additional_covariates_joint_model_noXY_informative_prior_DATA_Simons_1902_WGS_cases_ANNO_RR_estimate.html).
 
@@ -259,11 +268,38 @@ Execution code to do data partition and reading-in is `code/pipeline00_generate_
 
 + 5kb Promoter for footprinting  RR estmation accouting for div score, using the 7-mer ERV mutation rate mode, using all mutations of coding, promoters, promoter-proximal noncoding regions and UTRs to to adjust mutation rates. Each study has its own separate mutation rate adjusting model, use uniform prior [link](analysis/180520_promoter_5kb_with_div_mutrate_calibration_adjusted_RR_estimate_ERV_mutrate_additional_covariates_joint_model_noXY_informative_prior_DATA_Simons_1902_WGS_cases_ANNO_RR_estimate_for_footprinting_using_uniform_prior.html).
 
++ 5kb promoter, simple burden analysis, different genesets, chromHMM + gerp2 [link](analysis/180702_focusing_5kb_promoter_chromHMM_annotations_for_Simons_WGS_data_using_a_simple_burden_analysis.html). Enrichment not significant in genesets.
+
++ 5kb simple burden analysis, different gene sets, Yanyu's deep learning features, at 95% cutoff, only looking at mutations that are within the epigenetic feature that generated the deepSEA score.  [link](analysis/180621_focusing_5kb_promoter_deepsea_annotations_more_stringent_cutoff_in_original_bed_for_Simons_WGS_data_simple_burden.html)
+
 + 2kb Promoter RR estmation accouting for div score, using the 7-mer ERV mutation rate mode, using all mutations of coding, promoters, promoter-proximal noncoding regions and UTRs to to adjust mutation rates. Each study has its own separate mutation rate adjusting model,  [link](analysis/180531_promoter_2kb_with_div_mutrate_calibration_adjusted_RR_estimate_ERV_mutrate_additional_covariates_joint_model_noXY_informative_prior_DATA_Simons_1902_WGS_cases_ANNO_RR_estimate.html).
 
 + 2kb Promoter RR estmation accouting for div score, using the 7-mer ERV mutation rate mode, using all mutations of coding, promoters, promoter-proximal noncoding regions and UTRs to to adjust mutation rates. Each study has its own separate mutation rate adjusting model, after the 1st round of mutation rate adjustment, also adjust for the effects of the functional annotations on mutation rate, using WES prior from WES data. [link](analysis/180531_promoter_2kb_with_div_mutrate_calibration_adjusted_RR_estimate_ERV_mutrate_additional_covariates_joint_model_noXY_informative_prior_DATA_Simons_1902_WGS_cases_ANNO_RR_estimate_account_for_functional_anno.html).
 
 + 2kb Promoter RR estmation accouting for div score, using the 7-mer ERV mutation rate mode, using all mutations of coding, promoters, promoter-proximal noncoding regions and UTRs to to adjust mutation rates. Each study has its own separate mutation rate adjusting model, after the 1st round of mutation rate adjustment, also adjust for the effects of the functional annotations on mutation rate, using LoF prior from WES data. [link](analysis/180531_promoter_2kb_with_div_mutrate_calibration_adjusted_RR_estimate_ERV_mutrate_additional_covariates_joint_model_noXY_informative_prior_DATA_Simons_1902_WGS_cases_ANNO_RR_estimate_account_for_functional_anno_using_LoF_prior.html).
+
++ 2kb Promoter RR estimation, Epigenomic marks + Gerp gt 2, LoF prior. [link](analysis/180621_focusing_2kb_promoter_epignomic_annotations_gerp_gt2_for_Simons_WGS_data_using_a_mixture_binom_model_NOT_adjusting_for_baselevel_mutrate.html). Nothing is significant.
+
++ 2kb promoter RR estimation, Epigenomic marks, LoF prior[link](analysis/180621_focusing_2kb_promoter_epignomic_annotations_for_Simons_WGS_data_using_a_mixture_binom_model_adjusting_for_baselevel_mutrate.html).
+
++ 2kb promoter, simple burden analysis, different genesets, chromHMM + gerp2 [link](analysis/180702_focusing_2kb_promoter_chromHMM_annotations_for_Simons_WGS_data_using_a_simple_burden_analysis.html). Enrichment not significant in genesets.
+
++ Different genomic partitions, DeepSEA functional significance annotations retrieved from the DeepSEA online server, LoF prior [link](analysis/180603_focusing_DeepSEA_functional_significance_scores_for_Simons_WGS_data_using_a_mixture_binom_model.html). Only coding regions show significant signals. 
+
++ Different genomic partitions, DeepSEA HGMD probability score, plot the distribution for cases and controls.[link](analysis/180612_DeepSEA_web_server_retrieved_annotations_on_WGS_1902_data.html)
+
++ Different genomic partitions, simple burden analysis for fetal brain ChromHMM annotations + gerp gt 2, for Simons data. [link](./analysis/180627_simple_burden_analysis_to_replicate_ASC_burden_anaysis_results.html). See significant signal in 5kb promoter + fetal brain chromHMM + gerp gt 2. marginally significant signal for 2kb promoter. 
+
++ Different genomic partitions, simple burden analysis for HGMD score > 0.7 and > 0.8 in all genes and in different genesets. [link](analysis/180627_web_retrieved_Deepsea_HGMD_annotation_for_different_genomic_partitions_simple_burden.html)
+
+
++ Combine all genomic regions used in the AJHG manuscript, and try Yanyu's five DeepSEA annotations, using 0.6 as a cutoff, LoF prior. [link](analysis/180609_focusing_Yanyu_DeepSEA_annotations_cutoff_0.6_for_Simons_WGS_data_using_a_mixture_binom_model.html). Using 0.5 as a cutoff, LoF prior. [link](analysis/180609_focusing_Yanyu_DeepSEA_annotations_for_Simons_WGS_data_using_a_mixture_binom_model.html)
+
+
+
+
+
+
 
 ### 1.1.8 Siomons 1902 WGS controls
 + coding RR estimation accouting for div score, using the 7-mer ERV mutation rate mode, using all mutations of coding, promoters, promoter-proximal noncoding regions and UTRs to to adjust mutation rates. Each study has its own separate mutation rate adjusting model, using informative prior [link](analysis/180508_with_div_mutrate_calibration_adjusted_RR_estimate_ERV_mutrate_additional_covariates_joint_model_noXY_informative_prior_DATA_Simons_1902_WGS_controls_ANNO_RR_estimate.html).
@@ -477,3 +513,24 @@ From denovo-db
 + Data analysis for simulated data, data is simulated with the 7-mer ERV model, and fitted with both ERV model and the 3-mer Samocha model separately. Prediction is evaluated at the base level. Consider using or not using other covariates, although the data is simulated without introducing effects from these covariates. [here](./analysis/180426_mutation_rate_model_comparison_at_base_level.html). 
 
 + Data analysis for WES data, nonfunctional synonymous mutations are used to adust mutation rates. No covariates other than an intercept were used in fit the mutation rate model.  [here](./analysis/180501_prediction_accurary_of_mutation_model_between_ERV_and_3mer_for_WES_nonfunctional_syn_mutations_nocovariates.html). 
+
+
+# 3. Development of the new mixture binomial model
+## 3.1 Simulation results to show the model works well to estimate relative risks.
+
++ Perform 20 times of simulations. For each round, generate a pair of case and control data, and estimate the relative risk. [Details](./analysis/180530_simulate_a_pair_of_cases_and_controls_1_time.html) 
+
+4. A summary of the burden analysis of non-coding regions for DeepSEA related annotations.
+
+| Annotation + method | 2kb promoter | 5kb promoter | UTR | 
+|------------------|------------------|--------------------|-------------------|
+| DeepSEA HGMD + burden|  | [link](analysis/180627_web_retrieved_Deepsea_HGMD_annotation_for_different_genomic_partitions_simple_burden.html) | [link](analysis/180627_web_retrieved_Deepsea_HGMD_annotation_for_different_genomic_partitions_simple_burden.html) |
+| DeepSEA HGMD + mixture binomial modle |  |[link](analysis/180627_web_retrieved_Deepsea_HGMD_annotation_for_different_genomic_partitions_mixture_binomial_model.html)  | [link](analysis/180627_web_retrieved_Deepsea_HGMD_annotation_for_different_genomic_partitions_mixture_binomial_model.html) |
+| DeepSEA Functional significance score + mixtur binomial model | [link](analysis/180603_focusing_DeepSEA_functional_significance_scores_for_Simons_WGS_data_using_a_mixture_binom_model.html) | [link](analysis/180603_focusing_DeepSEA_functional_significance_scores_for_Simons_WGS_data_using_a_mixture_binom_model.html) | [link](analysis/180603_focusing_DeepSEA_functional_significance_scores_for_Simons_WGS_data_using_a_mixture_binom_model.html) |
+| Yanyu DeepSEA annotation + burden | [Strigent and in epi](analysis/180621_focusing_2kb_promoter_deepsea_annotations_more_stringent_cutoff_in_original_bed_for_Simons_WGS_data_simple_burden.html); [Strigent](analysis/180621_focusing_2kb_promoter_deepsea_annotations_more_stringent_cutoff_for_Simons_WGS_data_simple_burden.html); [Less stringent](analysis/180621_focusing_2kb_promoter_deepsea_annotations_for_Simons_WGS_data_simple_burden.html)|  |  |
+| Yanyu DeepSEA annotation + mixture binomial model |  |  |  |
+| Epigenomic annotations + mixture binomial model | [link](180621_focusing_2kb_promoter_epignomic_annotations_for_Simons_WGS_data_using_a_mixture_binom_model_NOT_adjusting_for_baselevel_mutrate.html) |  |  |
+| Epigenomic annotations (Gerp > 2) + mixture binomial model | [link](180621_focusing_2kb_promoter_epignomic_annotations_gerp_gt2_for_Simons_WGS_data_using_a_mixture_binom_model_NOT_adjusting_for_baselevel_mutrate.html) |  |  |
+|  + mixture binomial model | [link](180621_focusing_2kb_promoter_epignomic_annotations_gerp_gt2_for_Simons_WGS_data_using_a_mixture_binom_model_NOT_adjusting_for_baselevel_mutrate.html) |  |  |
+|chromHMM + burden| [link](analysis/180702_focusing_2kb_promoter_chromHMM_annotations_for_Simons_WGS_data_using_a_simple_burden_analysis.html) | [link](analysis/180702_focusing_5kb_promoter_chromHMM_annotations_for_Simons_WGS_data_using_a_simple_burden_analysis.html) | |
+|chromHMM + mixture binomial modle| | [link](analysis/180627_focusing_5kb_promoter_chromHMM_annotations_for_Simons_WGS_data_using_a_mixture_binom_model_NOT_adjusting_for_baselevel_mutrate.html) | |

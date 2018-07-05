@@ -307,296 +307,616 @@ div.tocify {
 library(parallel)
 source(&quot;../TADA-A/lib/TADA_Annotation.R&quot;)
 source(&quot;../lib/TADA-A-plus.R&quot;)</code></pre>
+<pre class="r"><code>setwd(&quot;../../ASD/analysis/&quot;)
+source(&quot;../lib/170117_gene_list_definition.R&quot;)</code></pre>
+<p>Use DeepSea annotations for mutations with a score smaller than 95% and are in the epigenomic mark regions that generates the deepSEA score</p>
 <pre class="r"><code>data &lt;- TADA_A_read_info_pair(mut_files_1 = c(&quot;../data/table.ASCWGS_20180504.WGS1902_hg19_cases_SNV_remove_recurrent_mutations_with_allele_info.txt&quot;),
                                   mut_files_2 = c(&quot;../data/table.ASCWGS_20180504.WGS1902_hg19_controls_SNV_remove_recurrent_mutations_with_allele_info.txt&quot;),
                                   window_file = &quot;../data/Example_windows_coding_noncoding_UTRs_updated_for_mutation_rate_adjustment_ERV_mutrate_noXY_with_additional_covariates.bed&quot;,
                                   gene_prior_file = &quot;../data/Example_gene_prior.txt&quot;,
-                                  nonAS_noncoding_annotations = c(&quot;../other_annotations/chromHMM/E081_15_coreMarks_segments_E1_E2_overlap_Example_windows_for_5kb_upstream_of_TSSs_from_coding_noncoding_UTRs_updated_for_mutation_rate_adjustment_ERV_mutrate_noXY_no_header_gerp_gt2.bed&quot;,&quot;../other_annotations/chromHMM/E081_15_coreMarks_segments_E1_E2_overlap_Example_windows_for_5kb_upstream_of_TSSs_from_coding_noncoding_UTRs_updated_for_mutation_rate_adjustment_ERV_mutrate_noXY_no_header.bed&quot;),
-                                  AS_noncoding_annotations = NA,
-                              mutation_mutrate_adjusting_features_file_1 = NA,
-                                  mutation_mutrate_adjusting_features_file_2 = NA,
+                                  nonAS_noncoding_annotations = NA,
+                                  AS_noncoding_annotations = list(c(&quot;/project2/xinhe/DeepVariantAnnotation/variant_annotations/WGS1902_DNM_case_control_combined/output__CN_altA_cutoff_st_0.83009371659762_in_original_bed.bed.in_2kb_promoter.bed&quot;, &quot;/project2/xinhe/DeepVariantAnnotation/variant_annotations/WGS1902_DNM_case_control_combined/output__CN_altC_cutoff_st_0.83009371659762_in_original_bed.bed.in_2kb_promoter.bed&quot;, &quot;/project2/xinhe/DeepVariantAnnotation/variant_annotations/WGS1902_DNM_case_control_combined/output__CN_altG_cutoff_st_0.83009371659762_in_original_bed.bed.in_2kb_promoter.bed&quot;, &quot;/project2/xinhe/DeepVariantAnnotation/variant_annotations/WGS1902_DNM_case_control_combined/output__CN_altT_cutoff_st_0.83009371659762_in_original_bed.bed.in_2kb_promoter.bed&quot;),
+                                                                  c(&quot;/project2/xinhe/DeepVariantAnnotation/variant_annotations/WGS1902_DNM_case_control_combined/output__DN_altA_cutoff_st_0.830433924400597_in_original_bed.bed.in_2kb_promoter.bed&quot;,&quot;/project2/xinhe/DeepVariantAnnotation/variant_annotations/WGS1902_DNM_case_control_combined/output__DN_altC_cutoff_st_0.830433924400597_in_original_bed.bed.in_2kb_promoter.bed&quot;,&quot;/project2/xinhe/DeepVariantAnnotation/variant_annotations/WGS1902_DNM_case_control_combined/output__DN_altG_cutoff_st_0.830433924400597_in_original_bed.bed.in_2kb_promoter.bed&quot;,&quot;/project2/xinhe/DeepVariantAnnotation/variant_annotations/WGS1902_DNM_case_control_combined/output__DN_altT_cutoff_st_0.830433924400597_in_original_bed.bed.in_2kb_promoter.bed&quot;),
+                                                                  c(&quot;/project2/xinhe/DeepVariantAnnotation/variant_annotations/WGS1902_DNM_case_control_combined/output__fantomFetalBrain_altA_cutoff_st_0.822069612052581_in_original_bed.bed.in_2kb_promoter.bed&quot;,&quot;/project2/xinhe/DeepVariantAnnotation/variant_annotations/WGS1902_DNM_case_control_combined/output__fantomFetalBrain_altC_cutoff_st_0.822069612052581_in_original_bed.bed.in_2kb_promoter.bed&quot;,&quot;/project2/xinhe/DeepVariantAnnotation/variant_annotations/WGS1902_DNM_case_control_combined/output__fantomFetalBrain_altG_cutoff_st_0.822069612052581_in_original_bed.bed.in_2kb_promoter.bed&quot;,&quot;/project2/xinhe/DeepVariantAnnotation/variant_annotations/WGS1902_DNM_case_control_combined/output__fantomFetalBrain_altT_cutoff_st_0.822069612052581_in_original_bed.bed.in_2kb_promoter.bed&quot;),
+                                                                  c(&quot;/project2/xinhe/DeepVariantAnnotation/variant_annotations/WGS1902_DNM_case_control_combined/output__FetalBrainDHS_altA_cutoff_st_0.723574705859309_in_original_bed.bed.in_2kb_promoter.bed&quot;,&quot;/project2/xinhe/DeepVariantAnnotation/variant_annotations/WGS1902_DNM_case_control_combined/output__FetalBrainDHS_altC_cutoff_st_0.723574705859309_in_original_bed.bed.in_2kb_promoter.bed&quot;,&quot;/project2/xinhe/DeepVariantAnnotation/variant_annotations/WGS1902_DNM_case_control_combined/output__FetalBrainDHS_altG_cutoff_st_0.723574705859309_in_original_bed.bed.in_2kb_promoter.bed&quot;,&quot;/project2/xinhe/DeepVariantAnnotation/variant_annotations/WGS1902_DNM_case_control_combined/output__FetalBrainDHS_altT_cutoff_st_0.723574705859309_in_original_bed.bed.in_2kb_promoter.bed&quot;),
+                                                                  c(&quot;/project2/xinhe/DeepVariantAnnotation/variant_annotations/WGS1902_DNM_case_control_combined/output__FetalBrainH3K27ac_altA_cutoff_st_0.853916678741281_in_original_bed.bed.in_2kb_promoter.bed&quot;, &quot;/project2/xinhe/DeepVariantAnnotation/variant_annotations/WGS1902_DNM_case_control_combined/output__FetalBrainH3K27ac_altC_cutoff_st_0.853916678741281_in_original_bed.bed.in_2kb_promoter.bed&quot;, &quot;/project2/xinhe/DeepVariantAnnotation/variant_annotations/WGS1902_DNM_case_control_combined/output__FetalBrainH3K27ac_altG_cutoff_st_0.853916678741281_in_original_bed.bed.in_2kb_promoter.bed&quot;, &quot;/project2/xinhe/DeepVariantAnnotation/variant_annotations/WGS1902_DNM_case_control_combined/output__FetalBrainH3K27ac_altT_cutoff_st_0.853916678741281_in_original_bed.bed.in_2kb_promoter.bed&quot;),
+                                                                  c(&quot;/project2/xinhe/DeepVariantAnnotation/variant_annotations/WGS1902_DNM_case_control_combined/output__GA_altA_cutoff_st_0.863648557423422_in_original_bed.bed.in_2kb_promoter.bed&quot;, &quot;/project2/xinhe/DeepVariantAnnotation/variant_annotations/WGS1902_DNM_case_control_combined/output__GA_altC_cutoff_st_0.863648557423422_in_original_bed.bed.in_2kb_promoter.bed&quot;,&quot;/project2/xinhe/DeepVariantAnnotation/variant_annotations/WGS1902_DNM_case_control_combined/output__GA_altG_cutoff_st_0.863648557423422_in_original_bed.bed.in_2kb_promoter.bed&quot;, &quot;/project2/xinhe/DeepVariantAnnotation/variant_annotations/WGS1902_DNM_case_control_combined/output__GA_altT_cutoff_st_0.863648557423422_in_original_bed.bed.in_2kb_promoter.bed&quot;),
+                                                                  c(&quot;/project2/xinhe/DeepVariantAnnotation/variant_annotations/WGS1902_DNM_case_control_combined/output__hNSC-50_altA_cutoff_st_0.702373017143112_in_original_bed.bed.in_2kb_promoter.bed&quot;,&quot;/project2/xinhe/DeepVariantAnnotation/variant_annotations/WGS1902_DNM_case_control_combined/output__hNSC-50_altC_cutoff_st_0.702373017143112_in_original_bed.bed.in_2kb_promoter.bed&quot;,&quot;/project2/xinhe/DeepVariantAnnotation/variant_annotations/WGS1902_DNM_case_control_combined/output__hNSC-50_altG_cutoff_st_0.702373017143112_in_original_bed.bed.in_2kb_promoter.bed&quot;,&quot;/project2/xinhe/DeepVariantAnnotation/variant_annotations/WGS1902_DNM_case_control_combined/output__hNSC-50_altT_cutoff_st_0.702373017143112_in_original_bed.bed.in_2kb_promoter.bed&quot;),
+                                                                  c(&quot;/project2/xinhe/DeepVariantAnnotation/variant_annotations/WGS1902_DNM_case_control_combined/output__hNSC-P15-1_altA_cutoff_st_0.694144681054676_in_original_bed.bed.in_2kb_promoter.bed&quot;,&quot;/project2/xinhe/DeepVariantAnnotation/variant_annotations/WGS1902_DNM_case_control_combined/output__hNSC-P15-1_altC_cutoff_st_0.694144681054676_in_original_bed.bed.in_2kb_promoter.bed&quot;,&quot;/project2/xinhe/DeepVariantAnnotation/variant_annotations/WGS1902_DNM_case_control_combined/output__hNSC-P15-1_altG_cutoff_st_0.694144681054676_in_original_bed.bed.in_2kb_promoter.bed&quot;,&quot;/project2/xinhe/DeepVariantAnnotation/variant_annotations/WGS1902_DNM_case_control_combined/output__hNSC-P15-1_altT_cutoff_st_0.694144681054676_in_original_bed.bed.in_2kb_promoter.bed&quot;),
+                                                                  c(&quot;/project2/xinhe/DeepVariantAnnotation/variant_annotations/WGS1902_DNM_case_control_combined/output__hNSC-P5-1_altA_cutoff_st_0.693684702037165_in_original_bed.bed.in_2kb_promoter.bed&quot;,&quot;/project2/xinhe/DeepVariantAnnotation/variant_annotations/WGS1902_DNM_case_control_combined/output__hNSC-P5-1_altC_cutoff_st_0.693684702037165_in_original_bed.bed.in_2kb_promoter.bed&quot;,&quot;/project2/xinhe/DeepVariantAnnotation/variant_annotations/WGS1902_DNM_case_control_combined/output__hNSC-P5-1_altG_cutoff_st_0.693684702037165_in_original_bed.bed.in_2kb_promoter.bed&quot;,&quot;/project2/xinhe/DeepVariantAnnotation/variant_annotations/WGS1902_DNM_case_control_combined/output__hNSC-P5-1_altT_cutoff_st_0.693684702037165_in_original_bed.bed.in_2kb_promoter.bed&quot;),
+                                                                  c(&quot;/project2/xinhe/DeepVariantAnnotation/variant_annotations/WGS1902_DNM_case_control_combined/output__hNSC-P5-2_altA_cutoff_st_0.690549438384485_in_original_bed.bed.in_2kb_promoter.bed&quot;,&quot;/project2/xinhe/DeepVariantAnnotation/variant_annotations/WGS1902_DNM_case_control_combined/output__hNSC-P5-2_altC_cutoff_st_0.690549438384485_in_original_bed.bed.in_2kb_promoter.bed&quot;,&quot;/project2/xinhe/DeepVariantAnnotation/variant_annotations/WGS1902_DNM_case_control_combined/output__hNSC-P5-2_altG_cutoff_st_0.690549438384485_in_original_bed.bed.in_2kb_promoter.bed&quot;,&quot;/project2/xinhe/DeepVariantAnnotation/variant_annotations/WGS1902_DNM_case_control_combined/output__hNSC-P5-2_altT_cutoff_st_0.690549438384485_in_original_bed.bed.in_2kb_promoter.bed&quot;),
+                                                                  c(&quot;/project2/xinhe/DeepVariantAnnotation/variant_annotations/WGS1902_DNM_case_control_combined/output__ips_altA_cutoff_st_0.860315258751432_in_original_bed.bed.in_2kb_promoter.bed&quot;,&quot;/project2/xinhe/DeepVariantAnnotation/variant_annotations/WGS1902_DNM_case_control_combined/output__ips_altC_cutoff_st_0.860315258751432_in_original_bed.bed.in_2kb_promoter.bed&quot;,&quot;/project2/xinhe/DeepVariantAnnotation/variant_annotations/WGS1902_DNM_case_control_combined/output__ips_altG_cutoff_st_0.860315258751432_in_original_bed.bed.in_2kb_promoter.bed&quot;,&quot;/project2/xinhe/DeepVariantAnnotation/variant_annotations/WGS1902_DNM_case_control_combined/output__ips_altT_cutoff_st_0.860315258751432_in_original_bed.bed.in_2kb_promoter.bed&quot;),
+                                                                  c(&quot;/project2/xinhe/DeepVariantAnnotation/variant_annotations/WGS1902_DNM_case_control_combined/output__NSC_altA_cutoff_st_0.82652463344185_in_original_bed.bed.in_2kb_promoter.bed&quot;,&quot;/project2/xinhe/DeepVariantAnnotation/variant_annotations/WGS1902_DNM_case_control_combined/output__NSC_altC_cutoff_st_0.82652463344185_in_original_bed.bed.in_2kb_promoter.bed&quot;,&quot;/project2/xinhe/DeepVariantAnnotation/variant_annotations/WGS1902_DNM_case_control_combined/output__NSC_altG_cutoff_st_0.82652463344185_in_original_bed.bed.in_2kb_promoter.bed&quot;,&quot;/project2/xinhe/DeepVariantAnnotation/variant_annotations/WGS1902_DNM_case_control_combined/output__NSC_altT_cutoff_st_0.82652463344185_in_original_bed.bed.in_2kb_promoter.bed&quot;),
+                                                                  c(&quot;/project2/xinhe/DeepVariantAnnotation/variant_annotations/WGS1902_DNM_case_control_combined/output__paperNSC-d27_altA_cutoff_st_0.797997879099005_in_original_bed.bed.in_2kb_promoter.bed&quot;,&quot;/project2/xinhe/DeepVariantAnnotation/variant_annotations/WGS1902_DNM_case_control_combined/output__paperNSC-d27_altC_cutoff_st_0.797997879099005_in_original_bed.bed.in_2kb_promoter.bed&quot;,&quot;/project2/xinhe/DeepVariantAnnotation/variant_annotations/WGS1902_DNM_case_control_combined/output__paperNSC-d27_altG_cutoff_st_0.797997879099005_in_original_bed.bed.in_2kb_promoter.bed&quot;,&quot;/project2/xinhe/DeepVariantAnnotation/variant_annotations/WGS1902_DNM_case_control_combined/output__paperNSC-d27_altT_cutoff_st_0.797997879099005_in_original_bed.bed.in_2kb_promoter.bed&quot;),
+                                                                  c(&quot;/project2/xinhe/DeepVariantAnnotation/variant_annotations/WGS1902_DNM_case_control_combined/output__paperNSC-d41-1_altA_cutoff_st_0.823409416921031_in_original_bed.bed.in_2kb_promoter.bed&quot;,&quot;/project2/xinhe/DeepVariantAnnotation/variant_annotations/WGS1902_DNM_case_control_combined/output__paperNSC-d41-1_altC_cutoff_st_0.823409416921031_in_original_bed.bed.in_2kb_promoter.bed&quot;,&quot;/project2/xinhe/DeepVariantAnnotation/variant_annotations/WGS1902_DNM_case_control_combined/output__paperNSC-d41-1_altG_cutoff_st_0.823409416921031_in_original_bed.bed.in_2kb_promoter.bed&quot;,&quot;/project2/xinhe/DeepVariantAnnotation/variant_annotations/WGS1902_DNM_case_control_combined/output__paperNSC-d41-1_altT_cutoff_st_0.823409416921031_in_original_bed.bed.in_2kb_promoter.bed&quot;),
+                                                                  c(&quot;/project2/xinhe/DeepVariantAnnotation/variant_annotations/WGS1902_DNM_case_control_combined/output__paperNSC-d41-2_altA_cutoff_st_0.814745029144483_in_original_bed.bed.in_2kb_promoter.bed&quot;,&quot;/project2/xinhe/DeepVariantAnnotation/variant_annotations/WGS1902_DNM_case_control_combined/output__paperNSC-d41-2_altC_cutoff_st_0.814745029144483_in_original_bed.bed.in_2kb_promoter.bed&quot;,&quot;/project2/xinhe/DeepVariantAnnotation/variant_annotations/WGS1902_DNM_case_control_combined/output__paperNSC-d41-2_altG_cutoff_st_0.814745029144483_in_original_bed.bed.in_2kb_promoter.bed&quot;,&quot;/project2/xinhe/DeepVariantAnnotation/variant_annotations/WGS1902_DNM_case_control_combined/output__paperNSC-d41-2_altT_cutoff_st_0.814745029144483_in_original_bed.bed.in_2kb_promoter.bed&quot;)),
+                              mutation_mutrate_adjusting_features_file_1 = c(&quot;../data/180607_test_1_mutation_rate_adjustment_for_GC_contents_normalized.txt&quot;),
+                              mutation_mutrate_adjusting_features_file_2 = c(&quot;../data/180607_test_1_mutation_rate_adjustment_for_GC_contents_normalized.txt&quot;),
                                   report_proportion = 1,
                                   MPI = 1)</code></pre>
 <pre><code>## 
-Read 4.5% of 8574715 rows
-Read 11.0% of 8574715 rows
-Read 16.7% of 8574715 rows
-Read 24.6% of 8574715 rows
-Read 31.7% of 8574715 rows
-Read 37.4% of 8574715 rows
-Read 43.3% of 8574715 rows
-Read 49.9% of 8574715 rows
-Read 59.6% of 8574715 rows
-Read 63.2% of 8574715 rows
-Read 73.1% of 8574715 rows
-Read 75.6% of 8574715 rows
-Read 84.0% of 8574715 rows
-Read 91.5% of 8574715 rows
-Read 8574715 rows and 21 (of 21) columns from 0.932 GB file in 00:00:17
+Read 0.3% of 8574715 rows
+Read 8.2% of 8574715 rows
+Read 13.2% of 8574715 rows
+Read 18.3% of 8574715 rows
+Read 22.5% of 8574715 rows
+Read 28.7% of 8574715 rows
+Read 36.6% of 8574715 rows
+Read 45.0% of 8574715 rows
+Read 47.1% of 8574715 rows
+Read 55.4% of 8574715 rows
+Read 57.6% of 8574715 rows
+Read 65.8% of 8574715 rows
+Read 71.4% of 8574715 rows
+Read 77.0% of 8574715 rows
+Read 85.5% of 8574715 rows
+Read 87.8% of 8574715 rows
+Read 96.2% of 8574715 rows
+Read 8574715 rows and 21 (of 21) columns from 0.932 GB file in 00:00:22
 ## [1] &quot;echo \&quot;Temp files cleaned and data recording finished!\&quot;&quot;</code></pre>
-<pre class="r"><code>report &lt;- data.frame(annotation = c(&quot;5kb_chromHMM_active_promoters_gerp_gt2&quot;,
-                                    &quot;5kb_chromHMM_active_promoters&quot;), 
-                     log_RR = NA, lower_bound = NA, upper_bound = NA)</code></pre>
-<div id="wes-prior" class="section level3">
-<h3><span class="header-section-number">0.0.1</span> WES prior</h3>
-<pre class="r"><code>temp &lt;- TADA_A_RR_estimate_binom(data = data$base_info, selected_annotations = c(1), gene_prior_file = &quot;../data/Example_gene_prior.txt&quot;, optimization_iteration = 2000, mode = &quot;regular&quot;)
-print(temp)</code></pre>
-<pre><code>## $mle
-## $mle$par
-## [1] 0.04367615 0.10526413
-## 
-## $mle$value
-## [1] -25309.09
-## 
-## $mle$counts
-## function gradient 
-##       29       NA 
-## 
-## $mle$convergence
-## [1] 0
-## 
-## $mle$message
-## NULL
-## 
-## $mle$hessian
-##              [,1]       [,2]
-## [1,] -9127.128547 -2.4159344
-## [2,]    -2.415934 -0.9223286
-## 
-## 
-## $rr_report
-##   relative_risk lower_bound upper_bournd
-## 1    0.04367615  0.02315321   0.06419909
-## 2    0.10526413 -1.93630386   2.14683212</code></pre>
-<pre class="r"><code>report[1,2:4] &lt;- temp$rr_report[2,]</code></pre>
-<pre class="r"><code>temp &lt;- TADA_A_RR_estimate_binom(data = data$base_info, selected_annotations = c(2), gene_prior_file = &quot;../data/Example_gene_prior.txt&quot;, optimization_iteration = 2000, mode = &quot;regular&quot;)
-print(temp)</code></pre>
-<pre><code>## $mle
-## $mle$par
-## [1]  0.04414126 -0.22698689
-## 
-## $mle$value
-## [1] -25309.01
-## 
-## $mle$counts
-## function gradient 
-##       65       NA 
-## 
-## $mle$convergence
-## [1] 0
-## 
-## $mle$message
-## NULL
-## 
-## $mle$hessian
-##            [,1]       [,2]
-## [1,] -9126.8697 -10.194502
-## [2,]   -10.1945  -3.121952
-## 
-## 
-## $rr_report
-##   relative_risk lower_bound upper_bournd
-## 1    0.04414126  0.02358763    0.0646949
-## 2   -0.22698689 -1.33829991    0.8843261</code></pre>
-<pre class="r"><code>report[2,2:4] &lt;- temp$rr_report[2,]</code></pre>
-<pre class="r"><code>knitr::kable(report)</code></pre>
+<div id="use-all-genes" class="section level3">
+<h3><span class="header-section-number">0.0.1</span> Use all genes</h3>
+<pre class="r"><code>output_table &lt;- TADA_A_RR_estimate_simple_burden(data = data$base_info, gene_list = &quot;all&quot;, background = c(117685, 114849))$rr_report
+
+report &lt;- cbind(data.table(annotation = c(&quot;CN-ATAC-Seq&quot;,
+                                                &quot;DN-ATAC-Seq&quot;,
+                                                &quot;Fantom active promoter&quot;,
+                                                &quot;Fetal Brain DHS E081&quot;,
+                                                &quot;Noonan fetal brain H3K27AC&quot;,
+                                                &quot;GA-ATAC-Seq&quot;,
+                                                &quot;Noonan Human NSC ATAC-Seq p50&quot;,
+                                                &quot;Noonan Human NSC ATAC-Seq p15&quot;,
+                                                &quot;Noonan Human NSC ATAC-Seq p5-1&quot;,
+                                                &quot;Noonan Human NSC ATAC-Seq p5-2&quot;,
+                                                &quot;ips-ATAC-Seq&quot;,
+                                                &quot;NSC ATAC-Seq&quot;,
+                                                &quot;NSC developmental neuron ATAC-seq d27&quot;,
+                                                &quot;NSC developmental neuron ATAC-seq d41-1&quot;,
+                                                &quot;NSC developmental neuron ATAC-seq d41-2&quot;
+                                                )), output_table)
+
+knitr::kable(report)</code></pre>
 <table>
 <thead>
 <tr class="header">
 <th align="left">annotation</th>
-<th align="right">log_RR</th>
-<th align="right">lower_bound</th>
-<th align="right">upper_bound</th>
+<th align="right">burden</th>
+<th align="right">p.value</th>
+<th align="right">case_count</th>
+<th align="right">control_count</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td align="left">5kb_chromHMM_active_promoters_gerp_gt2</td>
-<td align="right">0.1052641</td>
-<td align="right">-1.936304</td>
-<td align="right">2.1468321</td>
+<td align="left">CN-ATAC-Seq</td>
+<td align="right">1.5614428</td>
+<td align="right">0.3060345</td>
+<td align="right">8</td>
+<td align="right">5</td>
 </tr>
 <tr class="even">
-<td align="left">5kb_chromHMM_active_promoters</td>
-<td align="right">-0.2269869</td>
-<td align="right">-1.338300</td>
-<td align="right">0.8843261</td>
+<td align="left">DN-ATAC-Seq</td>
+<td align="right">2.6837299</td>
+<td align="right">0.0650245</td>
+<td align="right">11</td>
+<td align="right">4</td>
+</tr>
+<tr class="odd">
+<td align="left">Fantom active promoter</td>
+<td align="right">NaN</td>
+<td align="right">1.0000000</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">Fetal Brain DHS E081</td>
+<td align="right">0.5855411</td>
+<td align="right">0.8633306</td>
+<td align="right">3</td>
+<td align="right">5</td>
+</tr>
+<tr class="odd">
+<td align="left">Noonan fetal brain H3K27AC</td>
+<td align="right">0.1219877</td>
+<td align="right">0.9982514</td>
+<td align="right">1</td>
+<td align="right">8</td>
+</tr>
+<tr class="even">
+<td align="left">GA-ATAC-Seq</td>
+<td align="right">1.7891532</td>
+<td align="right">0.1791202</td>
+<td align="right">11</td>
+<td align="right">6</td>
+</tr>
+<tr class="odd">
+<td align="left">Noonan Human NSC ATAC-Seq p50</td>
+<td align="right">0.7807214</td>
+<td align="right">0.7579560</td>
+<td align="right">4</td>
+<td align="right">5</td>
+</tr>
+<tr class="even">
+<td align="left">Noonan Human NSC ATAC-Seq p15</td>
+<td align="right">0.6506012</td>
+<td align="right">0.8379519</td>
+<td align="right">4</td>
+<td align="right">6</td>
+</tr>
+<tr class="odd">
+<td align="left">Noonan Human NSC ATAC-Seq p5-1</td>
+<td align="right">0.9759018</td>
+<td align="right">0.6379622</td>
+<td align="right">5</td>
+<td align="right">5</td>
+</tr>
+<tr class="even">
+<td align="left">Noonan Human NSC ATAC-Seq p5-2</td>
+<td align="right">0.9759018</td>
+<td align="right">0.6499774</td>
+<td align="right">4</td>
+<td align="right">4</td>
+</tr>
+<tr class="odd">
+<td align="left">ips-ATAC-Seq</td>
+<td align="right">0.7319263</td>
+<td align="right">0.8011979</td>
+<td align="right">6</td>
+<td align="right">8</td>
+</tr>
+<tr class="even">
+<td align="left">NSC ATAC-Seq</td>
+<td align="right">3.2530059</td>
+<td align="right">0.0505541</td>
+<td align="right">10</td>
+<td align="right">3</td>
+</tr>
+<tr class="odd">
+<td align="left">NSC developmental neuron ATAC-seq d27</td>
+<td align="right">1.5858404</td>
+<td align="right">0.2074023</td>
+<td align="right">13</td>
+<td align="right">8</td>
+</tr>
+<tr class="even">
+<td align="left">NSC developmental neuron ATAC-seq d41-1</td>
+<td align="right">0.7807214</td>
+<td align="right">0.7579560</td>
+<td align="right">4</td>
+<td align="right">5</td>
+</tr>
+<tr class="odd">
+<td align="left">NSC developmental neuron ATAC-seq d41-2</td>
+<td align="right">0.9759018</td>
+<td align="right">0.6379622</td>
+<td align="right">5</td>
+<td align="right">5</td>
 </tr>
 </tbody>
 </table>
 </div>
-<div id="uniform-prior" class="section level3">
-<h3><span class="header-section-number">0.0.2</span> Uniform prior</h3>
-<pre class="r"><code>temp &lt;- TADA_A_RR_estimate_binom(data = data$base_info, selected_annotations = c(1), gene_prior_file = &quot;../data/Example_gene_uniform_prior.txt&quot;, optimization_iteration = 2000, mode = &quot;regular&quot;)
-print(temp)</code></pre>
-<pre><code>## $mle
-## $mle$par
-## [1] 0.04350727 7.93624432
-## 
-## $mle$value
-## [1] -25308.09
-## 
-## $mle$counts
-## function gradient 
-##       87       NA 
-## 
-## $mle$convergence
-## [1] 0
-## 
-## $mle$message
-## NULL
-## 
-## $mle$hessian
-##               [,1]          [,2]
-## [1,] -9.123074e+03 -0.0030968295
-## [2,] -3.096829e-03 -0.0005402399
-## 
-## 
-## $rr_report
-##   relative_risk  lower_bound upper_bournd
-## 1    0.04350727   0.02298687   0.06402767
-## 2    7.93624432 -76.39008277  92.26257142</code></pre>
-<pre class="r"><code>report[1,2:4] &lt;- temp$rr_report[2,]</code></pre>
-<pre class="r"><code>temp &lt;- TADA_A_RR_estimate_binom(data = data$base_info, selected_annotations = c(2), gene_prior_file = &quot;../data/Example_gene_uniform_prior.txt&quot;, optimization_iteration = 2000, mode = &quot;regular&quot;)
-print(temp)</code></pre>
-<pre><code>## $mle
-## $mle$par
-## [1] 0.04358389 0.11779361
-## 
-## $mle$value
-## [1] -25309.05
-## 
-## $mle$counts
-## function gradient 
-##       39       NA 
-## 
-## $mle$convergence
-## [1] 0
-## 
-## $mle$message
-## NULL
-## 
-## $mle$hessian
-##            [,1]        [,2]
-## [1,] -9127.0639 -10.2296981
-## [2,]   -10.2297  -0.4900803
-## 
-## 
-## $rr_report
-##   relative_risk lower_bound upper_bournd
-## 1    0.04358389  0.02282371   0.06434407
-## 2    0.11779361 -2.71531369   2.95090091</code></pre>
-<pre class="r"><code>report[2,2:4] &lt;- temp$rr_report[2,]</code></pre>
-<pre class="r"><code>knitr::kable(report)</code></pre>
+<div id="use-strigent-asd-genes" class="section level3">
+<h3><span class="header-section-number">0.0.2</span> Use strigent ASD genes</h3>
+<pre class="r"><code>output_table &lt;- TADA_A_RR_estimate_simple_burden(data = data$base_info, gene_list = stringent_ASD, background = c(117685, 114849))$rr_report</code></pre>
+<pre><code>## Warning in if (gene_list != &quot;all&quot;) {: the condition has length &gt; 1 and only
+## the first element will be used</code></pre>
+<pre class="r"><code>report &lt;- cbind(data.table(annotation = c(&quot;CN-ATAC-Seq&quot;,
+                                                &quot;DN-ATAC-Seq&quot;,
+                                                &quot;Fantom active promoter&quot;,
+                                                &quot;Fetal Brain DHS E081&quot;,
+                                                &quot;Noonan fetal brain H3K27AC&quot;,
+                                                &quot;GA-ATAC-Seq&quot;,
+                                                &quot;Noonan Human NSC ATAC-Seq p50&quot;,
+                                                &quot;Noonan Human NSC ATAC-Seq p15&quot;,
+                                                &quot;Noonan Human NSC ATAC-Seq p5-1&quot;,
+                                                &quot;Noonan Human NSC ATAC-Seq p5-2&quot;,
+                                                &quot;ips-ATAC-Seq&quot;,
+                                                &quot;NSC ATAC-Seq&quot;,
+                                                &quot;NSC developmental neuron ATAC-seq d27&quot;,
+                                                &quot;NSC developmental neuron ATAC-seq d41-1&quot;,
+                                                &quot;NSC developmental neuron ATAC-seq d41-2&quot;
+                                                )), output_table)
+
+knitr::kable(report)</code></pre>
 <table>
 <thead>
 <tr class="header">
 <th align="left">annotation</th>
-<th align="right">log_RR</th>
-<th align="right">lower_bound</th>
-<th align="right">upper_bound</th>
+<th align="right">burden</th>
+<th align="right">p.value</th>
+<th align="right">case_count</th>
+<th align="right">control_count</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td align="left">5kb_chromHMM_active_promoters_gerp_gt2</td>
-<td align="right">7.9362443</td>
-<td align="right">-76.390083</td>
-<td align="right">92.262571</td>
+<td align="left">CN-ATAC-Seq</td>
+<td align="right">Inf</td>
+<td align="right">0.5060980</td>
+<td align="right">1</td>
+<td align="right">0</td>
 </tr>
 <tr class="even">
-<td align="left">5kb_chromHMM_active_promoters</td>
-<td align="right">0.1177936</td>
-<td align="right">-2.715314</td>
-<td align="right">2.950901</td>
+<td align="left">DN-ATAC-Seq</td>
+<td align="right">NaN</td>
+<td align="right">1.0000000</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="left">Fantom active promoter</td>
+<td align="right">NaN</td>
+<td align="right">1.0000000</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">Fetal Brain DHS E081</td>
+<td align="right">NaN</td>
+<td align="right">1.0000000</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="left">Noonan fetal brain H3K27AC</td>
+<td align="right">NaN</td>
+<td align="right">1.0000000</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">GA-ATAC-Seq</td>
+<td align="right">Inf</td>
+<td align="right">0.5060980</td>
+<td align="right">1</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="left">Noonan Human NSC ATAC-Seq p50</td>
+<td align="right">Inf</td>
+<td align="right">0.5060980</td>
+<td align="right">1</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">Noonan Human NSC ATAC-Seq p15</td>
+<td align="right">Inf</td>
+<td align="right">0.5060980</td>
+<td align="right">1</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="left">Noonan Human NSC ATAC-Seq p5-1</td>
+<td align="right">Inf</td>
+<td align="right">0.5060980</td>
+<td align="right">1</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">Noonan Human NSC ATAC-Seq p5-2</td>
+<td align="right">Inf</td>
+<td align="right">0.5060980</td>
+<td align="right">1</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="left">ips-ATAC-Seq</td>
+<td align="right">NaN</td>
+<td align="right">1.0000000</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">NSC ATAC-Seq</td>
+<td align="right">Inf</td>
+<td align="right">0.5060980</td>
+<td align="right">1</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="left">NSC developmental neuron ATAC-seq d27</td>
+<td align="right">Inf</td>
+<td align="right">0.5060980</td>
+<td align="right">1</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">NSC developmental neuron ATAC-seq d41-1</td>
+<td align="right">Inf</td>
+<td align="right">0.5060980</td>
+<td align="right">1</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="left">NSC developmental neuron ATAC-seq d41-2</td>
+<td align="right">Inf</td>
+<td align="right">0.2561341</td>
+<td align="right">2</td>
+<td align="right">0</td>
 </tr>
 </tbody>
 </table>
 </div>
-<div id="wes-lof-prior" class="section level3">
-<h3><span class="header-section-number">0.0.3</span> WES LoF prior</h3>
-<pre class="r"><code>temp &lt;- TADA_A_RR_estimate_binom(data = data$base_info, selected_annotations = c(1), gene_prior_file = &quot;../data/Example_gene_LoF_prior.txt&quot;, optimization_iteration = 2000, mode = &quot;regular&quot;)
-print(temp)</code></pre>
-<pre><code>## $mle
-## $mle$par
-## [1] 0.04344201 0.76582646
-## 
-## $mle$value
-## [1] -25308.79
-## 
-## $mle$counts
-## function gradient 
-##       61       NA 
-## 
-## $mle$convergence
-## [1] 0
-## 
-## $mle$message
-## NULL
-## 
-## $mle$hessian
-##              [,1]       [,2]
-## [1,] -9126.226547 -3.3780034
-## [2,]    -3.378003 -0.9584001
-## 
-## 
-## $rr_report
-##   relative_risk lower_bound upper_bournd
-## 1    0.04344201  0.02291177   0.06397224
-## 2    0.76582646 -1.23756647   2.76921938</code></pre>
-<pre class="r"><code>report[1,2:4] &lt;- temp$rr_report[2,]</code></pre>
-<pre class="r"><code>temp &lt;- TADA_A_RR_estimate_binom(data = data$base_info, selected_annotations = c(2), gene_prior_file = &quot;../data/Example_gene_LoF_prior.txt&quot;, optimization_iteration = 2000, mode = &quot;regular&quot;)
-print(temp)</code></pre>
-<pre><code>## $mle
-## $mle$par
-## [1]  0.04430883 -0.12149935
-## 
-## $mle$value
-## [1] -25309.06
-## 
-## $mle$counts
-## function gradient 
-##       53       NA 
-## 
-## $mle$convergence
-## [1] 0
-## 
-## $mle$message
-## NULL
-## 
-## $mle$hessian
-##             [,1]       [,2]
-## [1,] -9126.93828 -19.423256
-## [2,]   -19.42326  -4.826583
-## 
-## 
-## $rr_report
-##   relative_risk lower_bound upper_bournd
-## 1    0.04430883  0.02370438   0.06491329
-## 2   -0.12149935 -1.01749078   0.77449208</code></pre>
-<pre class="r"><code>report[2,2:4] &lt;- temp$rr_report[2,]</code></pre>
-<pre class="r"><code>knitr::kable(report)</code></pre>
+<div id="use-relaxed-asd-genes" class="section level3">
+<h3><span class="header-section-number">0.0.3</span> Use relaxed ASD genes</h3>
+<pre class="r"><code>output_table &lt;- TADA_A_RR_estimate_simple_burden(data = data$base_info, gene_list = relaxed_ASD, background = c(117685, 114849))$rr_report</code></pre>
+<pre><code>## Warning in if (gene_list != &quot;all&quot;) {: the condition has length &gt; 1 and only
+## the first element will be used</code></pre>
+<pre class="r"><code>report &lt;- cbind(data.table(annotation = c(&quot;CN-ATAC-Seq&quot;,
+                                                &quot;DN-ATAC-Seq&quot;,
+                                                &quot;Fantom active promoter&quot;,
+                                                &quot;Fetal Brain DHS E081&quot;,
+                                                &quot;Noonan fetal brain H3K27AC&quot;,
+                                                &quot;GA-ATAC-Seq&quot;,
+                                                &quot;Noonan Human NSC ATAC-Seq p50&quot;,
+                                                &quot;Noonan Human NSC ATAC-Seq p15&quot;,
+                                                &quot;Noonan Human NSC ATAC-Seq p5-1&quot;,
+                                                &quot;Noonan Human NSC ATAC-Seq p5-2&quot;,
+                                                &quot;ips-ATAC-Seq&quot;,
+                                                &quot;NSC ATAC-Seq&quot;,
+                                                &quot;NSC developmental neuron ATAC-seq d27&quot;,
+                                                &quot;NSC developmental neuron ATAC-seq d41-1&quot;,
+                                                &quot;NSC developmental neuron ATAC-seq d41-2&quot;
+                                                )), output_table)
+
+knitr::kable(report)</code></pre>
 <table>
 <thead>
 <tr class="header">
 <th align="left">annotation</th>
-<th align="right">log_RR</th>
-<th align="right">lower_bound</th>
-<th align="right">upper_bound</th>
+<th align="right">burden</th>
+<th align="right">p.value</th>
+<th align="right">case_count</th>
+<th align="right">control_count</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td align="left">5kb_chromHMM_active_promoters_gerp_gt2</td>
-<td align="right">0.7658265</td>
-<td align="right">-1.237567</td>
-<td align="right">2.7692194</td>
+<td align="left">CN-ATAC-Seq</td>
+<td align="right">1.9518035</td>
+<td align="right">0.5091466</td>
+<td align="right">2</td>
+<td align="right">1</td>
 </tr>
 <tr class="even">
-<td align="left">5kb_chromHMM_active_promoters</td>
-<td align="right">-0.1214994</td>
-<td align="right">-1.017491</td>
-<td align="right">0.7744921</td>
+<td align="left">DN-ATAC-Seq</td>
+<td align="right">2.9277053</td>
+<td align="right">0.3217008</td>
+<td align="right">3</td>
+<td align="right">1</td>
+</tr>
+<tr class="odd">
+<td align="left">Fantom active promoter</td>
+<td align="right">NaN</td>
+<td align="right">1.0000000</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">Fetal Brain DHS E081</td>
+<td align="right">0.9759018</td>
+<td align="right">0.7560619</td>
+<td align="right">1</td>
+<td align="right">1</td>
+</tr>
+<tr class="odd">
+<td align="left">Noonan fetal brain H3K27AC</td>
+<td align="right">0.4879509</td>
+<td align="right">0.8795196</td>
+<td align="right">1</td>
+<td align="right">2</td>
+</tr>
+<tr class="even">
+<td align="left">GA-ATAC-Seq</td>
+<td align="right">2.9277053</td>
+<td align="right">0.3217008</td>
+<td align="right">3</td>
+<td align="right">1</td>
+</tr>
+<tr class="odd">
+<td align="left">Noonan Human NSC ATAC-Seq p50</td>
+<td align="right">1.9518035</td>
+<td align="right">0.5091466</td>
+<td align="right">2</td>
+<td align="right">1</td>
+</tr>
+<tr class="even">
+<td align="left">Noonan Human NSC ATAC-Seq p15</td>
+<td align="right">1.9518035</td>
+<td align="right">0.5091466</td>
+<td align="right">2</td>
+<td align="right">1</td>
+</tr>
+<tr class="odd">
+<td align="left">Noonan Human NSC ATAC-Seq p5-1</td>
+<td align="right">Inf</td>
+<td align="right">0.2561341</td>
+<td align="right">2</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">Noonan Human NSC ATAC-Seq p5-2</td>
+<td align="right">1.9518035</td>
+<td align="right">0.5091466</td>
+<td align="right">2</td>
+<td align="right">1</td>
+</tr>
+<tr class="odd">
+<td align="left">ips-ATAC-Seq</td>
+<td align="right">0.9759018</td>
+<td align="right">0.6965925</td>
+<td align="right">2</td>
+<td align="right">2</td>
+</tr>
+<tr class="even">
+<td align="left">NSC ATAC-Seq</td>
+<td align="right">1.9518035</td>
+<td align="right">0.5091466</td>
+<td align="right">2</td>
+<td align="right">1</td>
+</tr>
+<tr class="odd">
+<td align="left">NSC developmental neuron ATAC-seq d27</td>
+<td align="right">Inf</td>
+<td align="right">0.2561341</td>
+<td align="right">2</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">NSC developmental neuron ATAC-seq d41-1</td>
+<td align="right">1.9518035</td>
+<td align="right">0.5091466</td>
+<td align="right">2</td>
+<td align="right">1</td>
+</tr>
+<tr class="odd">
+<td align="left">NSC developmental neuron ATAC-seq d41-2</td>
+<td align="right">Inf</td>
+<td align="right">0.1296279</td>
+<td align="right">3</td>
+<td align="right">0</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="use-constrained-genes" class="section level3">
+<h3><span class="header-section-number">0.0.4</span> Use constrained genes</h3>
+<pre class="r"><code>output_table &lt;- TADA_A_RR_estimate_simple_burden(data = data$base_info, gene_list = constraint_union, background = c(117685, 114849))$rr_report</code></pre>
+<pre><code>## Warning in if (gene_list != &quot;all&quot;) {: the condition has length &gt; 1 and only
+## the first element will be used</code></pre>
+<pre class="r"><code>report &lt;- cbind(data.table(annotation = c(&quot;CN-ATAC-Seq&quot;,
+                                                &quot;DN-ATAC-Seq&quot;,
+                                                &quot;Fantom active promoter&quot;,
+                                                &quot;Fetal Brain DHS E081&quot;,
+                                                &quot;Noonan fetal brain H3K27AC&quot;,
+                                                &quot;GA-ATAC-Seq&quot;,
+                                                &quot;Noonan Human NSC ATAC-Seq p50&quot;,
+                                                &quot;Noonan Human NSC ATAC-Seq p15&quot;,
+                                                &quot;Noonan Human NSC ATAC-Seq p5-1&quot;,
+                                                &quot;Noonan Human NSC ATAC-Seq p5-2&quot;,
+                                                &quot;ips-ATAC-Seq&quot;,
+                                                &quot;NSC ATAC-Seq&quot;,
+                                                &quot;NSC developmental neuron ATAC-seq d27&quot;,
+                                                &quot;NSC developmental neuron ATAC-seq d41-1&quot;,
+                                                &quot;NSC developmental neuron ATAC-seq d41-2&quot;
+                                                )), output_table)
+
+knitr::kable(report)</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">annotation</th>
+<th align="right">burden</th>
+<th align="right">p.value</th>
+<th align="right">case_count</th>
+<th align="right">control_count</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">CN-ATAC-Seq</td>
+<td align="right">0.9759018</td>
+<td align="right">0.7560619</td>
+<td align="right">1</td>
+<td align="right">1</td>
+</tr>
+<tr class="even">
+<td align="left">DN-ATAC-Seq</td>
+<td align="right">1.9518035</td>
+<td align="right">0.5091466</td>
+<td align="right">2</td>
+<td align="right">1</td>
+</tr>
+<tr class="odd">
+<td align="left">Fantom active promoter</td>
+<td align="right">NaN</td>
+<td align="right">1.0000000</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">Fetal Brain DHS E081</td>
+<td align="right">0.9759018</td>
+<td align="right">0.7560619</td>
+<td align="right">1</td>
+<td align="right">1</td>
+</tr>
+<tr class="odd">
+<td align="left">Noonan fetal brain H3K27AC</td>
+<td align="right">NaN</td>
+<td align="right">1.0000000</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">GA-ATAC-Seq</td>
+<td align="right">0.9759018</td>
+<td align="right">0.7560619</td>
+<td align="right">1</td>
+<td align="right">1</td>
+</tr>
+<tr class="odd">
+<td align="left">Noonan Human NSC ATAC-Seq p50</td>
+<td align="right">Inf</td>
+<td align="right">0.5060980</td>
+<td align="right">1</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">Noonan Human NSC ATAC-Seq p15</td>
+<td align="right">Inf</td>
+<td align="right">0.2561341</td>
+<td align="right">2</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="left">Noonan Human NSC ATAC-Seq p5-1</td>
+<td align="right">Inf</td>
+<td align="right">0.1296279</td>
+<td align="right">3</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">Noonan Human NSC ATAC-Seq p5-2</td>
+<td align="right">Inf</td>
+<td align="right">0.2561341</td>
+<td align="right">2</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="left">ips-ATAC-Seq</td>
+<td align="right">Inf</td>
+<td align="right">0.2561341</td>
+<td align="right">2</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">NSC ATAC-Seq</td>
+<td align="right">0.9759018</td>
+<td align="right">0.7560619</td>
+<td align="right">1</td>
+<td align="right">1</td>
+</tr>
+<tr class="odd">
+<td align="left">NSC developmental neuron ATAC-seq d27</td>
+<td align="right">Inf</td>
+<td align="right">0.2561341</td>
+<td align="right">2</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">NSC developmental neuron ATAC-seq d41-1</td>
+<td align="right">3.9036071</td>
+<td align="right">0.1952128</td>
+<td align="right">4</td>
+<td align="right">1</td>
+</tr>
+<tr class="odd">
+<td align="left">NSC developmental neuron ATAC-seq d41-2</td>
+<td align="right">Inf</td>
+<td align="right">0.1296279</td>
+<td align="right">3</td>
+<td align="right">0</td>
 </tr>
 </tbody>
 </table>

@@ -307,50 +307,69 @@ div.tocify {
 library(parallel)
 source(&quot;../TADA-A/lib/TADA_Annotation.R&quot;)
 source(&quot;../lib/TADA-A-plus.R&quot;)</code></pre>
+<div id="simulate-with-log-rr-2-top-100-tada-genes" class="section level3">
+<h3><span class="header-section-number">0.0.1</span> Simulate with log rr = 2, top 100 TADA genes</h3>
 <pre class="r"><code>data &lt;- TADA_A_read_info_pair(mut_files_1 = c(&quot;../data/table.ASCWGS_20180504.WGS1902_hg19_cases_SNV_remove_recurrent_mutations_with_allele_info.txt&quot;),
                                   mut_files_2 = c(&quot;../data/table.ASCWGS_20180504.WGS1902_hg19_controls_SNV_remove_recurrent_mutations_with_allele_info.txt&quot;),
                                   window_file = &quot;../data/Example_windows_coding_noncoding_UTRs_updated_for_mutation_rate_adjustment_ERV_mutrate_noXY_with_additional_covariates.bed&quot;,
                                   gene_prior_file = &quot;../data/Example_gene_prior.txt&quot;,
-                                  nonAS_noncoding_annotations = c(&quot;../other_annotations/chromHMM/E081_15_coreMarks_segments_E1_E2_overlap_Example_windows_for_5kb_upstream_of_TSSs_from_coding_noncoding_UTRs_updated_for_mutation_rate_adjustment_ERV_mutrate_noXY_no_header_gerp_gt2.bed&quot;,&quot;../other_annotations/chromHMM/E081_15_coreMarks_segments_E1_E2_overlap_Example_windows_for_5kb_upstream_of_TSSs_from_coding_noncoding_UTRs_updated_for_mutation_rate_adjustment_ERV_mutrate_noXY_no_header.bed&quot;),
-                                  AS_noncoding_annotations = NA,
-                              mutation_mutrate_adjusting_features_file_1 = NA,
-                                  mutation_mutrate_adjusting_features_file_2 = NA,
+                                  nonAS_noncoding_annotations = c(&quot;../other_annotations/coding/CLIP/human_combine.merged_in_coding_windows.bed&quot;,
+                                                                  &quot;../other_annotations/coding/CLIPdb/human_combined.merged_in_coding_windows.bed&quot;,
+                                                                  &quot;../other_annotations/conservation/Example_windows_coding_gerp_gt2.bed&quot;,                                                            &quot;../other_annotations/coding/Ray_et_al_RBP_motif_hits/A_Up_Down.best_hit.hg19.bed.merge_in_coding_windows.bed&quot;),
+                                  AS_noncoding_annotations = list(c(&quot;../other_annotations/allele_specific_CADD/Example_windows_coding_SNVs_gt15_altA.bed&quot;,&quot;../other_annotations/allele_specific_CADD/Example_windows_coding_SNVs_gt15_altC.bed&quot;,&quot;../other_annotations/allele_specific_CADD/Example_windows_coding_SNVs_gt15_altG.bed&quot;, &quot;../other_annotations/allele_specific_CADD/Example_windows_coding_SNVs_gt15_altT.bed&quot;), c(&quot;../other_annotations/coding/CLIPdb/human_combine.merged_hg19_refGenes_exons.gtf.lg.transc.fa.RNAsnpM3.bed.abspos.p0.05.merged.altA_in_coding_windows.bed&quot;, &quot;../other_annotations/coding/CLIPdb/human_combine.merged_hg19_refGenes_exons.gtf.lg.transc.fa.RNAsnpM3.bed.abspos.p0.05.merged.altC_in_coding_windows.bed&quot;, &quot;../other_annotations/coding/CLIPdb/human_combine.merged_hg19_refGenes_exons.gtf.lg.transc.fa.RNAsnpM3.bed.abspos.p0.05.merged.altG_in_coding_windows.bed&quot;,&quot;../other_annotations/coding/CLIPdb/human_combine.merged_hg19_refGenes_exons.gtf.lg.transc.fa.RNAsnpM3.bed.abspos.p0.05.merged.altT_in_coding_windows.bed&quot;), c(&quot;../other_annotations/coding/CLIP/human_combine.merged_hg19_refGenes_exons.gtf.lg.transc.fa.RNAsnpM3.bed.abspos.p0.05.merged.altA_in_coding_windows.bed&quot;, &quot;../other_annotations/coding/CLIP/human_combine.merged_hg19_refGenes_exons.gtf.lg.transc.fa.RNAsnpM3.bed.abspos.p0.05.merged.altC_in_coding_windows.bed&quot;, &quot;../other_annotations/coding/CLIP/human_combine.merged_hg19_refGenes_exons.gtf.lg.transc.fa.RNAsnpM3.bed.abspos.p0.05.merged.altG_in_coding_windows.bed&quot;, &quot;../other_annotations/coding/CLIP/human_combine.merged_hg19_refGenes_exons.gtf.lg.transc.fa.RNAsnpM3.bed.abspos.p0.05.merged.altT_in_coding_windows.bed&quot;), c(&quot;../other_annotations/coding/RBP-VarDB/RBP.all.bed.merge_overlap_hg19_refGenes_exons.gtf.lg.transc.fa.RNAsnpM3.bed.abspos.p0.1.altA.bed.merge_in_coding_windows.bed&quot;, &quot;../other_annotations/coding/RBP-VarDB/RBP.all.bed.merge_overlap_hg19_refGenes_exons.gtf.lg.transc.fa.RNAsnpM3.bed.abspos.p0.1.altC.bed.merge_in_coding_windows.bed&quot;,&quot;../other_annotations/coding/RBP-VarDB/RBP.all.bed.merge_overlap_hg19_refGenes_exons.gtf.lg.transc.fa.RNAsnpM3.bed.abspos.p0.1.altG.bed.merge_in_coding_windows.bed&quot;, &quot;../other_annotations/coding/RBP-VarDB/RBP.all.bed.merge_overlap_hg19_refGenes_exons.gtf.lg.transc.fa.RNAsnpM3.bed.abspos.p0.1.altT.bed.merge_in_coding_windows.bed&quot;), c(&quot;../other_annotations/coding/ribosnitch/hg19_refGenes_exons.gtf.lg.transc.fa.RNAsnpM3.bed.abspos.p0.05.merged.altA_in_coding_windows.bed&quot;, &quot;../other_annotations/coding/ribosnitch/hg19_refGenes_exons.gtf.lg.transc.fa.RNAsnpM3.bed.abspos.p0.05.merged.altC_in_coding_windows.bed&quot;, &quot;../other_annotations/coding/ribosnitch/hg19_refGenes_exons.gtf.lg.transc.fa.RNAsnpM3.bed.abspos.p0.05.merged.altG_in_coding_windows.bed&quot;, &quot;../other_annotations/coding/ribosnitch/hg19_refGenes_exons.gtf.lg.transc.fa.RNAsnpM3.bed.abspos.p0.05.merged.altT_in_coding_windows.bed&quot;), c(&quot;../data/spidex_public_noncommercial_v1_0.tab_alt_A_lower10pct.bed&quot;, &quot;../data/spidex_public_noncommercial_v1_0.tab_alt_C_lower10pct.bed&quot;, &quot;../data/spidex_public_noncommercial_v1_0.tab_alt_G_lower10pct.bed&quot;, &quot;../data/spidex_public_noncommercial_v1_0.tab_alt_T_lower10pct.bed&quot;), c(&quot;../other_annotations/coding/171121_coding_stop_loss_and_gain_SNV_altA.bed.merge.bed&quot;, &quot;../other_annotations/coding/171121_coding_stop_loss_and_gain_SNV_altC.bed.merge.bed&quot;, &quot;../other_annotations/coding/171121_coding_stop_loss_and_gain_SNV_altG.bed.merge.bed&quot;, &quot;../other_annotations/coding/171121_coding_stop_loss_and_gain_SNV_altT.bed.merge.bed&quot;), c(&quot;../other_annotations/coding/Polyphen_HDIV_probably_damaging_altA.bed.merge.bed&quot;, &quot;../other_annotations/coding/Polyphen_HDIV_probably_damaging_altC.bed.merge.bed&quot;, &quot;../other_annotations/coding/Polyphen_HDIV_probably_damaging_altG.bed.merge.bed&quot;, &quot;../other_annotations/coding/Polyphen_HDIV_probably_damaging_altT.bed.merge.bed&quot;), c(&quot;../other_annotations/coding/171029_synonymous_SNV_altA.bed.merge_removing_spidex_lower10pct.bed&quot;, &quot;../other_annotations/coding/171029_synonymous_SNV_altC.bed.merge_removing_spidex_lower10pct.bed&quot;, &quot;../other_annotations/coding/171029_synonymous_SNV_altG.bed.merge_removing_spidex_lower10pct.bed&quot;,&quot;../other_annotations/coding/171029_synonymous_SNV_altT.bed.merge_removing_spidex_lower10pct.bed&quot;), c(&quot;../other_annotations/coding/MPC_score/fordist_constraint_official_mpc_values_v2_MPC_gt2_altA.sorted.merged_in_coding_windows.bed&quot;, &quot;../other_annotations/coding/MPC_score/fordist_constraint_official_mpc_values_v2_MPC_gt2_altC.sorted.merged_in_coding_windows.bed&quot;, &quot;../other_annotations/coding/MPC_score/fordist_constraint_official_mpc_values_v2_MPC_gt2_altG.sorted.merged_in_coding_windows.bed&quot;, &quot;../other_annotations/coding/MPC_score/fordist_constraint_official_mpc_values_v2_MPC_gt2_altT.sorted.merged_in_coding_windows.bed&quot;)),
+                              mutation_mutrate_adjusting_features_file_1 = c(&quot;../data/180607_test_1_mutation_rate_adjustment_for_GC_contents_normalized.txt&quot;),
+                                  mutation_mutrate_adjusting_features_file_2 = c(&quot;../data/180607_test_2_mutation_rate_adjustment_for_GC_contents_normalized.txt&quot;),
                                   report_proportion = 1,
                                   MPI = 1)</code></pre>
 <pre><code>## 
-Read 4.5% of 8574715 rows
-Read 11.0% of 8574715 rows
-Read 16.7% of 8574715 rows
-Read 24.6% of 8574715 rows
-Read 31.7% of 8574715 rows
-Read 37.4% of 8574715 rows
-Read 43.3% of 8574715 rows
-Read 49.9% of 8574715 rows
-Read 59.6% of 8574715 rows
-Read 63.2% of 8574715 rows
-Read 73.1% of 8574715 rows
-Read 75.6% of 8574715 rows
-Read 84.0% of 8574715 rows
-Read 91.5% of 8574715 rows
-Read 8574715 rows and 21 (of 21) columns from 0.932 GB file in 00:00:17
+Read 0.0% of 8574715 rows
+Read 5.6% of 8574715 rows
+Read 10.4% of 8574715 rows
+Read 14.9% of 8574715 rows
+Read 19.7% of 8574715 rows
+Read 24.4% of 8574715 rows
+Read 31.0% of 8574715 rows
+Read 37.6% of 8574715 rows
+Read 40.7% of 8574715 rows
+Read 47.9% of 8574715 rows
+Read 50.1% of 8574715 rows
+Read 57.3% of 8574715 rows
+Read 59.9% of 8574715 rows
+Read 66.8% of 8574715 rows
+Read 73.4% of 8574715 rows
+Read 73.9% of 8574715 rows
+Read 78.8% of 8574715 rows
+Read 86.0% of 8574715 rows
+Read 90.0% of 8574715 rows
+Read 97.1% of 8574715 rows
+Read 8574715 rows and 21 (of 21) columns from 0.932 GB file in 00:00:25
 ## [1] &quot;echo \&quot;Temp files cleaned and data recording finished!\&quot;&quot;</code></pre>
-<pre class="r"><code>report &lt;- data.frame(annotation = c(&quot;5kb_chromHMM_active_promoters_gerp_gt2&quot;,
-                                    &quot;5kb_chromHMM_active_promoters&quot;), 
-                     log_RR = NA, lower_bound = NA, upper_bound = NA)</code></pre>
-<div id="wes-prior" class="section level3">
-<h3><span class="header-section-number">0.0.1</span> WES prior</h3>
-<pre class="r"><code>temp &lt;- TADA_A_RR_estimate_binom(data = data$base_info, selected_annotations = c(1), gene_prior_file = &quot;../data/Example_gene_prior.txt&quot;, optimization_iteration = 2000, mode = &quot;regular&quot;)
+<pre class="r"><code>report &lt;- data.frame(annotation = c(&quot;codings_CLIP&quot;,
+                                                &quot;codings_CLIPdb&quot;,
+                                                &quot;codings_GERP&quot;,
+                                                &quot;codings_Ray_RBP_motif&quot;,
+                                                &quot;codings_CADD&quot;,
+                                                &quot;codings_CLIPdb_ribosnitch&quot;,
+                                                &quot;codings_CLIP_ribosnitch&quot;,
+                                                &quot;codings_RBP_Var_Level2&quot;,
+                                                &quot;codings_ribosnitch&quot;,
+                                    &quot;Spidex&quot;,
+                                    &quot;LoF&quot;,
+                                    &quot;Mis3&quot;,
+                                    &quot;Nonfunctional_syn&quot;,
+                                    &quot;codings_MPC_gt2&quot;), log_RR = NA, lower_bound = NA, upper_bound = NA)</code></pre>
+<pre class="r"><code>temp &lt;- TADA_A_RR_estimate_binom_v3(data = data$base_info, selected_annotations = c(1), gene_prior_file = &quot;../data/Example_gene_LoF_prior.txt&quot;, optimization_iteration = 2000, mode = &quot;regular&quot;)
 print(temp)</code></pre>
 <pre><code>## $mle
 ## $mle$par
-## [1] 0.04367615 0.10526413
+## [1] 0.036363125 0.003493907 1.030938812
 ## 
 ## $mle$value
-## [1] -25309.09
+## [1] -25298.88
 ## 
 ## $mle$counts
 ## function gradient 
-##       29       NA 
+##      206       NA 
 ## 
 ## $mle$convergence
 ## [1] 0
@@ -359,28 +378,30 @@ print(temp)</code></pre>
 ## NULL
 ## 
 ## $mle$hessian
-##              [,1]       [,2]
-## [1,] -9127.128547 -2.4159344
-## [2,]    -2.415934 -0.9223286
+##             [,1]         [,2]      [,3]
+## [1,] -9103.00422  -3592.77431 -42.38864
+## [2,] -3592.77431 -12732.89908 -33.89973
+## [3,]   -42.38864    -33.89973 -15.52569
 ## 
 ## 
 ## $rr_report
 ##   relative_risk lower_bound upper_bournd
-## 1    0.04367615  0.02315321   0.06419909
-## 2    0.10526413 -1.93630386   2.14683212</code></pre>
-<pre class="r"><code>report[1,2:4] &lt;- temp$rr_report[2,]</code></pre>
-<pre class="r"><code>temp &lt;- TADA_A_RR_estimate_binom(data = data$base_info, selected_annotations = c(2), gene_prior_file = &quot;../data/Example_gene_prior.txt&quot;, optimization_iteration = 2000, mode = &quot;regular&quot;)
+## 1   0.036363125  0.01447625   0.05825000
+## 2   0.003493907 -0.01494776   0.02193557
+## 3   1.030938812  0.52989186   1.53198576</code></pre>
+<pre class="r"><code>report[1,2:4] &lt;- temp$rr_report[3,]</code></pre>
+<pre class="r"><code>temp &lt;- TADA_A_RR_estimate_binom_v3(data = data$base_info, selected_annotations = c(2), gene_prior_file = &quot;../data/Example_gene_LoF_prior.txt&quot;, optimization_iteration = 2000, mode = &quot;regular&quot;)
 print(temp)</code></pre>
 <pre><code>## $mle
 ## $mle$par
-## [1]  0.04414126 -0.22698689
+## [1] 0.038803535 0.004963277 0.916536566
 ## 
 ## $mle$value
-## [1] -25309.01
+## [1] -25304.27
 ## 
 ## $mle$counts
 ## function gradient 
-##       65       NA 
+##      152       NA 
 ## 
 ## $mle$convergence
 ## [1] 0
@@ -389,56 +410,30 @@ print(temp)</code></pre>
 ## NULL
 ## 
 ## $mle$hessian
-##            [,1]       [,2]
-## [1,] -9126.8697 -10.194502
-## [2,]   -10.1945  -3.121952
+##             [,1]         [,2]       [,3]
+## [1,] -9116.10088  -3605.66082 -26.265439
+## [2,] -3605.66082 -12756.62988 -16.625516
+## [3,]   -26.26544    -16.62552  -9.428904
 ## 
 ## 
 ## $rr_report
 ##   relative_risk lower_bound upper_bournd
-## 1    0.04414126  0.02358763    0.0646949
-## 2   -0.22698689 -1.33829991    0.8843261</code></pre>
-<pre class="r"><code>report[2,2:4] &lt;- temp$rr_report[2,]</code></pre>
-<pre class="r"><code>knitr::kable(report)</code></pre>
-<table>
-<thead>
-<tr class="header">
-<th align="left">annotation</th>
-<th align="right">log_RR</th>
-<th align="right">lower_bound</th>
-<th align="right">upper_bound</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td align="left">5kb_chromHMM_active_promoters_gerp_gt2</td>
-<td align="right">0.1052641</td>
-<td align="right">-1.936304</td>
-<td align="right">2.1468321</td>
-</tr>
-<tr class="even">
-<td align="left">5kb_chromHMM_active_promoters</td>
-<td align="right">-0.2269869</td>
-<td align="right">-1.338300</td>
-<td align="right">0.8843261</td>
-</tr>
-</tbody>
-</table>
-</div>
-<div id="uniform-prior" class="section level3">
-<h3><span class="header-section-number">0.0.2</span> Uniform prior</h3>
-<pre class="r"><code>temp &lt;- TADA_A_RR_estimate_binom(data = data$base_info, selected_annotations = c(1), gene_prior_file = &quot;../data/Example_gene_uniform_prior.txt&quot;, optimization_iteration = 2000, mode = &quot;regular&quot;)
+## 1   0.038803535  0.01695486   0.06065221
+## 2   0.004963277 -0.01345340   0.02337996
+## 3   0.916536566  0.27554100   1.55753214</code></pre>
+<pre class="r"><code>report[2,2:4] &lt;- temp$rr_report[3,]</code></pre>
+<pre class="r"><code>temp &lt;- TADA_A_RR_estimate_binom_v3(data = data$base_info, selected_annotations = c(3), gene_prior_file = &quot;../data/Example_gene_LoF_prior.txt&quot;, optimization_iteration = 2000, mode = &quot;regular&quot;)
 print(temp)</code></pre>
 <pre><code>## $mle
 ## $mle$par
-## [1] 0.04350727 7.93624432
+## [1] 0.034907357 0.003141147 1.178550219
 ## 
 ## $mle$value
-## [1] -25308.09
+## [1] -25294.58
 ## 
 ## $mle$counts
 ## function gradient 
-##       87       NA 
+##      132       NA 
 ## 
 ## $mle$convergence
 ## [1] 0
@@ -447,28 +442,62 @@ print(temp)</code></pre>
 ## NULL
 ## 
 ## $mle$hessian
-##               [,1]          [,2]
-## [1,] -9.123074e+03 -0.0030968295
-## [2,] -3.096829e-03 -0.0005402399
+##             [,1]         [,2]      [,3]
+## [1,] -9093.80546  -3584.76555 -44.42041
+## [2,] -3584.76555 -12717.79056 -37.13641
+## [3,]   -44.42041    -37.13641 -15.39939
+## 
+## 
+## $rr_report
+##   relative_risk lower_bound upper_bournd
+## 1   0.034907357  0.01300481   0.05680991
+## 2   0.003141147 -0.01531388   0.02159618
+## 3   1.178550219  0.67496427   1.68213616</code></pre>
+<pre class="r"><code>report[3,2:4] &lt;- temp$rr_report[3,]</code></pre>
+<pre class="r"><code>temp &lt;- TADA_A_RR_estimate_binom_v3(data = data$base_info, selected_annotations = c(4), gene_prior_file = &quot;../data/Example_gene_LoF_prior.txt&quot;, optimization_iteration = 2000, mode = &quot;regular&quot;)
+print(temp)</code></pre>
+<pre><code>## $mle
+## $mle$par
+## [1] 0.041697835 0.005807869 0.183004933
+## 
+## $mle$value
+## [1] -25308.9
+## 
+## $mle$counts
+## function gradient 
+##       60       NA 
+## 
+## $mle$convergence
+## [1] 0
+## 
+## $mle$message
+## NULL
+## 
+## $mle$hessian
+##               [,1]          [,2]        [,3]
+## [1,] -9.126984e+03 -3.612599e+03 -0.06953815
+## [2,] -3.612599e+03 -1.277017e+04 -0.07037670
+## [3,] -6.953815e-02 -7.037670e-02 -0.01128865
 ## 
 ## 
 ## $rr_report
 ##   relative_risk  lower_bound upper_bournd
-## 1    0.04350727   0.02298687   0.06402767
-## 2    7.93624432 -76.39008277  92.26257142</code></pre>
-<pre class="r"><code>report[1,2:4] &lt;- temp$rr_report[2,]</code></pre>
-<pre class="r"><code>temp &lt;- TADA_A_RR_estimate_binom(data = data$base_info, selected_annotations = c(2), gene_prior_file = &quot;../data/Example_gene_uniform_prior.txt&quot;, optimization_iteration = 2000, mode = &quot;regular&quot;)
+## 1   0.041697835   0.01992649   0.06346918
+## 2   0.005807869  -0.01259764   0.02421338
+## 3   0.183004933 -18.26495760  18.63096746</code></pre>
+<pre class="r"><code>report[4,2:4] &lt;- temp$rr_report[3,]</code></pre>
+<pre class="r"><code>temp &lt;- TADA_A_RR_estimate_binom_v3(data = data$base_info, selected_annotations = c(5), gene_prior_file = &quot;../data/Example_gene_LoF_prior.txt&quot;, optimization_iteration = 2000, mode = &quot;regular&quot;)
 print(temp)</code></pre>
 <pre><code>## $mle
 ## $mle$par
-## [1] 0.04358389 0.11779361
+## [1] 0.035088414 0.002808993 1.245365461
 ## 
 ## $mle$value
-## [1] -25309.05
+## [1] -25292.89
 ## 
 ## $mle$counts
 ## function gradient 
-##       39       NA 
+##      136       NA 
 ## 
 ## $mle$convergence
 ## [1] 0
@@ -477,16 +506,306 @@ print(temp)</code></pre>
 ## NULL
 ## 
 ## $mle$hessian
-##            [,1]        [,2]
-## [1,] -9127.0639 -10.2296981
-## [2,]   -10.2297  -0.4900803
+##             [,1]         [,2]      [,3]
+## [1,] -9092.55980  -3582.87988 -41.04764
+## [2,] -3582.87988 -12714.44956 -34.78664
+## [3,]   -41.04764    -34.78664 -15.19401
 ## 
 ## 
 ## $rr_report
 ##   relative_risk lower_bound upper_bournd
-## 1    0.04358389  0.02282371   0.06434407
-## 2    0.11779361 -2.71531369   2.95090091</code></pre>
-<pre class="r"><code>report[2,2:4] &lt;- temp$rr_report[2,]</code></pre>
+## 1   0.035088414  0.01319992   0.05697691
+## 2   0.002808993 -0.01564584   0.02126383
+## 3   1.245365461  0.73892505   1.75180587</code></pre>
+<pre class="r"><code>report[5,2:4] &lt;- temp$rr_report[3,]</code></pre>
+<pre class="r"><code>temp &lt;- TADA_A_RR_estimate_binom_v3(data = data$base_info, selected_annotations = c(6), gene_prior_file = &quot;../data/Example_gene_LoF_prior.txt&quot;, optimization_iteration = 2000, mode = &quot;regular&quot;)
+print(temp)</code></pre>
+<pre><code>## $mle
+## $mle$par
+## [1] 0.04162855 0.00571198 0.18391213
+## 
+## $mle$value
+## [1] -25308.83
+## 
+## $mle$counts
+## function gradient 
+##       62       NA 
+## 
+## $mle$convergence
+## [1] 0
+## 
+## $mle$message
+## NULL
+## 
+## $mle$hessian
+##               [,1]          [,2]       [,3]
+## [1,] -9127.0023477 -3.612633e+03 -0.4259928
+## [2,] -3612.6327986 -1.277023e+04 -0.2749321
+## [3,]    -0.4259928 -2.749321e-01 -0.1741191
+## 
+## 
+## $rr_report
+##   relative_risk lower_bound upper_bournd
+## 1    0.04162855  0.01985656   0.06340053
+## 2    0.00571198 -0.01269342   0.02411738
+## 3    0.18391213 -4.51350229   4.88132656</code></pre>
+<pre class="r"><code>report[6,2:4] &lt;- temp$rr_report[3,]</code></pre>
+<pre class="r"><code>temp &lt;- TADA_A_RR_estimate_binom_v3(data = data$base_info, selected_annotations = c(7), gene_prior_file = &quot;../data/Example_gene_LoF_prior.txt&quot;, optimization_iteration = 2000, mode = &quot;regular&quot;)
+print(temp)</code></pre>
+<pre><code>## $mle
+## $mle$par
+## [1] 0.041603467 0.005755356 0.182651676
+## 
+## $mle$value
+## [1] -25308.89
+## 
+## $mle$counts
+## function gradient 
+##       60       NA 
+## 
+## $mle$convergence
+## [1] 0
+## 
+## $mle$message
+## NULL
+## 
+## $mle$hessian
+##               [,1]          [,2]        [,3]
+## [1,] -9127.0042667 -3.612623e+03 -0.30744832
+## [2,] -3612.6229616 -1.277022e+04 -0.21286633
+## [3,]    -0.3074483 -2.128663e-01 -0.07667131
+## 
+## 
+## $rr_report
+##   relative_risk lower_bound upper_bournd
+## 1   0.041603467  0.01983136   0.06337558
+## 2   0.005755356 -0.01265008   0.02416080
+## 3   0.182651676 -6.89633397   7.26163732</code></pre>
+<pre class="r"><code>report[7,2:4] &lt;- temp$rr_report[3,]</code></pre>
+<pre class="r"><code>temp &lt;- TADA_A_RR_estimate_binom_v3(data = data$base_info, selected_annotations = c(8), gene_prior_file = &quot;../data/Example_gene_LoF_prior.txt&quot;, optimization_iteration = 2000, mode = &quot;regular&quot;)
+print(temp)</code></pre>
+<pre><code>## $mle
+## $mle$par
+## [1] 0.041286412 0.005623992 0.185984158
+## 
+## $mle$value
+## [1] -25308.81
+## 
+## $mle$counts
+## function gradient 
+##       66       NA 
+## 
+## $mle$convergence
+## [1] 0
+## 
+## $mle$message
+## NULL
+## 
+## $mle$hessian
+##              [,1]          [,2]       [,3]
+## [1,] -9127.049571  -3612.665792 -2.0990246
+## [2,] -3612.665792 -12770.320555 -1.9955087
+## [3,]    -2.099025     -1.995509 -0.8374072
+## 
+## 
+## $rr_report
+##   relative_risk lower_bound upper_bournd
+## 1   0.041286412  0.01951163   0.06306119
+## 2   0.005623992 -0.01278262   0.02403060
+## 3   0.185984158 -1.95662997   2.32859829</code></pre>
+<pre class="r"><code>report[8,2:4] &lt;- temp$rr_report[3,]</code></pre>
+<pre class="r"><code>temp &lt;- TADA_A_RR_estimate_binom_v3(data = data$base_info, selected_annotations = c(9), gene_prior_file = &quot;../data/Example_gene_LoF_prior.txt&quot;, optimization_iteration = 2000, mode = &quot;regular&quot;)
+print(temp)</code></pre>
+<pre><code>## $mle
+## $mle$par
+## [1] 0.041584959 0.005774104 0.183641059
+## 
+## $mle$value
+## [1] -25308.85
+## 
+## $mle$counts
+## function gradient 
+##       62       NA 
+## 
+## $mle$convergence
+## [1] 0
+## 
+## $mle$message
+## NULL
+## 
+## $mle$hessian
+##              [,1]          [,2]       [,3]
+## [1,] -9126.993208 -3.612614e+03 -1.0363983
+## [2,] -3612.614164 -1.277020e+04 -0.4250069
+## [3,]    -1.036398 -4.250069e-01 -0.3875402
+## 
+## 
+## $rr_report
+##   relative_risk lower_bound upper_bournd
+## 1   0.041584959  0.01981100   0.06335892
+## 2   0.005774104 -0.01263126   0.02417947
+## 3   0.183641059 -2.96529348   3.33257560</code></pre>
+<pre class="r"><code>report[9,2:4] &lt;- temp$rr_report[3,]</code></pre>
+<pre class="r"><code>temp &lt;- TADA_A_RR_estimate_binom_v3(data = data$base_info, selected_annotations = c(10), gene_prior_file = &quot;../data/Example_gene_LoF_prior.txt&quot;, optimization_iteration = 2000, mode = &quot;regular&quot;)
+print(temp)</code></pre>
+<pre><code>## $mle
+## $mle$par
+## [1] 0.03460052 0.00509587 2.43197743
+## 
+## $mle$value
+## [1] -25277.81
+## 
+## $mle$counts
+## function gradient 
+##      142       NA 
+## 
+## $mle$convergence
+## [1] 0
+## 
+## $mle$message
+## NULL
+## 
+## $mle$hessian
+##             [,1]          [,2]      [,3]
+## [1,] -9084.22463  -3590.643871 -9.646290
+## [2,] -3590.64387 -12715.705390 -4.583719
+## [3,]    -9.64629     -4.583719 -3.932618
+## 
+## 
+## $rr_report
+##   relative_risk lower_bound upper_bournd
+## 1    0.03460052  0.01275868   0.05644236
+## 2    0.00509587 -0.01334527   0.02353701
+## 3    2.43197743  1.44232101   3.42163385</code></pre>
+<pre class="r"><code>report[10,2:4] &lt;- temp$rr_report[3,]</code></pre>
+<pre class="r"><code>temp &lt;- TADA_A_RR_estimate_binom_v3(data = data$base_info, selected_annotations = c(11), gene_prior_file = &quot;../data/Example_gene_LoF_prior.txt&quot;, optimization_iteration = 2000, mode = &quot;regular&quot;)
+print(temp)</code></pre>
+<pre><code>## $mle
+## $mle$par
+## [1] 0.038742076 0.004766058 3.740711350
+## 
+## $mle$value
+## [1] -25281.01
+## 
+## $mle$counts
+## function gradient 
+##      170       NA 
+## 
+## $mle$convergence
+## [1] 0
+## 
+## $mle$message
+## NULL
+## 
+## $mle$hessian
+##              [,1]          [,2]       [,3]
+## [1,] -9110.038581  -3600.470672 -1.2954451
+## [2,] -3600.470672 -12747.663843 -1.0661333
+## [3,]    -1.295445     -1.066133 -0.9847136
+## 
+## 
+## $rr_report
+##   relative_risk lower_bound upper_bournd
+## 1   0.038742076  0.01695369   0.06053047
+## 2   0.004766058 -0.01365222   0.02318433
+## 3   3.740711350  1.76534468   5.71607801</code></pre>
+<pre class="r"><code>report[11,2:4] &lt;- temp$rr_report[3,]</code></pre>
+<pre class="r"><code>temp &lt;- TADA_A_RR_estimate_binom_v3(data = data$base_info, selected_annotations = c(12), gene_prior_file = &quot;../data/Example_gene_LoF_prior.txt&quot;, optimization_iteration = 2000, mode = &quot;regular&quot;)
+print(temp)</code></pre>
+<pre><code>## $mle
+## $mle$par
+## [1] 0.03992367 0.00479027 0.68937088
+## 
+## $mle$value
+## [1] -25306.87
+## 
+## $mle$counts
+## function gradient 
+##      188       NA 
+## 
+## $mle$convergence
+## [1] 0
+## 
+## $mle$message
+## NULL
+## 
+## $mle$hessian
+##            [,1]         [,2]       [,3]
+## [1,] -9121.0312  -3607.37713 -25.823198
+## [2,] -3607.3771 -12760.88755 -22.423445
+## [3,]   -25.8232    -22.42345  -7.300517
+## 
+## 
+## $rr_report
+##   relative_risk lower_bound upper_bournd
+## 1    0.03992367  0.01807697   0.06177036
+## 2    0.00479027 -0.01363682   0.02321736
+## 3    0.68937088 -0.04035610   1.41909785</code></pre>
+<pre class="r"><code>report[12,2:4] &lt;- temp$rr_report[3,]</code></pre>
+<pre class="r"><code>temp &lt;- TADA_A_RR_estimate_binom_v3(data = data$base_info, selected_annotations = c(13), gene_prior_file = &quot;../data/Example_gene_LoF_prior.txt&quot;, optimization_iteration = 2000, mode = &quot;regular&quot;)
+print(temp)</code></pre>
+<pre><code>## $mle
+## $mle$par
+## [1]  0.043005194  0.006478976 -0.724744585
+## 
+## $mle$value
+## [1] -25307.63
+## 
+## $mle$counts
+## function gradient 
+##      158       NA 
+## 
+## $mle$convergence
+## [1] 0
+## 
+## $mle$message
+## NULL
+## 
+## $mle$hessian
+##             [,1]         [,2]       [,3]
+## [1,] -9122.56444  -3607.91283 -17.459114
+## [2,] -3607.91283 -12760.53319 -18.272047
+## [3,]   -17.45911    -18.27205  -4.411227
+## 
+## 
+## $rr_report
+##   relative_risk lower_bound upper_bournd
+## 1   0.043005194  0.02118427   0.06482611
+## 2   0.006478976 -0.01195580   0.02491375
+## 3  -0.724744585 -1.66272487   0.21323570</code></pre>
+<pre class="r"><code>report[13,2:4] &lt;- temp$rr_report[3,]</code></pre>
+<pre class="r"><code>temp &lt;- TADA_A_RR_estimate_binom_v3(data = data$base_info, selected_annotations = c(14), gene_prior_file = &quot;../data/Example_gene_LoF_prior.txt&quot;, optimization_iteration = 2000, mode = &quot;regular&quot;)
+print(temp)</code></pre>
+<pre><code>## $mle
+## $mle$par
+## [1] 0.041385774 0.005554669 1.391946699
+## 
+## $mle$value
+## [1] -25307.26
+## 
+## $mle$counts
+## function gradient 
+##      130       NA 
+## 
+## $mle$convergence
+## [1] 0
+## 
+## $mle$message
+## NULL
+## 
+## $mle$hessian
+##              [,1]          [,2]      [,3]
+## [1,] -9124.625563  -3610.719352 -2.628814
+## [2,] -3610.719352 -12767.063504 -2.028725
+## [3,]    -2.628814     -2.028725 -1.225562
+## 
+## 
+## $rr_report
+##   relative_risk lower_bound upper_bournd
+## 1   0.041385774  0.01960801   0.06316353
+## 2   0.005554669 -0.01285297   0.02396231
+## 3   1.391946699 -0.37913211   3.16302551</code></pre>
+<pre class="r"><code>report[14,2:4] &lt;- temp$rr_report[3,]</code></pre>
 <pre class="r"><code>knitr::kable(report)</code></pre>
 <table>
 <thead>
@@ -499,104 +818,88 @@ print(temp)</code></pre>
 </thead>
 <tbody>
 <tr class="odd">
-<td align="left">5kb_chromHMM_active_promoters_gerp_gt2</td>
-<td align="right">7.9362443</td>
-<td align="right">-76.390083</td>
-<td align="right">92.262571</td>
+<td align="left">codings_CLIP</td>
+<td align="right">1.0309388</td>
+<td align="right">0.5298919</td>
+<td align="right">1.5319858</td>
 </tr>
 <tr class="even">
-<td align="left">5kb_chromHMM_active_promoters</td>
-<td align="right">0.1177936</td>
-<td align="right">-2.715314</td>
-<td align="right">2.950901</td>
+<td align="left">codings_CLIPdb</td>
+<td align="right">0.9165366</td>
+<td align="right">0.2755410</td>
+<td align="right">1.5575321</td>
 </tr>
-</tbody>
-</table>
-</div>
-<div id="wes-lof-prior" class="section level3">
-<h3><span class="header-section-number">0.0.3</span> WES LoF prior</h3>
-<pre class="r"><code>temp &lt;- TADA_A_RR_estimate_binom(data = data$base_info, selected_annotations = c(1), gene_prior_file = &quot;../data/Example_gene_LoF_prior.txt&quot;, optimization_iteration = 2000, mode = &quot;regular&quot;)
-print(temp)</code></pre>
-<pre><code>## $mle
-## $mle$par
-## [1] 0.04344201 0.76582646
-## 
-## $mle$value
-## [1] -25308.79
-## 
-## $mle$counts
-## function gradient 
-##       61       NA 
-## 
-## $mle$convergence
-## [1] 0
-## 
-## $mle$message
-## NULL
-## 
-## $mle$hessian
-##              [,1]       [,2]
-## [1,] -9126.226547 -3.3780034
-## [2,]    -3.378003 -0.9584001
-## 
-## 
-## $rr_report
-##   relative_risk lower_bound upper_bournd
-## 1    0.04344201  0.02291177   0.06397224
-## 2    0.76582646 -1.23756647   2.76921938</code></pre>
-<pre class="r"><code>report[1,2:4] &lt;- temp$rr_report[2,]</code></pre>
-<pre class="r"><code>temp &lt;- TADA_A_RR_estimate_binom(data = data$base_info, selected_annotations = c(2), gene_prior_file = &quot;../data/Example_gene_LoF_prior.txt&quot;, optimization_iteration = 2000, mode = &quot;regular&quot;)
-print(temp)</code></pre>
-<pre><code>## $mle
-## $mle$par
-## [1]  0.04430883 -0.12149935
-## 
-## $mle$value
-## [1] -25309.06
-## 
-## $mle$counts
-## function gradient 
-##       53       NA 
-## 
-## $mle$convergence
-## [1] 0
-## 
-## $mle$message
-## NULL
-## 
-## $mle$hessian
-##             [,1]       [,2]
-## [1,] -9126.93828 -19.423256
-## [2,]   -19.42326  -4.826583
-## 
-## 
-## $rr_report
-##   relative_risk lower_bound upper_bournd
-## 1    0.04430883  0.02370438   0.06491329
-## 2   -0.12149935 -1.01749078   0.77449208</code></pre>
-<pre class="r"><code>report[2,2:4] &lt;- temp$rr_report[2,]</code></pre>
-<pre class="r"><code>knitr::kable(report)</code></pre>
-<table>
-<thead>
-<tr class="header">
-<th align="left">annotation</th>
-<th align="right">log_RR</th>
-<th align="right">lower_bound</th>
-<th align="right">upper_bound</th>
-</tr>
-</thead>
-<tbody>
 <tr class="odd">
-<td align="left">5kb_chromHMM_active_promoters_gerp_gt2</td>
-<td align="right">0.7658265</td>
-<td align="right">-1.237567</td>
-<td align="right">2.7692194</td>
+<td align="left">codings_GERP</td>
+<td align="right">1.1785502</td>
+<td align="right">0.6749643</td>
+<td align="right">1.6821362</td>
 </tr>
 <tr class="even">
-<td align="left">5kb_chromHMM_active_promoters</td>
-<td align="right">-0.1214994</td>
-<td align="right">-1.017491</td>
-<td align="right">0.7744921</td>
+<td align="left">codings_Ray_RBP_motif</td>
+<td align="right">0.1830049</td>
+<td align="right">-18.2649576</td>
+<td align="right">18.6309675</td>
+</tr>
+<tr class="odd">
+<td align="left">codings_CADD</td>
+<td align="right">1.2453655</td>
+<td align="right">0.7389251</td>
+<td align="right">1.7518059</td>
+</tr>
+<tr class="even">
+<td align="left">codings_CLIPdb_ribosnitch</td>
+<td align="right">0.1839121</td>
+<td align="right">-4.5135023</td>
+<td align="right">4.8813266</td>
+</tr>
+<tr class="odd">
+<td align="left">codings_CLIP_ribosnitch</td>
+<td align="right">0.1826517</td>
+<td align="right">-6.8963340</td>
+<td align="right">7.2616373</td>
+</tr>
+<tr class="even">
+<td align="left">codings_RBP_Var_Level2</td>
+<td align="right">0.1859842</td>
+<td align="right">-1.9566300</td>
+<td align="right">2.3285983</td>
+</tr>
+<tr class="odd">
+<td align="left">codings_ribosnitch</td>
+<td align="right">0.1836411</td>
+<td align="right">-2.9652935</td>
+<td align="right">3.3325756</td>
+</tr>
+<tr class="even">
+<td align="left">Spidex</td>
+<td align="right">2.4319774</td>
+<td align="right">1.4423210</td>
+<td align="right">3.4216339</td>
+</tr>
+<tr class="odd">
+<td align="left">LoF</td>
+<td align="right">3.7407113</td>
+<td align="right">1.7653447</td>
+<td align="right">5.7160780</td>
+</tr>
+<tr class="even">
+<td align="left">Mis3</td>
+<td align="right">0.6893709</td>
+<td align="right">-0.0403561</td>
+<td align="right">1.4190979</td>
+</tr>
+<tr class="odd">
+<td align="left">Nonfunctional_syn</td>
+<td align="right">-0.7247446</td>
+<td align="right">-1.6627249</td>
+<td align="right">0.2132357</td>
+</tr>
+<tr class="even">
+<td align="left">codings_MPC_gt2</td>
+<td align="right">1.3919467</td>
+<td align="right">-0.3791321</td>
+<td align="right">3.1630255</td>
 </tr>
 </tbody>
 </table>

@@ -1034,6 +1034,7 @@ TADA_A_DNM_generator_v2 <- function(window_file = "../data/Example_windows.bed",
                                "../other_annotations/Mark_Daly_mutrate/Example_windows_extended_1bp_for_getting_base_level_mutrate.bed.fasta.tri.alt_T.mutrate.bw"),
          rr = c(1, 0, 0.5),
          compact_mut_output = NA,
+         compact_mut_output_poisson = NA,
          MPI = 1,
          iteration = 100){
   
@@ -1054,6 +1055,7 @@ TADA_A_DNM_generator_v2 <- function(window_file = "../data/Example_windows.bed",
   # [mutrate_ref_files] is a vector of mutrate files in the bigwiggle format. These files have base-level mutation rates to a specific allele, A, C, G, T. 
   # [rr] is the log-relative risk of DNMs.
   # [compact_mut_output] if set to be True, a RDS with mutation data in a compact form will be generated. Useful for estimating RR and claculating Bayes factor
+  # [compact_mut_output_poisson] if set to be TRUE (given a RDS file name), a RDS with mutation data in a compact form that fit mixture Poisson model will be generated. 
   # [MPI] is the index that will add to temp files, useful when running multipe processes at one time
   # [iteration] an integer showing the number of iterations that need to be done, i.e., the number of simulation rounds. 
   # prefix for temporary files that will be deleted at the end of the pipeline
@@ -1146,7 +1148,7 @@ TADA_A_DNM_generator_v2 <- function(window_file = "../data/Example_windows.bed",
   # get total feature number
   feature_number = nonAS_feature_number + AS_feature_number
   # function to get effective information of each element of partition_by_gene
-  # These information are those necessary to compute log-likelihood in the optimization function
+  # These information are those necessary to compute log-likelihood in the optimization function,for mixture binomial model
   partition_feature <- function(pbg){
     # input is one element of the list of partition_by_gene
     pbg_split <- split(pbg, pbg[,4:(4 + feature_number - 1)],drop = TRUE)
@@ -1159,9 +1161,24 @@ TADA_A_DNM_generator_v2 <- function(window_file = "../data/Example_windows.bed",
   }
   
   
+  # function to get effective information of each element of partition_by_gene
+  # These information are those necessary to compute log-likelihood in the optimization function,for mixture Poisson model
+  partition_feature_poisson <- function(pbg){
+    # input is one element of the list of partition_by_gene
+    pbg_split <- split(pbg, pbg[,4:(4 + feature_number - 1)],drop = TRUE)
+    feature_combination_number <- length(pbg_split)
+    # this function below is different from the function used in dealing with dataset without reading by chunk. Here, prior is not incoporated at this step.
+    info_for_each_feature <- function(feature_set){
+      list(feature_vector = c(as.numeric(feature_set[1,4:(4 + feature_number - 1)])), sum_mut_rate_count = sum(feature_set$mut_count_1*log(feature_set$adjusted_base_mutrate)), sum_mut_rate = sum(feature_set$adjusted_base_mutrate), sum_mut_count = sum(feature_set$mut_count_1), log_fcount = sum(log(factorial(feature_set$mut_count_1))))
+    }
+    sapply(pbg_split, info_for_each_feature,simplify = FALSE)
+  }
+  
+  
   alt_letters <- c("A","C","G","T")
   mut_output_list <- list()
-  data_partition_list <- list()
+  data_partition_list_binomial <- list()
+  data_partition_list_poisson <- list()
   for(m in 1:length(mutrate_scaling_files)){
     mut_output_list[[m]] <- data.table(chr = character(), start = integer(), end = integer(), ref = character(), alt = character())
   }
@@ -1239,7 +1256,8 @@ TADA_A_DNM_generator_v2 <- function(window_file = "../data/Example_windows.bed",
     for(m in 1:length(mutrate_scaling_files)){
       mut_output_temp <- data.table(chr = character(), start = integer(), end = integer(), ref = character(), alt = character())
       for(k in 1:iteration){# across iterations
-        data_partition <- list()
+        data_partition_binomial <- list()
+        data_partition_poisson <- list()
         # randomly assign risk genes based on prior probability
         genes_for_report_with_prior$risk <- rbinom(nrow(genes_for_report_with_prior), 1, genes_for_report_with_prior$prior)
         risk_genes <- genes_for_report_with_prior[risk == 1,]$genename
@@ -1275,15 +1293,37 @@ TADA_A_DNM_generator_v2 <- function(window_file = "../data/Example_windows.bed",
           # generate random allele-specific mutations based on adjusted mutation rate, for controls
           coverage_noncoding_for_base_mutrate_temp$mut_count_2 <- rpois(nrow(coverage_noncoding_for_base_mutrate_temp), coverage_noncoding_for_base_mutrate_temp$adjusted_base_mutrate)
           
-          
-          coverage_noncoding_for_base_mutrate_temp <- coverage_noncoding_for_base_mutrate_temp[mut_count_1 > 0 | mut_count_2 > 0]  
-          
-          coverage_noncoding_for_base_mutrate_temp<- split(coverage_noncoding_for_base_mutrate_temp, coverage_noncoding_for_base_mutrate_temp$genename)
+          # collect data in a format that suits binomial mixture model
+          coverage_noncoding_for_base_mutrate_temp_binomial <- coverage_noncoding_for_base_mutrate_temp[mut_count_1 > 0 | mut_count_2 > 0]  
+          coverage_noncoding_for_base_mutrate_temp_binomial<- split(coverage_noncoding_for_base_mutrate_temp_binomial, coverage_noncoding_for_base_mutrate_temp_binomial$genename)
           # then partition by feature configuration for each gene in the current chunk
-          coverage_noncoding_for_base_mutrate_temp <- sapply(coverage_noncoding_for_base_mutrate_temp, partition_feature, simplify = FALSE)
+          coverage_noncoding_for_base_mutrate_temp_binomial <- sapply(coverage_noncoding_for_base_mutrate_temp_binomial, partition_feature, simplify = FALSE)
           # add compact data
-          data_partition <- append(data_partition, coverage_noncoding_for_base_mutrate_temp)
-          rm(coverage_noncoding_for_base_mutrate_temp) # release memory
+          data_partition_binomial <- append(data_partition_binomial, coverage_noncoding_for_base_mutrate_temp_binomial)
+          rm(coverage_noncoding_for_base_mutrate_temp_binomial) # release memory
+          
+          # collect data in a format that suits POisson mixture model
+          if(!is.na(compact_mut_output_poisson)){
+            # have to collpase data at this point, otherwise, the I will run out of RAM if process 1000 genes every time. 
+            anno_count <- rep(0, nrow(coverage_noncoding_for_base_mutrate_temp))
+            for(p in 1:feature_number){
+              anno_count <- anno_count + coverage_noncoding_for_base_mutrate_temp[[(4 + p -1)]]
+            }
+            # remove rows(bases) that don't have any non-coding features, this could save a lot of RAM, so I could use smaller partition number which would greatly accelerate speed when read in data for all genes.
+            coverage_noncoding_for_base_mutrate_temp_poisson <- coverage_noncoding_for_base_mutrate_temp[anno_count >0,]
+            # first partition by gene for the current chunk
+            coverage_noncoding_for_base_mutrate_temp_poisson <- split(coverage_noncoding_for_base_mutrate_temp_poisson, coverage_noncoding_for_base_mutrate_temp_poisson$genename)
+            # then partition by feature configuration for each gene in the current chunk
+            coverage_noncoding_for_base_mutrate_temp_poisson <- sapply(coverage_noncoding_for_base_mutrate_temp_poisson, partition_feature_poisson, simplify = FALSE)
+            # add compact data
+            data_partition_poisson <- append(data_partition_poisson, coverage_noncoding_for_base_mutrate_temp_poisson)
+            rm(coverage_noncoding_for_base_mutrate_temp_poisson) # release memory
+          }
+          
+          
+          
+          
+          
           system(paste("echo \"Finished read in mutation data and make them into the compact format for Study ", m, " and allele ", letter, ".\"", sep = ""))
           system("date")
           # then generate bed file format, this is a pseudobed file as I will put N at the 4th column as the ref allele is not relevant and mutant allele at the last column.
@@ -1300,7 +1340,8 @@ TADA_A_DNM_generator_v2 <- function(window_file = "../data/Example_windows.bed",
           #mut_bed$end <- as.integer(as.character(mut_bed$end))
           #mut_output_temp <- rbind(mut_output_temp, mut_bed)
         }
-        data_partition_list <- append(data_partition_list, list(data_partition))
+        data_partition_list_binomial <- append(data_partition_list_binomial, list(data_partition_binomial))
+        data_partition_list_poisson <- append(data_partition_list_poisson, list(data_partition_poisson))
       }
       #mut_output_list[[m]] <- rbind(mut_output_list[[m]], mut_output_temp)
     }
@@ -1320,6 +1361,9 @@ TADA_A_DNM_generator_v2 <- function(window_file = "../data/Example_windows.bed",
   #}
   #write.table(risk_genes, output_risk_genes_file, col.names = FALSE, row.names = FALSE, sep = "\t", quote = FALSE)
   if(!is.na(compact_mut_output)){
-    saveRDS(data_partition_list, compact_mut_output) # return a list of (data_partition), each data_partition has four lists representing data with mutation's allele as A, C, G, and T
+    saveRDS(data_partition_list_binomial, compact_mut_output) # return a list of (data_partition), each data_partition has four lists representing data with mutation's allele as A, C, G, and T
+  }
+  if(!is.na(compact_mut_output_poisson)){
+    saveRDS(data_partition_list_poisson, compact_mut_output_poisson) # return a list of (data_partition), each data_partition has four lists representing data with mutation's allele as A, C, G, and T
   }
 }

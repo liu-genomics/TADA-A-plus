@@ -520,6 +520,16 @@ From denovo-db
 
 + Perform 20 times of simulations. For each round, generate a pair of case and control data, and estimate the relative risk. [Details](./analysis/180530_simulate_a_pair_of_cases_and_controls_1_time.html) 
 
++ Perform 30 tims of simulations with different parameters, comparing the performance of the mixture binomial model and the mixture Poisson model
+    + Uniform prior, size 10000, logRR 2, [link](./analysis/180712_2kb_promoter_simulation_uniform_size_10000_logRR_2_iteration_30_times.html)
+    + Uniform prior, size 5000, logRR 2, [link](./analysis/180712_2kb_promoter_simulation_uniform_size_5000_logRR_2_iteration_30_times.html)
+    + Uniform prior, size 3000, logRR 2, [link](./analysis/180712_2kb_promoter_simulation_uniform_size_3000_logRR_2_iteration_30_times.html)
+    + Uniform prior, size 10000, logRR 4, [link](./analysis/180712_2kb_promoter_simulation_uniform_size_10000_logRR_4_iteration_30_times.html)
+    + WES prior, size 10000, logRR 2, [link](./analysis/180712_2kb_promoter_simulation_WES_prior_size_10000_logRR_2_iteration_30_times.html)
+    + WES prior, size 5000, logRR 2, [link](./analysis/180712_2kb_promoter_simulation__WES_prior_size_5000_logRR_2_iteration_30_times.html)
+    + WES prior, size 3000, logRR 2, [link](./analysis/180712_2kb_promoter_simulation__WES_prior_size_3000_logRR_2_iteration_30_times.html)
+    + WES prior, size 10000, logRR 4, [link](./analysis/180712_2kb_promoter_simulation__WES_prior_size_10000_logRR_4_iteration_30_times.html)
+
 # 4. A summary of the burden analysis of non-coding regions for DeepSEA related annotations.
 
 | Annotation + method | 2kb promoter | 5kb promoter | UTR | 

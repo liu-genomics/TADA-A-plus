@@ -306,194 +306,1982 @@ div.tocify {
 </div>
 
 
+<p>The new mutation generation function will read in mutation rate and annotations just once, and then simulate mutations based on how many iterations it is told to do, and then store the mutation information in a compact form that could be analyzed by rr estimation function directly, avoiding reading in mutation information at this step.</p>
 <pre class="r"><code>library(data.table)
 library(parallel)
 source(&quot;../TADA-A/lib/TADA_Annotation.R&quot;)
 source(&quot;../lib/TADA-A-plus.R&quot;)</code></pre>
-<pre class="r"><code>setwd(&quot;../../ASD/analysis/&quot;)
-source(&quot;../lib/170117_gene_list_definition.R&quot;)</code></pre>
-<div id="use-all-the-genes" class="section level3">
-<h3><span class="header-section-number">0.0.1</span> Use all the genes</h3>
-<pre class="r"><code>a &lt;- 2
-data &lt;- TADA_A_read_info_pair(mut_files_1 = c(&quot;../data/table.ASCWGS_20180504.WGS1902_hg19_cases_SNV_remove_recurrent_mutations_with_allele_info.txt&quot;),
-                              mut_files_2 = c(&quot;../data/table.ASCWGS_20180504.WGS1902_hg19_controls_SNV_remove_recurrent_mutations_with_allele_info.txt&quot;),
-                              window_file = &quot;../data/Example_windows_coding_noncoding_UTRs_updated_for_mutation_rate_adjustment_ERV_mutrate_noXY_with_additional_covariates.bed&quot;,
-                              gene_prior_file = &quot;../data/Example_gene_prior.txt&quot;,
-                              nonAS_noncoding_annotations = c(&quot;../other_annotations/chromHMM/E081_15_coreMarks_segments_E1_E2_overlap_Example_windows_for_5kb_upstream_of_TSSs_from_coding_noncoding_UTRs_updated_for_mutation_rate_adjustment_ERV_mutrate_noXY_no_header_gerp_gt2.bed&quot;,&quot;../other_annotations/chromHMM/E081_15_coreMarks_segments_E1_E2_overlap_Example_windows_for_5kb_upstream_of_TSSs_from_coding_noncoding_UTRs_updated_for_mutation_rate_adjustment_ERV_mutrate_noXY_no_header.bed&quot;,&quot;../other_annotations/PhyloP_100way/E081_15_coreMarks_segments_E1_E2_overlap_Example_windows_for_5kb_upstream_of_TSSs_from_coding_noncoding_UTRs_updated_for_mutation_rate_adjustment_ERV_mutrate_noXY_no_header_baselevel.bed.phylop100.gt2.sorted.merged.bed&quot;),
-                              AS_noncoding_annotations = NA,
-                              mutation_mutrate_adjusting_features_file_1 = c(&quot;../data/180607_test_1_mutation_rate_adjustment_for_GC_contents_normalized.txt&quot;),
-                              mutation_mutrate_adjusting_features_file_2 = c(&quot;../data/180607_test_1_mutation_rate_adjustment_for_GC_contents_normalized.txt&quot;),
-                              report_proportion = 1,
-                              MPI = 1)</code></pre>
-<pre><code>## [1] &quot;echo \&quot;Temp files cleaned and data recording finished!\&quot;&quot;</code></pre>
-<pre class="r"><code>output_table &lt;- TADA_A_RR_estimate_simple_burden(data = data$base_info, gene_list = &quot;all&quot;, background = c(117685, 114849))$rr_report
+<div id="generate-mutations-30-times-using-all-2kb-promoters" class="section level3">
+<h3><span class="header-section-number">0.0.1</span> Generate mutations 30 times, using all 2kb promoters</h3>
+<p>Using informative prior</p>
+<pre class="r"><code>report_binomial &lt;- data.frame(log_RR = rep(-1,30), lower_bound = NA, upper_bound = NA)
+report_poisson &lt;- data.frame(log_RR = rep(-1,30), lower_bound = NA, upper_bound = NA)
 
-report &lt;- cbind(data.table(annotation = c(&quot;5kb_chromHMM_active_promoters_gerp_gt2&quot;,&quot;5kb_chromHMM_active_promoters&quot;, &quot;5kb_chromHMM_active_promoters_phylop_gt2&quot;)), output_table)
-
-knitr::kable(report)</code></pre>
+for(j in 1:30){
+  data_poisson &lt;- list()
+  data_binomial &lt;- list()
+  for(i in 0:9){
+    poisson_RDS &lt;- readRDS(paste(&quot;180712_2kb_promoter_simulation_WES_prior_size_3000_logRR_2_iteration_30_times/180712_2kb_promoter_simulation_WES_prior_size_3000_logRR_2_iteration_30_times_0&quot;, i, &quot;_compact_data_poisson.RDS&quot;, sep = &quot;&quot;))
+    data_poisson &lt;- append(data_poisson, poisson_RDS[[j]])
+    binomial_RDS &lt;- readRDS(paste(&quot;180712_2kb_promoter_simulation_WES_prior_size_3000_logRR_2_iteration_30_times/180712_2kb_promoter_simulation_WES_prior_size_3000_logRR_2_iteration_30_times_0&quot;, i, &quot;_compact_data.RDS&quot;, sep = &quot;&quot;))
+    data_binomial &lt;- append(data_binomial, binomial_RDS[[j]])
+  }
+  temp &lt;- TADA_A_RR_estimate_binom(data = data_binomial, selected_annotations = c(1), gene_prior_file = &quot;../data/Example_gene_prior.txt&quot;, optimization_iteration = 2000, mode = &quot;regular&quot;)
+  print(temp)
+  system(paste(&quot;echo \&quot;Finished RR estimation using binomial model at Round &quot;, j, &quot;.\&quot;&quot;, sep = &quot;&quot;))
+  report_binomial[j,1:3] &lt;- temp$rr_report[2,]
+  temp &lt;- TADA_A_RR_estimate(data = data_poisson, selected_annotations = c(1), gene_prior_file = &quot;../data/Example_gene_prior.txt&quot;, optimization_iteration = 2000, mode = &quot;single_fast&quot;)
+  print(temp)
+  system(paste(&quot;echo \&quot;Finished RR estimation using Poisson model at Round &quot;, j, &quot;.\&quot;&quot;, sep = &quot;&quot;))
+  report_poisson[j,1:3] &lt;- temp$rr_report[1,]
+}</code></pre>
+<pre><code>## $mle
+## $mle$par
+## [1] 0.001883068 0.931044188
+## 
+## $mle$value
+## [1] -4908.93
+## 
+## $mle$counts
+## function gradient 
+##      337       NA 
+## 
+## $mle$convergence
+## [1] 0
+## 
+## $mle$message
+## NULL
+## 
+## $mle$hessian
+##              [,1]      [,2]
+## [1,] -1770.031558 -2.812552
+## [2,]    -2.812552 -1.645266
+## 
+## 
+## $rr_report
+##   relative_risk lower_bound upper_bournd
+## 1   0.001883068 -0.04476742   0.04853356
+## 2   0.931044188 -0.59908680   2.46117517
+## 
+## $mle
+## $mle$par
+## [1] 1.902067
+## 
+## $mle$value
+## [1] -592.7552
+## 
+## $mle$counts
+## function gradient 
+##       NA       NA 
+## 
+## $mle$convergence
+## [1] 0
+## 
+## $mle$message
+## NULL
+## 
+## $mle$hessian
+##          [,1]
+## [1,] -11.7569
+## 
+## 
+## $rr_report
+##   relative_risk lower_bound upper_bournd
+## 1      1.902067    1.330444      2.47369
+## 
+## $mle
+## $mle$par
+## [1] 0.002748711 1.514966305
+## 
+## $mle$value
+## [1] -4956.94
+## 
+## $mle$counts
+## function gradient 
+##       69       NA 
+## 
+## $mle$convergence
+## [1] 0
+## 
+## $mle$message
+## NULL
+## 
+## $mle$hessian
+##             [,1]       [,2]
+## [1,] -1786.45451 -1.4409200
+## [2,]    -1.44092 -0.5953029
+## 
+## 
+## $rr_report
+##   relative_risk lower_bound upper_bournd
+## 1   0.002748711 -0.04366908    0.0491665
+## 2   1.514966305 -1.02782907    4.0577617
+## 
+## $mle
+## $mle$par
+## [1] 1.712976
+## 
+## $mle$value
+## [1] -580.8745
+## 
+## $mle$counts
+## function gradient 
+##       NA       NA 
+## 
+## $mle$convergence
+## [1] 0
+## 
+## $mle$message
+## NULL
+## 
+## $mle$hessian
+##           [,1]
+## [1,] -8.617851
+## 
+## 
+## $rr_report
+##   relative_risk lower_bound upper_bournd
+## 1      1.712976    1.045314     2.380638
+## 
+## $mle
+## $mle$par
+## [1] -0.03631233  2.41315111
+## 
+## $mle$value
+## [1] -4972.918
+## 
+## $mle$counts
+## function gradient 
+##       73       NA 
+## 
+## $mle$convergence
+## [1] 0
+## 
+## $mle$message
+## NULL
+## 
+## $mle$hessian
+##               [,1]       [,2]
+## [1,] -1790.4965621 -0.9985138
+## [2,]    -0.9985138 -0.5062118
+## 
+## 
+## $rr_report
+##   relative_risk lower_bound upper_bournd
+## 1   -0.03631233 -0.08265791   0.01003325
+## 2    2.41315111 -0.34316448   5.16946670
+## 
+## $mle
+## $mle$par
+## [1] 2.298008
+## 
+## $mle$value
+## [1] -720.432
+## 
+## $mle$counts
+## function gradient 
+##       NA       NA 
+## 
+## $mle$convergence
+## [1] 0
+## 
+## $mle$message
+## NULL
+## 
+## $mle$hessian
+##           [,1]
+## [1,] -17.68328
+## 
+## 
+## $rr_report
+##   relative_risk lower_bound upper_bournd
+## 1      2.298008    1.831912     2.764103
+## 
+## $mle
+## $mle$par
+## [1] -0.03872137  3.72211598
+## 
+## $mle$value
+## [1] -4881.235
+## 
+## $mle$counts
+## function gradient 
+##       81       NA 
+## 
+## $mle$convergence
+## [1] 0
+## 
+## $mle$message
+## NULL
+## 
+## $mle$hessian
+##               [,1]         [,2]
+## [1,] -1757.6802786 -0.149738298
+## [2,]    -0.1497383 -0.004928552
+## 
+## 
+## $rr_report
+##   relative_risk  lower_bound upper_bournd
+## 1   -0.03872137  -0.08553247  0.008089735
+## 2    3.72211598 -24.23286297 31.677094924
+## 
+## $mle
+## $mle$par
+## [1] 1.363113
+## 
+## $mle$value
+## [1] -634.6419
+## 
+## $mle$counts
+## function gradient 
+##       NA       NA 
+## 
+## $mle$convergence
+## [1] 0
+## 
+## $mle$message
+## NULL
+## 
+## $mle$hessian
+##           [,1]
+## [1,] -3.361785
+## 
+## 
+## $rr_report
+##   relative_risk lower_bound upper_bournd
+## 1      1.363113   0.2941289     2.432096
+## 
+## $mle
+## $mle$par
+## [1]  0.01560007 12.22928926
+## 
+## $mle$value
+## [1] -5037.911
+## 
+## $mle$counts
+## function gradient 
+##       97       NA 
+## 
+## $mle$convergence
+## [1] 0
+## 
+## $mle$message
+## NULL
+## 
+## $mle$hessian
+##               [,1]          [,2]
+## [1,] -1.814232e+03 -9.458745e-05
+## [2,] -9.458745e-05 -7.071321e-05
+## 
+## 
+## $rr_report
+##   relative_risk   lower_bound upper_bournd
+## 1    0.01560007   -0.03041602   0.06161616
+## 2   12.22928926 -220.85113553 245.30971405
+## 
+## $mle
+## $mle$par
+## [1] 2.390544
+## 
+## $mle$value
+## [1] -726.8913
+## 
+## $mle$counts
+## function gradient 
+##       NA       NA 
+## 
+## $mle$convergence
+## [1] 0
+## 
+## $mle$message
+## NULL
+## 
+## $mle$hessian
+##           [,1]
+## [1,] -20.29145
+## 
+## 
+## $rr_report
+##   relative_risk lower_bound upper_bournd
+## 1      2.390544    1.955434     2.825655
+## 
+## $mle
+## $mle$par
+## [1] -0.009902154 10.433333514
+## 
+## $mle$value
+## [1] -4946.191
+## 
+## $mle$counts
+## function gradient 
+##       95       NA 
+## 
+## $mle$convergence
+## [1] 0
+## 
+## $mle$message
+## NULL
+## 
+## $mle$hessian
+##               [,1]          [,2]
+## [1,] -1.780819e+03 -0.0003719833
+## [2,] -3.719833e-04 -0.0001989520
+## 
+## 
+## $rr_report
+##   relative_risk   lower_bound upper_bournd
+## 1  -0.009902154   -0.05634793   0.03654362
+## 2  10.433333514 -128.52418137 149.39084840
+## 
+## $mle
+## $mle$par
+## [1] 1.947377
+## 
+## $mle$value
+## [1] -672.2425
+## 
+## $mle$counts
+## function gradient 
+##       NA       NA 
+## 
+## $mle$convergence
+## [1] 0
+## 
+## $mle$message
+## NULL
+## 
+## $mle$hessian
+##           [,1]
+## [1,] -11.28118
+## 
+## 
+## $rr_report
+##   relative_risk lower_bound upper_bournd
+## 1      1.947377    1.363826     2.530928
+## 
+## $mle
+## $mle$par
+## [1] 0.008826173 3.182713931
+## 
+## $mle$value
+## [1] -5054.767
+## 
+## $mle$counts
+## function gradient 
+##       71       NA 
+## 
+## $mle$convergence
+## [1] 0
+## 
+## $mle$message
+## NULL
+## 
+## $mle$hessian
+##               [,1]       [,2]
+## [1,] -1819.8214932 -0.5172878
+## [2,]    -0.5172878 -0.1636452
+## 
+## 
+## $rr_report
+##   relative_risk lower_bound upper_bournd
+## 1   0.008826173 -0.03713984   0.05479219
+## 2   3.182713931 -1.66458382   8.03001168
+## 
+## $mle
+## $mle$par
+## [1] 2.387081
+## 
+## $mle$value
+## [1] -696.8858
+## 
+## $mle$counts
+## function gradient 
+##       NA       NA 
+## 
+## $mle$convergence
+## [1] 0
+## 
+## $mle$message
+## NULL
+## 
+## $mle$hessian
+##           [,1]
+## [1,] -18.35085
+## 
+## 
+## $rr_report
+##   relative_risk lower_bound upper_bournd
+## 1      2.387081    1.929542     2.844619
+## 
+## $mle
+## $mle$par
+## [1] -0.01581093 15.63792795
+## 
+## $mle$value
+## [1] -5024.112
+## 
+## $mle$counts
+## function gradient 
+##       97       NA 
+## 
+## $mle$convergence
+## [1] 0
+## 
+## $mle$message
+## NULL
+## 
+## $mle$hessian
+##               [,1]          [,2]
+## [1,] -1.808325e+03 -2.501110e-06
+## [2,] -2.501110e-06 -1.136868e-06
+## 
+## 
+## $rr_report
+##   relative_risk   lower_bound upper_bournd
+## 1   -0.01581093 -6.190211e-02 3.028024e-02
+## 2   15.63792795 -1.822597e+03 1.853873e+03
+## 
+## $mle
+## $mle$par
+## [1] 2.313397
+## 
+## $mle$value
+## [1] -685.8767
+## 
+## $mle$counts
+## function gradient 
+##       NA       NA 
+## 
+## $mle$convergence
+## [1] 0
+## 
+## $mle$message
+## NULL
+## 
+## $mle$hessian
+##           [,1]
+## [1,] -18.16249
+## 
+## 
+## $rr_report
+##   relative_risk lower_bound upper_bournd
+## 1      2.313397    1.853492     2.773302
+## 
+## $mle
+## $mle$par
+## [1]  0.02718601 14.88077045
+## 
+## $mle$value
+## [1] -4972.963
+## 
+## $mle$counts
+## function gradient 
+##       75       NA 
+## 
+## $mle$convergence
+## [1] 0
+## 
+## $mle$message
+## NULL
+## 
+## $mle$hessian
+##               [,1]          [,2]
+## [1,] -1.790769e+03 -5.911716e-06
+## [2,] -5.911716e-06 -3.865352e-06
+## 
+## 
+## $rr_report
+##   relative_risk   lower_bound upper_bournd
+## 1    0.02718601   -0.01913055 7.350258e-02
+## 2   14.88077045 -982.04201145 1.011804e+03
+## 
+## $mle
+## $mle$par
+## [1] 2.224614
+## 
+## $mle$value
+## [1] -639.2676
+## 
+## $mle$counts
+## function gradient 
+##       NA       NA 
+## 
+## $mle$convergence
+## [1] 0
+## 
+## $mle$message
+## NULL
+## 
+## $mle$hessian
+##           [,1]
+## [1,] -18.17576
+## 
+## 
+## $rr_report
+##   relative_risk lower_bound upper_bournd
+## 1      2.224614    1.764877     2.684352
+## 
+## $mle
+## $mle$par
+## [1]  0.01549809 13.98334131
+## 
+## $mle$value
+## [1] -4940.157
+## 
+## $mle$counts
+## function gradient 
+##       75       NA 
+## 
+## $mle$convergence
+## [1] 0
+## 
+## $mle$message
+## NULL
+## 
+## $mle$hessian
+##               [,1]          [,2]
+## [1,] -1.777924e+03 -1.477929e-05
+## [2,] -1.477929e-05 -9.094947e-06
+## 
+## 
+## $rr_report
+##   relative_risk   lower_bound upper_bournd
+## 1    0.01549809   -0.03098548   0.06198166
+## 2   13.98334131 -635.93080120 663.89748381
+## 
+## $mle
+## $mle$par
+## [1] 2.428191
+## 
+## $mle$value
+## [1] -763.5115
+## 
+## $mle$counts
+## function gradient 
+##       NA       NA 
+## 
+## $mle$convergence
+## [1] 0
+## 
+## $mle$message
+## NULL
+## 
+## $mle$hessian
+##           [,1]
+## [1,] -20.89266
+## 
+## 
+## $rr_report
+##   relative_risk lower_bound upper_bournd
+## 1      2.428191    1.999387     2.856995
+## 
+## $mle
+## $mle$par
+## [1] -0.0630652  1.5075337
+## 
+## $mle$value
+## [1] -5028.999
+## 
+## $mle$counts
+## function gradient 
+##       71       NA 
+## 
+## $mle$convergence
+## [1] 0
+## 
+## $mle$message
+## NULL
+## 
+## $mle$hessian
+##              [,1]      [,2]
+## [1,] -1810.488566 -3.140847
+## [2,]    -3.140847 -1.973023
+## 
+## 
+## $rr_report
+##   relative_risk lower_bound upper_bournd
+## 1    -0.0630652  -0.1091926  -0.01693783
+## 2     1.5075337   0.1102310   2.90483632
+## 
+## $mle
+## $mle$par
+## [1] 2.472954
+## 
+## $mle$value
+## [1] -769.8995
+## 
+## $mle$counts
+## function gradient 
+##       NA       NA 
+## 
+## $mle$convergence
+## [1] 0
+## 
+## $mle$message
+## NULL
+## 
+## $mle$hessian
+##           [,1]
+## [1,] -26.25235
+## 
+## 
+## $rr_report
+##   relative_risk lower_bound upper_bournd
+## 1      2.472954    2.090418      2.85549
+## 
+## $mle
+## $mle$par
+## [1] 0.02071651 9.97445325
+## 
+## $mle$value
+## [1] -5014.337
+## 
+## $mle$counts
+## function gradient 
+##       97       NA 
+## 
+## $mle$convergence
+## [1] 0
+## 
+## $mle$message
+## NULL
+## 
+## $mle$hessian
+##               [,1]          [,2]
+## [1,] -1.803874e+03 -6.239134e-04
+## [2,] -6.239134e-04 -1.591616e-05
+## 
+## 
+## $rr_report
+##   relative_risk   lower_bound upper_bournd
+## 1    0.02071651   -0.02543181   0.06686482
+## 2    9.97445325 -481.31778673 501.26669323
+## 
+## $mle
+## $mle$par
+## [1] 2.523084
+## 
+## $mle$value
+## [1] -803.0349
+## 
+## $mle$counts
+## function gradient 
+##       NA       NA 
+## 
+## $mle$convergence
+## [1] 0
+## 
+## $mle$message
+## NULL
+## 
+## $mle$hessian
+##           [,1]
+## [1,] -24.41701
+## 
+## 
+## $rr_report
+##   relative_risk lower_bound upper_bournd
+## 1      2.523084    2.126431     2.919736
+## 
+## $mle
+## $mle$par
+## [1] -0.01565533 11.62799355
+## 
+## $mle$value
+## [1] -5076.813
+## 
+## $mle$counts
+## function gradient 
+##       91       NA 
+## 
+## $mle$convergence
+## [1] 0
+## 
+## $mle$message
+## NULL
+## 
+## $mle$hessian
+##               [,1]          [,2]
+## [1,] -1.827655e+03 -9.504220e-05
+## [2,] -9.504220e-05 -2.887646e-05
+## 
+## 
+## $rr_report
+##   relative_risk   lower_bound upper_bournd
+## 1   -0.01565533   -0.06150213   0.03019148
+## 2   11.62799355 -353.11264744 376.36863454
+## 
+## $mle
+## $mle$par
+## [1] 1.995856
+## 
+## $mle$value
+## [1] -712.9512
+## 
+## $mle$counts
+## function gradient 
+##       NA       NA 
+## 
+## $mle$convergence
+## [1] 0
+## 
+## $mle$message
+## NULL
+## 
+## $mle$hessian
+##           [,1]
+## [1,] -11.23118
+## 
+## 
+## $rr_report
+##   relative_risk lower_bound upper_bournd
+## 1      1.995856    1.411007     2.580704
+## 
+## $mle
+## $mle$par
+## [1] -0.02943938  2.46035427
+## 
+## $mle$value
+## [1] -4950.942
+## 
+## $mle$counts
+## function gradient 
+##       77       NA 
+## 
+## $mle$convergence
+## [1] 0
+## 
+## $mle$message
+## NULL
+## 
+## $mle$hessian
+##               [,1]       [,2]
+## [1,] -1782.8712944 -0.8574173
+## [2,]    -0.8574173 -0.4213630
+## 
+## 
+## $rr_report
+##   relative_risk lower_bound upper_bournd
+## 1   -0.02943938 -0.07588114   0.01700238
+## 2    2.46035427 -0.56057452   5.48128305
+## 
+## $mle
+## $mle$par
+## [1] 2.12238
+## 
+## $mle$value
+## [1] -677.8344
+## 
+## $mle$counts
+## function gradient 
+##       NA       NA 
+## 
+## $mle$convergence
+## [1] 0
+## 
+## $mle$message
+## NULL
+## 
+## $mle$hessian
+##           [,1]
+## [1,] -13.77327
+## 
+## 
+## $rr_report
+##   relative_risk lower_bound upper_bournd
+## 1       2.12238    1.594254     2.650506
+## 
+## $mle
+## $mle$par
+## [1] -0.0170478  4.1378136
+## 
+## $mle$value
+## [1] -5053.531
+## 
+## $mle$counts
+## function gradient 
+##       69       NA 
+## 
+## $mle$convergence
+## [1] 0
+## 
+## $mle$message
+## NULL
+## 
+## $mle$hessian
+##               [,1]         [,2]
+## [1,] -1819.7370082 -0.123240397
+## [2,]    -0.1232404 -0.008011739
+## 
+## 
+## $rr_report
+##   relative_risk  lower_bound upper_bournd
+## 1    -0.0170478  -0.06301818   0.02892258
+## 2     4.1378136 -17.77100777  26.04663497
+## 
+## $mle
+## $mle$par
+## [1] 1.690345
+## 
+## $mle$value
+## [1] -612.8656
+## 
+## $mle$counts
+## function gradient 
+##       NA       NA 
+## 
+## $mle$convergence
+## [1] 0
+## 
+## $mle$message
+## NULL
+## 
+## $mle$hessian
+##           [,1]
+## [1,] -8.136956
+## 
+## 
+## $rr_report
+##   relative_risk lower_bound upper_bournd
+## 1      1.690345    1.003237     2.377453
+## 
+## $mle
+## $mle$par
+## [1] -0.06863594  1.25038812
+## 
+## $mle$value
+## [1] -5172.402
+## 
+## $mle$counts
+## function gradient 
+##       79       NA 
+## 
+## $mle$convergence
+## [1] 0
+## 
+## $mle$message
+## NULL
+## 
+## $mle$hessian
+##              [,1]      [,2]
+## [1,] -1863.810770 -2.586905
+## [2,]    -2.586905 -1.500912
+## 
+## 
+## $rr_report
+##   relative_risk lower_bound upper_bournd
+## 1   -0.06863594  -0.1140903  -0.02318161
+## 2    1.25038812  -0.3513758   2.85215204
+## 
+## $mle
+## $mle$par
+## [1] 1.883961
+## 
+## $mle$value
+## [1] -608.4967
+## 
+## $mle$counts
+## function gradient 
+##       NA       NA 
+## 
+## $mle$convergence
+## [1] 0
+## 
+## $mle$message
+## NULL
+## 
+## $mle$hessian
+##           [,1]
+## [1,] -11.49448
+## 
+## 
+## $rr_report
+##   relative_risk lower_bound upper_bournd
+## 1      1.883961     1.30585     2.462072
+## 
+## $mle
+## $mle$par
+## [1] 0.03152484 0.46290811
+## 
+## $mle$value
+## [1] -5031.271
+## 
+## $mle$counts
+## function gradient 
+##       59       NA 
+## 
+## $mle$convergence
+## [1] 0
+## 
+## $mle$message
+## NULL
+## 
+## $mle$hessian
+##              [,1]       [,2]
+## [1,] -1814.378526 -1.6282177
+## [2,]    -1.628218 -0.3925966
+## 
+## 
+## $rr_report
+##   relative_risk lower_bound upper_bournd
+## 1    0.03152484 -0.01457526   0.07762493
+## 2    0.46290811 -2.67104503   3.59686126
+## 
+## $mle
+## $mle$par
+## [1] 0.7029137
+## 
+## $mle$value
+## [1] -512.2363
+## 
+## $mle$counts
+## function gradient 
+##       NA       NA 
+## 
+## $mle$convergence
+## [1] 0
+## 
+## $mle$message
+## NULL
+## 
+## $mle$hessian
+##          [,1]
+## [1,] -2.42332
+## 
+## 
+## $rr_report
+##   relative_risk lower_bound upper_bournd
+## 1     0.7029137  -0.5561588     1.961986
+## 
+## $mle
+## $mle$par
+## [1] -0.03245125  2.35517750
+## 
+## $mle$value
+## [1] -5028.567
+## 
+## $mle$counts
+## function gradient 
+##       75       NA 
+## 
+## $mle$convergence
+## [1] 0
+## 
+## $mle$message
+## NULL
+## 
+## $mle$hessian
+##             [,1]       [,2]
+## [1,] -1811.11088 -1.3890201
+## [2,]    -1.38902 -0.9134574
+## 
+## 
+## $rr_report
+##   relative_risk lower_bound upper_bournd
+## 1   -0.03245125 -0.07853385   0.01363134
+## 2    2.35517750  0.30323437   4.40712063
+## 
+## $mle
+## $mle$par
+## [1] 2.158785
+## 
+## $mle$value
+## [1] -661.664
+## 
+## $mle$counts
+## function gradient 
+##       NA       NA 
+## 
+## $mle$convergence
+## [1] 0
+## 
+## $mle$message
+## NULL
+## 
+## $mle$hessian
+##           [,1]
+## [1,] -16.02833
+## 
+## 
+## $rr_report
+##   relative_risk lower_bound upper_bournd
+## 1      2.158785    1.669218     2.648351
+## 
+## $mle
+## $mle$par
+## [1] -0.006478158  2.580624465
+## 
+## $mle$value
+## [1] -4977.3
+## 
+## $mle$counts
+## function gradient 
+##       77       NA 
+## 
+## $mle$convergence
+## [1] 0
+## 
+## $mle$message
+## NULL
+## 
+## $mle$hessian
+##               [,1]       [,2]
+## [1,] -1792.3828743 -0.8118427
+## [2,]    -0.8118427 -0.4024271
+## 
+## 
+## $rr_report
+##   relative_risk lower_bound upper_bournd
+## 1  -0.006478158 -0.05279503   0.03983871
+## 2   2.580624465 -0.51046079   5.67170971
+## 
+## $mle
+## $mle$par
+## [1] 2.177895
+## 
+## $mle$value
+## [1] -661.2942
+## 
+## $mle$counts
+## function gradient 
+##       NA       NA 
+## 
+## $mle$convergence
+## [1] 0
+## 
+## $mle$message
+## NULL
+## 
+## $mle$hessian
+##           [,1]
+## [1,] -15.50235
+## 
+## 
+## $rr_report
+##   relative_risk lower_bound upper_bournd
+## 1      2.177895    1.680092     2.675697
+## 
+## $mle
+## $mle$par
+## [1]  0.003063536 10.641459165
+## 
+## $mle$value
+## [1] -4936.039
+## 
+## $mle$counts
+## function gradient 
+##       77       NA 
+## 
+## $mle$convergence
+## [1] 0
+## 
+## $mle$message
+## NULL
+## 
+## $mle$hessian
+##               [,1]          [,2]
+## [1,] -1.777797e+03 -2.023626e-04
+## [2,] -2.023626e-04 -7.730705e-05
+## 
+## 
+## $rr_report
+##   relative_risk  lower_bound upper_bournd
+## 1   0.003063536   -0.0434217   0.04954877
+## 2  10.641459165 -212.2772843 233.56020268
+## 
+## $mle
+## $mle$par
+## [1] 1.544213
+## 
+## $mle$value
+## [1] -533.566
+## 
+## $mle$counts
+## function gradient 
+##       NA       NA 
+## 
+## $mle$convergence
+## [1] 0
+## 
+## $mle$message
+## NULL
+## 
+## $mle$hessian
+##           [,1]
+## [1,] -6.858983
+## 
+## 
+## $rr_report
+##   relative_risk lower_bound upper_bournd
+## 1      1.544213   0.7958262       2.2926
+## 
+## $mle
+## $mle$par
+## [1] -0.06676008 11.22989125
+## 
+## $mle$value
+## [1] -4974.204
+## 
+## $mle$counts
+## function gradient 
+##      141       NA 
+## 
+## $mle$convergence
+## [1] 0
+## 
+## $mle$message
+## NULL
+## 
+## $mle$hessian
+##               [,1]          [,2]
+## [1,] -1.790154e+03 -0.0001721219
+## [2,] -1.721219e-04 -0.0000898126
+## 
+## 
+## $rr_report
+##   relative_risk  lower_bound upper_bournd
+## 1   -0.06676008   -0.1130846  -0.02043556
+## 2   11.22989125 -195.5876985 218.04748097
+## 
+## $mle
+## $mle$par
+## [1] 2.211452
+## 
+## $mle$value
+## [1] -593.8805
+## 
+## $mle$counts
+## function gradient 
+##       NA       NA 
+## 
+## $mle$convergence
+## [1] 0
+## 
+## $mle$message
+## NULL
+## 
+## $mle$hessian
+##           [,1]
+## [1,] -16.42235
+## 
+## 
+## $rr_report
+##   relative_risk lower_bound upper_bournd
+## 1      2.211452    1.727794     2.695111
+## 
+## $mle
+## $mle$par
+## [1] 0.02600227 8.39266653
+## 
+## $mle$value
+## [1] -4926.716
+## 
+## $mle$counts
+## function gradient 
+##       87       NA 
+## 
+## $mle$convergence
+## [1] 0
+## 
+## $mle$message
+## NULL
+## 
+## $mle$hessian
+##               [,1]         [,2]
+## [1,] -1.773706e+03 -0.002734623
+## [2,] -2.734623e-03 -0.001241006
+## 
+## 
+## $rr_report
+##   relative_risk  lower_bound upper_bournd
+## 1    0.02600227  -0.02053661   0.07254116
+## 2    8.39266653 -47.24513390  64.03046696
+## 
+## $mle
+## $mle$par
+## [1] 2.071058
+## 
+## $mle$value
+## [1] -710.7341
+## 
+## $mle$counts
+## function gradient 
+##       NA       NA 
+## 
+## $mle$convergence
+## [1] 0
+## 
+## $mle$message
+## NULL
+## 
+## $mle$hessian
+##           [,1]
+## [1,] -13.58311
+## 
+## 
+## $rr_report
+##   relative_risk lower_bound upper_bournd
+## 1      2.071058    1.539248     2.602868
+## 
+## $mle
+## $mle$par
+## [1] -0.001866386  4.057462161
+## 
+## $mle$value
+## [1] -4950.659
+## 
+## $mle$counts
+## function gradient 
+##      373       NA 
+## 
+## $mle$convergence
+## [1] 0
+## 
+## $mle$message
+## NULL
+## 
+## $mle$hessian
+##               [,1]        [,2]
+## [1,] -1782.1294987 -0.18630226
+## [2,]    -0.1863023 -0.02485172
+## 
+## 
+## $rr_report
+##   relative_risk lower_bound upper_bournd
+## 1  -0.001866386 -0.04831328   0.04458051
+## 2   4.057462161 -8.38046839  16.49539271
+## 
+## $mle
+## $mle$par
+## [1] 2.015298
+## 
+## $mle$value
+## [1] -633.4344
+## 
+## $mle$counts
+## function gradient 
+##       NA       NA 
+## 
+## $mle$convergence
+## [1] 0
+## 
+## $mle$message
+## NULL
+## 
+## $mle$hessian
+##          [,1]
+## [1,] -14.8508
+## 
+## 
+## $rr_report
+##   relative_risk lower_bound upper_bournd
+## 1      2.015298    1.506693     2.523904
+## 
+## $mle
+## $mle$par
+## [1] -0.003996644  3.312413618
+## 
+## $mle$value
+## [1] -5004.622
+## 
+## $mle$counts
+## function gradient 
+##       89       NA 
+## 
+## $mle$convergence
+## [1] 0
+## 
+## $mle$message
+## NULL
+## 
+## $mle$hessian
+##               [,1]        [,2]
+## [1,] -1802.3533321 -0.34887671
+## [2,]    -0.3488767 -0.08589654
+## 
+## 
+## $rr_report
+##   relative_risk lower_bound upper_bournd
+## 1  -0.003996644 -0.05018228   0.04218899
+## 2   3.312413618 -3.37778498  10.00261222
+## 
+## $mle
+## $mle$par
+## [1] 1.873939
+## 
+## $mle$value
+## [1] -606.7735
+## 
+## $mle$counts
+## function gradient 
+##       NA       NA 
+## 
+## $mle$convergence
+## [1] 0
+## 
+## $mle$message
+## NULL
+## 
+## $mle$hessian
+##           [,1]
+## [1,] -11.60972
+## 
+## 
+## $rr_report
+##   relative_risk lower_bound upper_bournd
+## 1      1.873939    1.298704     2.449174
+## 
+## $mle
+## $mle$par
+## [1]  0.003096064 10.759611545
+## 
+## $mle$value
+## [1] -5080.837
+## 
+## $mle$counts
+## function gradient 
+##      195       NA 
+## 
+## $mle$convergence
+## [1] 0
+## 
+## $mle$message
+## NULL
+## 
+## $mle$hessian
+##               [,1]         [,2]
+## [1,] -1.829676e+03 -0.000238515
+## [2,] -2.385150e-04 -0.000114369
+## 
+## 
+## $rr_report
+##   relative_risk   lower_bound upper_bournd
+## 1   0.003096064   -0.04272541   0.04891753
+## 2  10.759611545 -172.51488991 194.03411300
+## 
+## $mle
+## $mle$par
+## [1] 1.939674
+## 
+## $mle$value
+## [1] -713.6689
+## 
+## $mle$counts
+## function gradient 
+##       NA       NA 
+## 
+## $mle$convergence
+## [1] 0
+## 
+## $mle$message
+## NULL
+## 
+## $mle$hessian
+##          [,1]
+## [1,] -11.1043
+## 
+## 
+## $rr_report
+##   relative_risk lower_bound upper_bournd
+## 1      1.939674    1.351494     2.527854
+## 
+## $mle
+## $mle$par
+## [1]  0.01117514 10.97801931
+## 
+## $mle$value
+## [1] -5034.494
+## 
+## $mle$counts
+## function gradient 
+##       93       NA 
+## 
+## $mle$convergence
+## [1] 0
+## 
+## $mle$message
+## NULL
+## 
+## $mle$hessian
+##               [,1]          [,2]
+## [1,] -1.812544e+03 -2.139586e-04
+## [2,] -2.139586e-04 -9.572432e-05
+## 
+## 
+## $rr_report
+##   relative_risk   lower_bound upper_bournd
+## 1    0.01117514   -0.03486237   0.05721265
+## 2   10.97801931 -189.35151879 211.30755741
+## 
+## $mle
+## $mle$par
+## [1] 2.164102
+## 
+## $mle$value
+## [1] -750.5421
+## 
+## $mle$counts
+## function gradient 
+##       NA       NA 
+## 
+## $mle$convergence
+## [1] 0
+## 
+## $mle$message
+## NULL
+## 
+## $mle$hessian
+##         [,1]
+## [1,] -14.338
+## 
+## 
+## $rr_report
+##   relative_risk lower_bound upper_bournd
+## 1      2.164102    1.646482     2.681723
+## 
+## $mle
+## $mle$par
+## [1] -0.030559  1.723122
+## 
+## $mle$value
+## [1] -4993.202
+## 
+## $mle$counts
+## function gradient 
+##       79       NA 
+## 
+## $mle$convergence
+## [1] 0
+## 
+## $mle$message
+## NULL
+## 
+## $mle$hessian
+##              [,1]      [,2]
+## [1,] -1799.387275 -1.450398
+## [2,]    -1.450398 -0.824919
+## 
+## 
+## $rr_report
+##   relative_risk lower_bound upper_bournd
+## 1     -0.030559 -0.07679729   0.01567928
+## 2      1.723122 -0.43640418   3.88264736
+## 
+## $mle
+## $mle$par
+## [1] 1.736704
+## 
+## $mle$value
+## [1] -674.2149
+## 
+## $mle$counts
+## function gradient 
+##       NA       NA 
+## 
+## $mle$convergence
+## [1] 0
+## 
+## $mle$message
+## NULL
+## 
+## $mle$hessian
+##           [,1]
+## [1,] -8.023335
+## 
+## 
+## $rr_report
+##   relative_risk lower_bound upper_bournd
+## 1      1.736704    1.044747      2.42866
+## 
+## $mle
+## $mle$par
+## [1] 0.01963593 1.87428051
+## 
+## $mle$value
+## [1] -5045.539
+## 
+## $mle$counts
+## function gradient 
+##       71       NA 
+## 
+## $mle$convergence
+## [1] 0
+## 
+## $mle$message
+## NULL
+## 
+## $mle$hessian
+##              [,1]       [,2]
+## [1,] -1817.974738 -1.5027620
+## [2,]    -1.502762 -0.8190927
+## 
+## 
+## $rr_report
+##   relative_risk lower_bound upper_bournd
+## 1    0.01963593 -0.02636766   0.06563952
+## 2    1.87428051 -0.29301982   4.04158085
+## 
+## $mle
+## $mle$par
+## [1] 1.944781
+## 
+## $mle$value
+## [1] -679.1721
+## 
+## $mle$counts
+## function gradient 
+##       NA       NA 
+## 
+## $mle$convergence
+## [1] 0
+## 
+## $mle$message
+## NULL
+## 
+## $mle$hessian
+##           [,1]
+## [1,] -11.74642
+## 
+## 
+## $rr_report
+##   relative_risk lower_bound upper_bournd
+## 1      1.944781    1.372903     2.516659
+## 
+## $mle
+## $mle$par
+## [1] -0.01852179  2.11236957
+## 
+## $mle$value
+## [1] -4930.469
+## 
+## $mle$counts
+## function gradient 
+##       75       NA 
+## 
+## $mle$convergence
+## [1] 0
+## 
+## $mle$message
+## NULL
+## 
+## $mle$hessian
+##              [,1]       [,2]
+## [1,] -1775.845028 -1.5173973
+## [2,]    -1.517397 -0.9209527
+## 
+## 
+## $rr_report
+##   relative_risk lower_bound upper_bournd
+## 1   -0.01852179 -0.06506534   0.02802175
+## 2    2.11236957  0.06854637   4.15619277
+## 
+## $mle
+## $mle$par
+## [1] 2.121444
+## 
+## $mle$value
+## [1] -665.5572
+## 
+## $mle$counts
+## function gradient 
+##       NA       NA 
+## 
+## $mle$convergence
+## [1] 0
+## 
+## $mle$message
+## NULL
+## 
+## $mle$hessian
+##           [,1]
+## [1,] -16.04301
+## 
+## 
+## $rr_report
+##   relative_risk lower_bound upper_bournd
+## 1      2.121444    1.632101     2.610787
+## 
+## $mle
+## $mle$par
+## [1] -0.01314484 10.52834709
+## 
+## $mle$value
+## [1] -4911.36
+## 
+## $mle$counts
+## function gradient 
+##       87       NA 
+## 
+## $mle$convergence
+## [1] 0
+## 
+## $mle$message
+## NULL
+## 
+## $mle$hessian
+##               [,1]          [,2]
+## [1,] -1.767197e+03 -0.0005061338
+## [2,] -5.061338e-04 -0.0002867182
+## 
+## 
+## $rr_report
+##   relative_risk   lower_bound upper_bournd
+## 1   -0.01314484   -0.05976928   0.03347961
+## 2   10.52834709 -105.22366442 126.28035859
+## 
+## $mle
+## $mle$par
+## [1] 2.336552
+## 
+## $mle$value
+## [1] -653.4531
+## 
+## $mle$counts
+## function gradient 
+##       NA       NA 
+## 
+## $mle$convergence
+## [1] 0
+## 
+## $mle$message
+## NULL
+## 
+## $mle$hessian
+##           [,1]
+## [1,] -21.68328
+## 
+## 
+## $rr_report
+##   relative_risk lower_bound upper_bournd
+## 1      2.336552    1.915638     2.757467</code></pre>
+<pre class="r"><code>knitr::kable(report_binomial)</code></pre>
 <table>
 <thead>
 <tr class="header">
-<th align="left">annotation</th>
-<th align="right">burden</th>
-<th align="right">p.value</th>
-<th align="right">case_count</th>
-<th align="right">control_count</th>
+<th align="right">log_RR</th>
+<th align="right">lower_bound</th>
+<th align="right">upper_bound</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td align="left">5kb_chromHMM_active_promoters_gerp_gt2</td>
-<td align="right">1.386808</td>
-<td align="right">0.0344843</td>
-<td align="right">81</td>
-<td align="right">57</td>
+<td align="right">0.9310442</td>
+<td align="right">-0.5990868</td>
+<td align="right">2.461175</td>
 </tr>
 <tr class="even">
-<td align="left">5kb_chromHMM_active_promoters</td>
-<td align="right">1.055991</td>
-<td align="right">0.2497985</td>
-<td align="right">356</td>
-<td align="right">329</td>
+<td align="right">1.5149663</td>
+<td align="right">-1.0278291</td>
+<td align="right">4.057762</td>
 </tr>
 <tr class="odd">
-<td align="left">5kb_chromHMM_active_promoters_phylop_gt2</td>
-<td align="right">1.485068</td>
-<td align="right">0.0879016</td>
-<td align="right">35</td>
-<td align="right">23</td>
+<td align="right">2.4131511</td>
+<td align="right">-0.3431645</td>
+<td align="right">5.169467</td>
+</tr>
+<tr class="even">
+<td align="right">3.7221160</td>
+<td align="right">-24.2328630</td>
+<td align="right">31.677095</td>
+</tr>
+<tr class="odd">
+<td align="right">12.2292893</td>
+<td align="right">-220.8511355</td>
+<td align="right">245.309714</td>
+</tr>
+<tr class="even">
+<td align="right">10.4333335</td>
+<td align="right">-128.5241814</td>
+<td align="right">149.390848</td>
+</tr>
+<tr class="odd">
+<td align="right">3.1827139</td>
+<td align="right">-1.6645838</td>
+<td align="right">8.030012</td>
+</tr>
+<tr class="even">
+<td align="right">15.6379279</td>
+<td align="right">-1822.5968519</td>
+<td align="right">1853.872708</td>
+</tr>
+<tr class="odd">
+<td align="right">14.8807705</td>
+<td align="right">-982.0420115</td>
+<td align="right">1011.803552</td>
+</tr>
+<tr class="even">
+<td align="right">13.9833413</td>
+<td align="right">-635.9308012</td>
+<td align="right">663.897484</td>
+</tr>
+<tr class="odd">
+<td align="right">1.5075337</td>
+<td align="right">0.1102310</td>
+<td align="right">2.904836</td>
+</tr>
+<tr class="even">
+<td align="right">9.9744532</td>
+<td align="right">-481.3177867</td>
+<td align="right">501.266693</td>
+</tr>
+<tr class="odd">
+<td align="right">11.6279935</td>
+<td align="right">-353.1126474</td>
+<td align="right">376.368634</td>
+</tr>
+<tr class="even">
+<td align="right">2.4603543</td>
+<td align="right">-0.5605745</td>
+<td align="right">5.481283</td>
+</tr>
+<tr class="odd">
+<td align="right">4.1378136</td>
+<td align="right">-17.7710078</td>
+<td align="right">26.046635</td>
+</tr>
+<tr class="even">
+<td align="right">1.2503881</td>
+<td align="right">-0.3513758</td>
+<td align="right">2.852152</td>
+</tr>
+<tr class="odd">
+<td align="right">0.4629081</td>
+<td align="right">-2.6710450</td>
+<td align="right">3.596861</td>
+</tr>
+<tr class="even">
+<td align="right">2.3551775</td>
+<td align="right">0.3032344</td>
+<td align="right">4.407121</td>
+</tr>
+<tr class="odd">
+<td align="right">2.5806245</td>
+<td align="right">-0.5104608</td>
+<td align="right">5.671710</td>
+</tr>
+<tr class="even">
+<td align="right">10.6414592</td>
+<td align="right">-212.2772843</td>
+<td align="right">233.560203</td>
+</tr>
+<tr class="odd">
+<td align="right">11.2298912</td>
+<td align="right">-195.5876985</td>
+<td align="right">218.047481</td>
+</tr>
+<tr class="even">
+<td align="right">8.3926665</td>
+<td align="right">-47.2451339</td>
+<td align="right">64.030467</td>
+</tr>
+<tr class="odd">
+<td align="right">4.0574622</td>
+<td align="right">-8.3804684</td>
+<td align="right">16.495393</td>
+</tr>
+<tr class="even">
+<td align="right">3.3124136</td>
+<td align="right">-3.3777850</td>
+<td align="right">10.002612</td>
+</tr>
+<tr class="odd">
+<td align="right">10.7596115</td>
+<td align="right">-172.5148899</td>
+<td align="right">194.034113</td>
+</tr>
+<tr class="even">
+<td align="right">10.9780193</td>
+<td align="right">-189.3515188</td>
+<td align="right">211.307557</td>
+</tr>
+<tr class="odd">
+<td align="right">1.7231216</td>
+<td align="right">-0.4364042</td>
+<td align="right">3.882647</td>
+</tr>
+<tr class="even">
+<td align="right">1.8742805</td>
+<td align="right">-0.2930198</td>
+<td align="right">4.041581</td>
+</tr>
+<tr class="odd">
+<td align="right">2.1123696</td>
+<td align="right">0.0685464</td>
+<td align="right">4.156193</td>
+</tr>
+<tr class="even">
+<td align="right">10.5283471</td>
+<td align="right">-105.2236644</td>
+<td align="right">126.280359</td>
 </tr>
 </tbody>
 </table>
-</div>
-<div id="use-strigent-asd-genes" class="section level3">
-<h3><span class="header-section-number">0.0.2</span> Use strigent ASD genes</h3>
-<pre class="r"><code>output_table &lt;- TADA_A_RR_estimate_simple_burden(data = data$base_info, gene_list = stringent_ASD, background = c(117685, 114849))$rr_report</code></pre>
-<pre><code>## Warning in if (gene_list != &quot;all&quot;) {: the condition has length &gt; 1 and only
-## the first element will be used</code></pre>
-<pre class="r"><code>report &lt;- cbind(data.table(annotation = c(&quot;5kb_chromHMM_active_promoters_gerp_gt2&quot;,&quot;5kb_chromHMM_active_promoters&quot;, &quot;5kb_chromHMM_active_promoters_phylop_gt2&quot;)), output_table)
-
-knitr::kable(report)</code></pre>
+<pre class="r"><code>boxplot(report_binomial[,3] - report_binomial[,2])</code></pre>
+<p><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAABUAAAAPACAMAAADDuCPrAAAC01BMVEUAAAABAQECAgIDAwMEBAQFBQUGBgYHBwcICAgJCQkKCgoLCwsMDAwNDQ0ODg4PDw8QEBARERESEhITExMUFBQVFRUWFhYXFxcYGBgZGRkaGhobGxscHBwdHR0eHh4fHx8gICAhISEiIiIjIyMkJCQlJSUmJiYnJycoKCgqKiorKyssLCwtLS0uLi4vLy8wMDAxMTEyMjIzMzM0NDQ1NTU2NjY3Nzc4ODg5OTk6Ojo7Ozs8PDw9PT0+Pj5AQEBBQUFCQkJDQ0NERERFRUVGRkZHR0dISEhJSUlKSkpLS0tMTExNTU1OTk5PT09QUFBRUVFSUlJTU1NUVFRVVVVWVlZXV1dYWFhZWVlaWlpbW1tcXFxdXV1eXl5fX19gYGBiYmJjY2NkZGRlZWVmZmZnZ2doaGhpaWlqampra2tsbGxtbW1ubm5vb29wcHBxcXFycnJzc3N1dXV2dnZ3d3d4eHh5eXl6enp8fHx9fX1+fn5/f3+AgICBgYGCgoKDg4OEhISFhYWGhoaHh4eIiIiJiYmKioqLi4uMjIyNjY2Ojo6Pj4+QkJCRkZGSkpKTk5OUlJSWlpaXl5eYmJiZmZmampqbm5udnZ2enp6fn5+ioqKjo6OkpKSlpaWmpqanp6epqamqqqqrq6usrKytra2urq6vr6+wsLCysrKzs7O0tLS1tbW2tra3t7e4uLi5ubm6urq7u7u8vLy+vr6/v7/AwMDCwsLDw8PExMTFxcXGxsbHx8fIyMjJycnKysrLy8vMzMzNzc3Ozs7Pz8/Q0NDR0dHS0tLT09PU1NTV1dXW1tbY2NjZ2dna2trb29vc3Nzd3d3e3t7f39/g4ODh4eHi4uLj4+Pk5OTl5eXm5ubn5+fo6Ojp6enq6urr6+vs7Ozt7e3v7+/w8PDx8fHy8vLz8/P09PT19fX29vb39/f4+Pj5+fn6+vr7+/v8/Pz9/f3+/v7///+2ocvWAAAACXBIWXMAAB2HAAAdhwGP5fFlAAAcQ0lEQVR4nO3d/5+lZX3f8WtZWBZYhFSQLwsboRulstCAUSE1trB8EQEbodBGWq2l1SjBEElDoSWJwUpJJEGxWZJQAxaMUEs2KaGNpDUFU6uUEHAREQE17A4g7Myf0NldvpydA+Gc91733Pe1PJ8/MPd9PeZccz3mMY8XZ2Z2PqfMARApfR8AoFUCChASUICQgAKEBBQgJKAAIQEFCAkoQEhAAUICChASUICQgAKEBBQgJKAAIQEFCAkoQEhAAUICChASUICQgAKEBBQgJKAAIQEFCAkoQEhAAUICChASUICQgAKEBBQgJKAAIQEFCAkoQEhAAUICChASUICQgAKEBBQgJKAAIQEFCAkoQEhAAUICChASUICQgAKEBBQgJKAAIQEFCAkoQEhAAUICChASUICQgAKEBBQgJKAAIQEFCAkoQEhAAUICChASUICQgAKEBBQgJKAAIQEFCAkoQEhAAUICChASUICQgAKEBBQgJKAAIQEFCAkoQEhAAUICChASUICQgAKEBBQgJKAAIQEFCAkoQEhAAUICChASUICQgAKEBBQgJKAAIQEFCAkoQEhAAUICChASUICQgAKEBBQgJKAAIQEFCAkoQEhAAUICChASUICQgAKEBBQgJKAAIQEFCAkoQEhAAUICChASUICQgAKEBBQgJKAAIQEFCAkoQEhAAUICChASUICQgAKEBBQgJKAAIQEFCAkoQEhAAUICChASUICQgAKEBBQgJKAAIQEFCAkoQEhAAUICChASUICQgAKEBBQgJKAAIQEFCAkoQEhAAUICChASUICQgAKEBBQgJKAAIQEFCAkoQEhAAUICChASUICQgAKEBBQgJKAAIQEFCAkoQEhAAUICChASUIDQoAP6zV+6GKCWyzdVbtSgA/qxAlDP71du1KAD+tHyrisA6vjx8ruVGzXwgF7V9xGAncZ7BRQgI6AAIQEFCAkoQEhAAUICChASUICQgAKEBBQgJKAAIQEFCAkojPn+/1r/F0/2fQgaIKCwwPoTdy2l7HXu/+37IAyegMJ2njyvlGVvPuFNS8rST/R9FoZOQGHUs6eW11z5g/mLb31kl3JJ36dh4AQURl1eDvjac5df2G3Jf+31LAyegMKI765YcvsLN58sa2Z7PAvDJ6Aw4tPltBdvnj6kfKW/o9AAAYUR55R1I3cfLFf2dhJaIKAw4u3lT0burioX9nYSWiCgMOLvlz8eufv35Rd6OwktEFAY8b7yqZG795bf6u0ktEBAYcTnylte/MX79/Ytf9njWRg+AYURmw4u171w88Gytsej0AABhVG/U5bfvO1q9vKy/Kv9HoahE1DYzs+XJT/z5c1z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d6+/dM387Rmzr/y4EQIK1NNSQOc2nrrwV0JnbpxuBwEF6mkqoHOz1x89ms+jbpzu+aeAAjW1FdB5X//Mh046bs2Rbzv5w9fcO/2jBRSop7mA7hgBBeoRUICQgAKEBBQgJKAAIQEFCAkoQEhAAUICChASUICQgAKEBBQgJKAAoVddQF+7+C/LDeykVry6Avqpbl42Fnh1WlL7JU8HHdC5B8ZeqBMg9e3aiRp2QAEGTEABQgIKEBJQgJCAAoQEFCAkoAAhAQUICShASEABQgIKEBJQgJCAAoQEFCAkoAAhAQUICShASEABQgIKEBJQgJCAAoQEFCAkoAAhAQUICShASEABQgIKEBJQgJCAAoQEFCAkoAAhAQUICShASEABQgIKEBJQgJCAAoQEFCAkoAAhAQUICShASEABQgIKEBJQgJCAAoQEFCAkoAAhAQUICShASEABQgIKEBJQgJCAAoQEFCAkoAAhAQUICShASEABQgIKEBJQgJCAAoQEFCAkoAAhAQUICShASEABQgIKEBJQgJCAAoQEFCAkoAAhAQUICShASEABQgIKEBJQgJCAAoQEFCAkoAAhAQUICShASEABQgIKEBJQgJCAAoQEFCAkoAAhAQUICShASEABQgIKEBJQgJCAAoQEFCAkoAAhAQUICShASEABQgIKEBJQgJCAAoQEFCAkoAAhAQUICShASEABQgIKEBJQgJCAAoQEFCAkoAAhAQUICShASEABQgIKEBJQgJCAAoQEFCAkoAAhAQUICShASEABQgIKEBJQgJCAAoQEFCAkoAAhAQUICShASEABQgIKEBJQgJCAAoQEFCAkoAAhAQUICShASEABQgIKEBJQgJCAAoQEFCAkoAAhAQUICShASEABQgIKEBJQgJCAAoQEFCAkoAAhAQUICShASEABQgIKEBJQgJCAAoQEFCAkoAAhAQUICShASEABQgIKEBJQgJCAAoQEFCAkoAAhAQUICShASEABQgIKEBJQgJCAAoQEFCAkoAAhAQUICShASEABQgIKEBJQgJCAAoQEFCAkoAAhAQUICShASEABQgIKEBJQgJCAAoQEFCAkoAAhAQUICShASEABQv8fPQ5K9iD7T74AAAAASUVORK5CYII=" width="672" /></p>
+<pre class="r"><code>knitr::kable(report_poisson)</code></pre>
 <table>
 <thead>
 <tr class="header">
-<th align="left">annotation</th>
-<th align="right">burden</th>
-<th align="right">p.value</th>
-<th align="right">case_count</th>
-<th align="right">control_count</th>
+<th align="right">log_RR</th>
+<th align="right">lower_bound</th>
+<th align="right">upper_bound</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td align="left">5kb_chromHMM_active_promoters_gerp_gt2</td>
-<td align="right">0.5855411</td>
-<td align="right">0.8633306</td>
-<td align="right">3</td>
-<td align="right">5</td>
+<td align="right">1.9020670</td>
+<td align="right">1.3304440</td>
+<td align="right">2.473690</td>
 </tr>
 <tr class="even">
-<td align="left">5kb_chromHMM_active_promoters</td>
-<td align="right">1.1710821</td>
-<td align="right">0.4385928</td>
-<td align="right">12</td>
-<td align="right">10</td>
+<td align="right">1.7129759</td>
+<td align="right">1.0453140</td>
+<td align="right">2.380638</td>
 </tr>
 <tr class="odd">
-<td align="left">5kb_chromHMM_active_promoters_phylop_gt2</td>
-<td align="right">1.4638527</td>
-<td align="right">0.5114328</td>
-<td align="right">3</td>
-<td align="right">2</td>
+<td align="right">2.2980077</td>
+<td align="right">1.8319124</td>
+<td align="right">2.764103</td>
+</tr>
+<tr class="even">
+<td align="right">1.3631126</td>
+<td align="right">0.2941289</td>
+<td align="right">2.432096</td>
+</tr>
+<tr class="odd">
+<td align="right">2.3905444</td>
+<td align="right">1.9554339</td>
+<td align="right">2.825655</td>
+</tr>
+<tr class="even">
+<td align="right">1.9473769</td>
+<td align="right">1.3638260</td>
+<td align="right">2.530928</td>
+</tr>
+<tr class="odd">
+<td align="right">2.3870806</td>
+<td align="right">1.9295417</td>
+<td align="right">2.844619</td>
+</tr>
+<tr class="even">
+<td align="right">2.3133972</td>
+<td align="right">1.8534920</td>
+<td align="right">2.773302</td>
+</tr>
+<tr class="odd">
+<td align="right">2.2246143</td>
+<td align="right">1.7648769</td>
+<td align="right">2.684352</td>
+</tr>
+<tr class="even">
+<td align="right">2.4281909</td>
+<td align="right">1.9993865</td>
+<td align="right">2.856995</td>
+</tr>
+<tr class="odd">
+<td align="right">2.4729541</td>
+<td align="right">2.0904184</td>
+<td align="right">2.855490</td>
+</tr>
+<tr class="even">
+<td align="right">2.5230836</td>
+<td align="right">2.1264314</td>
+<td align="right">2.919736</td>
+</tr>
+<tr class="odd">
+<td align="right">1.9958556</td>
+<td align="right">1.4110070</td>
+<td align="right">2.580704</td>
+</tr>
+<tr class="even">
+<td align="right">2.1223802</td>
+<td align="right">1.5942542</td>
+<td align="right">2.650506</td>
+</tr>
+<tr class="odd">
+<td align="right">1.6903452</td>
+<td align="right">1.0032371</td>
+<td align="right">2.377453</td>
+</tr>
+<tr class="even">
+<td align="right">1.8839611</td>
+<td align="right">1.3058499</td>
+<td align="right">2.462072</td>
+</tr>
+<tr class="odd">
+<td align="right">0.7029137</td>
+<td align="right">-0.5561588</td>
+<td align="right">1.961986</td>
+</tr>
+<tr class="even">
+<td align="right">2.1587847</td>
+<td align="right">1.6692179</td>
+<td align="right">2.648351</td>
+</tr>
+<tr class="odd">
+<td align="right">2.1778946</td>
+<td align="right">1.6800919</td>
+<td align="right">2.675697</td>
+</tr>
+<tr class="even">
+<td align="right">1.5442132</td>
+<td align="right">0.7958262</td>
+<td align="right">2.292600</td>
+</tr>
+<tr class="odd">
+<td align="right">2.2114525</td>
+<td align="right">1.7277944</td>
+<td align="right">2.695111</td>
+</tr>
+<tr class="even">
+<td align="right">2.0710580</td>
+<td align="right">1.5392481</td>
+<td align="right">2.602868</td>
+</tr>
+<tr class="odd">
+<td align="right">2.0152985</td>
+<td align="right">1.5066929</td>
+<td align="right">2.523904</td>
+</tr>
+<tr class="even">
+<td align="right">1.8739389</td>
+<td align="right">1.2987041</td>
+<td align="right">2.449174</td>
+</tr>
+<tr class="odd">
+<td align="right">1.9396740</td>
+<td align="right">1.3514938</td>
+<td align="right">2.527854</td>
+</tr>
+<tr class="even">
+<td align="right">2.1641024</td>
+<td align="right">1.6464816</td>
+<td align="right">2.681723</td>
+</tr>
+<tr class="odd">
+<td align="right">1.7367037</td>
+<td align="right">1.0447475</td>
+<td align="right">2.428660</td>
+</tr>
+<tr class="even">
+<td align="right">1.9447809</td>
+<td align="right">1.3729029</td>
+<td align="right">2.516659</td>
+</tr>
+<tr class="odd">
+<td align="right">2.1214439</td>
+<td align="right">1.6321011</td>
+<td align="right">2.610787</td>
+</tr>
+<tr class="even">
+<td align="right">2.3365523</td>
+<td align="right">1.9156380</td>
+<td align="right">2.757467</td>
 </tr>
 </tbody>
 </table>
-</div>
-<div id="use-relaxed-asd-genes" class="section level3">
-<h3><span class="header-section-number">0.0.3</span> Use relaxed ASD genes</h3>
-<pre class="r"><code>output_table &lt;- TADA_A_RR_estimate_simple_burden(data = data$base_info, gene_list = relaxed_ASD, background = c(117685, 114849))$rr_report</code></pre>
-<pre><code>## Warning in if (gene_list != &quot;all&quot;) {: the condition has length &gt; 1 and only
-## the first element will be used</code></pre>
-<pre class="r"><code>report &lt;- cbind(data.table(annotation = c(&quot;5kb_chromHMM_active_promoters_gerp_gt2&quot;,&quot;5kb_chromHMM_active_promoters&quot;, &quot;5kb_chromHMM_active_promoters_phylop_gt2&quot;)), output_table)
-
-knitr::kable(report)</code></pre>
-<table>
-<thead>
-<tr class="header">
-<th align="left">annotation</th>
-<th align="right">burden</th>
-<th align="right">p.value</th>
-<th align="right">case_count</th>
-<th align="right">control_count</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td align="left">5kb_chromHMM_active_promoters_gerp_gt2</td>
-<td align="right">1.2547308</td>
-<td align="right">0.3228197</td>
-<td align="right">18</td>
-<td align="right">14</td>
-</tr>
-<tr class="even">
-<td align="left">5kb_chromHMM_active_promoters</td>
-<td align="right">0.9099625</td>
-<td align="right">0.7414467</td>
-<td align="right">69</td>
-<td align="right">74</td>
-</tr>
-<tr class="odd">
-<td align="left">5kb_chromHMM_active_promoters_phylop_gt2</td>
-<td align="right">1.4638527</td>
-<td align="right">0.3205796</td>
-<td align="right">9</td>
-<td align="right">6</td>
-</tr>
-</tbody>
-</table>
-</div>
-<div id="use-constrained-genes" class="section level3">
-<h3><span class="header-section-number">0.0.4</span> Use constrained genes</h3>
-<pre class="r"><code>output_table &lt;- TADA_A_RR_estimate_simple_burden(data = data$base_info, gene_list = constraint_union, background = c(117685, 114849))$rr_report</code></pre>
-<pre><code>## Warning in if (gene_list != &quot;all&quot;) {: the condition has length &gt; 1 and only
-## the first element will be used</code></pre>
-<pre class="r"><code>report &lt;- cbind(data.table(annotation = c(&quot;5kb_chromHMM_active_promoters_gerp_gt2&quot;,&quot;5kb_chromHMM_active_promoters&quot;, &quot;5kb_chromHMM_active_promoters_phylop_gt2&quot;)), output_table)
-
-knitr::kable(report)</code></pre>
-<table>
-<thead>
-<tr class="header">
-<th align="left">annotation</th>
-<th align="right">burden</th>
-<th align="right">p.value</th>
-<th align="right">case_count</th>
-<th align="right">control_count</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td align="left">5kb_chromHMM_active_promoters_gerp_gt2</td>
-<td align="right">0.8036838</td>
-<td align="right">0.7840139</td>
-<td align="right">14</td>
-<td align="right">17</td>
-</tr>
-<tr class="even">
-<td align="left">5kb_chromHMM_active_promoters</td>
-<td align="right">1.1232077</td>
-<td align="right">0.2997916</td>
-<td align="right">61</td>
-<td align="right">53</td>
-</tr>
-<tr class="odd">
-<td align="left">5kb_chromHMM_active_promoters_phylop_gt2</td>
-<td align="right">1.3662625</td>
-<td align="right">0.4038086</td>
-<td align="right">7</td>
-<td align="right">5</td>
-</tr>
-</tbody>
-</table>
+<pre class="r"><code>boxplot(report_poisson[,3] - report_poisson[,2])</code></pre>
+<p><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAABUAAAAPACAMAAADDuCPrAAACu1BMVEUAAAABAQECAgIDAwMEBAQFBQUGBgYHBwcICAgJCQkKCgoLCwsMDAwNDQ0ODg4PDw8QEBARERESEhITExMUFBQVFRUXFxcYGBgZGRkaGhobGxscHBwdHR0eHh4fHx8gICAhISEiIiIjIyMkJCQlJSUmJiYnJycoKCgpKSkqKiorKyssLCwtLS0uLi4vLy8wMDAxMTEyMjIzMzM0NDQ1NTU2NjY3Nzc4ODg5OTk6Ojo7Ozs8PDw9PT0+Pj4/Pz9AQEBBQUFCQkJDQ0NERERFRUVGRkZHR0dISEhJSUlLS0tMTExNTU1OTk5PT09QUFBRUVFSUlJUVFRVVVVWVlZXV1dYWFhZWVlaWlpbW1tcXFxdXV1eXl5fX19gYGBiYmJmZmZnZ2doaGhpaWlqampra2tsbGxtbW1ubm5vb29wcHBxcXFycnJzc3N1dXV2dnZ3d3d4eHh5eXl6enp7e3t8fHx+fn5/f3+AgICBgYGCgoKDg4OEhISFhYWGhoaHh4eIiIiJiYmKioqLi4uMjIyNjY2Ojo6Pj4+QkJCRkZGSkpKUlJSWlpaXl5eYmJiZmZmampqbm5ucnJydnZ2enp6fn5+goKChoaGioqKjo6OkpKSlpaWnp6eoqKipqamqqqqrq6usrKyurq6vr6+wsLCzs7O0tLS1tbW3t7e4uLi5ubm7u7u9vb2+vr6/v7/AwMDBwcHCwsLDw8PFxcXHx8fIyMjKysrLy8vMzMzNzc3Ozs7Pz8/Q0NDR0dHS0tLU1NTV1dXW1tbX19fY2NjZ2dnb29vc3Nzd3d3e3t7f39/g4ODh4eHi4uLj4+Pk5OTl5eXm5ubn5+fo6Ojp6enq6urr6+vs7Ozt7e3u7u7v7+/w8PDx8fHy8vLz8/P09PT19fX29vb39/f4+Pj5+fn6+vr7+/v8/Pz9/f3+/v7///+avTtkAAAACXBIWXMAAB2HAAAdhwGP5fFlAAAa40lEQVR4nO3d/7+fZWHf8YtAYuRLgl2AEIoTkWQCUgHRpuu6jUAFBS1W2MQpStsproOtNa10fpkwrP0Wa4Pdiq2xbliklTbYjiods+KsFqyULxWsJIiQc/6MnZNvnOSOyX2/c9+57ys8nz/kXPd18rk+1+M8zuN1Psk593XKLACRMvYGAGoloAAhAQUICShASEABQgIKEBJQgJCAAoQEFCAkoAAhAQUICShASEABQgIKEBJQgJCAAoQEFCAkoAAhAQUICShASEABQgIKEBJQgJCAAoQEFCAkoAAhAQUICShASEABQgIKEBJQgJCAAoQEFCAkoAAhAQUICShASEABQgIKEBJQgJCAAoQEFCAkoAAhAQUICShASEABQgIKEBJQgJCAAoQEFCAkoAAhAQUICShASEABQgIKEBJQgJCAAoQEFCAkoAAhAQUICShASEABQgIKEBJQgJCAAoQEFCAkoAAhAQUICShASEABQgIKEBJQgJCAAoQEFCAkoAAhAQUICShASEABQgIKEBJQgJCAAoQEFCAkoAAhAQUICShASEABQgIKEBJQgJCAAoQEFCAkoAAhAQUICShASEABQgIKEBJQgJCAAoQEFCAkoAAhAQUICShASEABQgIKEBJQgJCAAoQEFCAkoAAhAQUICShASEABQgIKEBJQgJCAAoQEFCAkoAAhAQUICShASEABQgIKEBJQgJCAAoQEFCAkoAAhAQUICShASEABQgIKEBJQgJCAAoQEFCAkoAAhAQUICShASEABQgIKEBJQgJCAAoQEFCAkoAAhAQUICShASEABQgIKEBJQgJCAAoQEFCAkoAAhAQUICShASEABQgIKEBJQgJCAAoQEFCAkoAAhAQUITTqgf/sLNwD05cYtPTdq0gG9vgD05w96btSkA/qe8roPAfTjleV/9NyoiQf0lrG3ABw23iKgABkBBQgJKEBIQAFCAgoQqjOgj71/7YrFK1/7sae7PlBAgf7UFNAzz7xqx+BTx+38GdbTvthxCQEF+lNTQEt59fa3v789nictnfvj6C91W0JAgf5UGNCHjynlxNu+PfvsfZeVcsb3Oy0hoEB/Kgzo+rlXn49un5i5tpTf7bSEgAL9qTCgryrltp0zj/9QubzTEgIK9KfCgB5fyuO7pi4pqzotIaC08cT/vvP/PDX2JqhAhQE9uqzcPfWesqTTEgLKgd257qhSyjFX/t+xN8LkVRjQcxcE9B3lRZ2WEFAO5KmrS1ly/oVnHlGO/K9j74WpqzCgP1vKt3ZNrS1nd1pCQDmAZy8py27+ztzgm/9+UXnv2Lth4uoK6Etu/+ozsw8tK9fvnLm7lHd3WkJAOYAby4n37Rz+z8VH3DHmVpi+ugI6Z/HL33hWWfTp7RObV5TyF52WEFD275Fjj7hr98VN5eyZEffC9NUU0OOf+z0kPzF/ffHc4MpuSwgo+/eb5dLnLp4+pdwz3laoQE0BnXnk7k/84k+/8thdAV1eyo892W0JAWX/3lw2Lri6ttw82k6oQU0B3WnmoT/9+O/MD5a/9KZuN3IKKAfy4+XPFlzdUq4bbSfUoMKA7vb17g8RUPbvX5U/WXD14fIfR9sJNag5oAEBZf/eVj664Oot5dfH2ghVEFBY4JPlgue+8f748eX/jbgXpk9AYYEtJ5dbd19cWy4acStUoO6A3rF69eof/N4n7mx4Y/lvh2531Oi/l6Wf2TGaubEs/atxN8PU1R3QTaXs5+muKPvwzw/d7qjSfyhH/NsvbJv93md/vBz5e2Nvhok7nAO6aV3Dcf5NxoF85IWlLFmxqJQT/2jsrTB1dQe0s3M7HsDM89EDP/+yUo4870PfHXsjTJ6AQtPTj24bewvUQEABQgIKEBJQgFBlAd181aoXrHnbV3Zfv3p/34XfBwEF+lNVQLe9e8fPci764K4ZAQXGU1VAr5+v58nzvzHxfTtnBBQYT00BvXfutef6x2af3rCslJ2/dkFAgfHUFNB3lp2Hi/3lMeWlW7ePBBQYT00BXVNWP7tjtKHs/FULAgqMp6aAHlPevnO07fyy4h/nBwIKjKemgC4u63cNP1/Kr8y/FVBgPDUF9JTy1t3j15VjH5wVUGBMNQX0wrL8iV3jr72wXD4joMCYagror5Xyhqd2XdxUyi8LKDCmmgL6nVWlrLll899vv3jm/FKuvl9AgfHUFNDZO5fO34r05h0XD//Ijvs6O60goEB/qgro7BcueC6gs4+vE1BgTHUFdHbm7g9de/Puqz+/8mQBBUZTWUAbtt7X6a8LKNCf2gPakYAC/RFQgJCAAoQEFCAkoAAhAQUICShASEABQgIKEBJQgJCAAoQEFCAkoAAhAQUICShASEABQgIKEBJQgJCAAoQEFCAkoAAhAQUICShASEABQgIKEBJQgJCAAoQEFCAkoAAhAQUICShASEABQgIKEBJQgJCAAoQEFCAkoAAhAQUICShASEABQgIKEBJQgJCAAoQEFCAkoAAhAQUICShASEABQgIKEBJQgJCAAoQEFCAkoAAhAQUICShASEABQgIKEBJQgJCAAoQEFCAkoAAhAQUICShASEABQgIKEBJQgJCAAoQEFCAkoAAhAQUICShASEABQgIKEBJQgJCAAoQEFCAkoAAhAQUICShASEABQgIKEBJQgJCAAoQEFCAkoAAhAYW9bfvCJz7ye3899i6ogIDCnp7+yMoy76xPj70TJk9AYQ8PvaaU0//ddW8+oZSrvzf2Zpg4AYWFvvuKctod84NnNhxXrpwZeTdMnIDCQu8sZz66c/hXx5eNo+6FyRNQWOBvjlr8ld0XnyynPDPiXpg+AYUFPlze8tzFzD8rnx9vK1RAQGGBN5ZPLrj6+fKB0XZCDQQUFlhb7l5w9dHyrtF2Qg0EFBa4uHxuwdX7y38ebSfUQEBhgWvLf1lw9Qbfhme/BBQW+Gx52fd3X/zt0kUPjbgXpk9AYYFnX17W7xpvu3Tht+ShSUBhoT856oj3b9s+2nJVOeHBkXfDxAko7GHDkeXcj//1o/d++JSybPPYm2HiBBT29EcvLjtc8OWxt8LUCSjs5amNl61eceZb/5eTRDgQAQUICShASEABQgIKEBJQgJCAAoQEFCAkoAAhAQUICShASEABQgIKEBJQgJCAAoQEFCBUW0C/95nrLnrJiqVHHn/qhe+6/anODxdQoD91BXTrLy0vCyz/wJaOCwgo0J+qAvp3a3aE8+hTVy3dMTqv42+dFVCgPzUF9JlzS1ly6cZvbJ2/2PrAbW86tpS1z3ZaQkCB/tQU0I1zrzi/vnDiHy4t5dZOSwgo0J+aAnpROe7hPWe2nl7WdVpCQIH+1BTQE8rVe0/dWE7qtISAAv2pKaCLyw17T20sSzotIaBAf2oK6Kpyxd5T7y0/3GkJAQX6U1NAryhL7t9z5tGVHYMooEB/agro7aWcetfMgol7zynlDzstIaBAf2oK6MzrSymn3/C5Lz2wZeuD9965/uy5y8tmDvy4BQQU6E9NAZ198pKyl8uf7LaCgAL9qSqgszO3nbMwn6/Y1O31p4ACfaoroHO+/Fs/c/GPnn3Wa37y537jq90fLaBAf6oL6MERUKA/AgoQElCAkIAChOoO6B2rV6/ez7uf+PbezhFQoDd1B3RTKft5unfv/VOj89Yeut0Bh7nDOaDve1HDUeVfHLrdAYe5ugPamf8DBfojoAAhAQUICShASEABQpUFdPNVq16w5m1f2X396v19F34fBBToT1UB3bbzJzsXfXDXjIAC46kqoNfP1/Pko+b+eN/OGQEFxlNTQO+de+25/rHZpzcsK+WuHVMCCoynpoC+s5Rf3z74y2PKS7duHwkoMJ6aArqmrH52x2hDKTdvHwgoMJ6aAnpMefvO0bbzy4p/nB8IKDCemgK6uKzfNfx8Kb8y/1ZAgfHUFNBTylt3j19Xjn1wVkCBMdUU0AvL8id2jb/2wnL5jIACY6opoL9Wyhue2nVxUym/LKDAmGoK6HdWlbLmls1/v/3imfNLufp+AQXGU1NAZ+9cOn8r0pt3XDz8Izvu6+y0goAC/akqoLNfuOC5gM4+vk5AgTHVFdDZmbs/dO3Nu6/+/MqTBRQYTWUBbdh6X6e/LqBAf2oPaEcCCvRHQAFCAgoQElCAkIAChAQUICSgACEBBQgJKEBIQAFCAgoQElCAkIAChAQUICSgACEBBQgJKEBIQAFCAgoQElCAkIAChAQUICSgACEBBQgJKEBIQAFCAgoQElCAkIAChAQUICSgACEBBQgJKEBIQAFCAgoQElCAkIAChAQUICSgACEBBQgJKEBIQAFCAgoQElCAkIAChAQUICSgACEBBQgJKEBIQAFCAgoQElCAkIAChAQUICSgACEBBQgJKEBIQAFCAgoQElCAkIAChAQUICSgACEBBQgJKEBIQAFCAgoQElCAkIAChAQUICSgACEBBQgJKEBIQAFCAgoQElCAkIAChAQUICSgACEBBQgJKEBIQAFCAgoQElCAkIAChAQUICSgACEBBQgJKEBIQAFCAgoQElCAkIAChAQUICSgACEBBQgJKEBIQAFCAgoQElCAkIAChAQUICSgACEBBQgJKEBIQAFCAgoQElCAkIAChAQUICSgACEBBQgJKEBIQAFCAgoQElCAkIAChAQUIFRnQB97/9oVi1e+9mNPd32ggAL9qSmgZ5551Y7Bp44rO5z2xY5LCCjQn5oCWsqrt7/9/e3xPGnp3B9Hf6nbEgIK9KfCgD58TCkn3vbt2Wfvu6yUM77faQkBBfpTYUDXz736fHT7xMy1pfxupyUEFOhPhQF9VSm37Zx5/Ic6BlFAgf5UGNDjS3l819QlZVWnJQQU6E+FAT26rNw99Z6ypNMSAgr0p8KAnrsgoO8oL+q0hIAC/akwoD9byrd2Ta0tZ3daQkCB/tQV0Jfc/tVnZh9aVq7fOXN3Ke/utISAAv2pK6BzFr/8jWeVRZ/ePrF5RSl/0WkJAQX6U1NAjy+7/cT89cVzgyu7LSGgQH9qCujMI3d/4hd/+pXH7gro8lJ+7MluSwgo0J+aArrTzEN/+vHfmR8sf+lN3W7kFFCgTxUGdLevd3+IgAL9qTmgAQEF+iOgACEBBQjVHdA7Vq9e/YPf+7HzGo4u//rQ7Q44zNUd0E2l7Ofp3lL24YJDtzuGcF3zy+IAzlh+1qF4mrUbxv5wcnAO54A+/cV79rbGP+Frd8q+vixWy6dj5eoOaGf+D7R6jzS+Kg7hp8ovHJLn2TL2h5ODI6DQdE3xj2taEFBoElBaEVBoElBaEVBoElBaEVBoElBaEVBoElBaEVBoel+5fewtUAMBhaZtXxl7B1RBQAFCNQV03zfDdVpCQIH+1BTQowQUmJKaAvrIr540F8yVq/fUaQkBBfpTU0BnZ795RimbDmYBAQX6U1dAZ28VUA6FP770b8beAjWoLKBbFgkoh8A7ym+PvQVqUFlAZ08XUA4BdyLRSm0BffuLP3swDxdQWhFQWqktoAdJQGlFQGlFQKFJQGlFQKFJQGlFQKFJQGlFQKFJQGlFQKHJeaC0IqDQ5DxQWhFQgJCAAoQEFCAkoAAhAQUICSg0OQ+UVgQUmpwHSisCCk3uRKIVAYUmAaUVAYUmAaUVAYUmAaUVAYUmAaUVAYUmAaUVAYUmAaUVAYUm54HSioBCk/NAaUVAAUICChASUICQgAKEBBQgJKDQ5DxQWhFQaHIeKK0IKDS5E4lWBBSaBJRWBBSaBJRWBBSaBJRWBBSaBJRWBBSaBJRWBBSaBJRWBBSanAdKKwIKTc4DpRUBBQgJKEBIQAFCAgoQElCAkIBCk/NAaUVAocl5oLQioNDkTiRaEVBoElBaEVBoElBaEVBoElBaEVBoElBaEVBoElBaEVBoElBaEVBoch4orQgoNDkPlFYEFCAkoAAhAQUICShASEABQgIKTc4DpRUBhSbngdKKgEKTO5FoRUChSUBpRUChSUBpRUChSUBpRUChSUBpRUChSUBpRUChSUBpRUChyXmgtCKg0OQ8UFoRUICQgAKEBBQgJKAAIQEFCAkoNDkPlFYEFJqcB0orAgpN7kSiFQGFJgGlFQGFJgGlFQGFJgGlFQGFJgGlFQGFJgGlFQGFJgGlFQGlJ/csL0zT6d8e+5PjsCWg9GTD2JngB7pn7E+Ow5aA0pMN5Zqxt8A+nSeggxFQeiKgUyWgwxFQeiKgUyWgwxFQeiKgUyWgwxFQeiKgUyWgwxFQeiKgUyWgwxFQeiKgUyWgwxFQeiKgUyWgwxFQeiKgUyWgwxFQeiKgUyWgwxFQeiKgUyWgwxFQeiKgUyWgwxFQeiKgUyWgwxFQeiKgUyWgwxFQeiKgUyWgwxFQeiKgUyWgwxFQeiKgUyWgwxFQeiKgUyWgwxFQeiKgUyWgwxFQeiKgUyWgwxFQeiKgUyWgwxFQeiKgUyWgwxFQeiKgUyWgwxFQeiKgUyWgwxFQeiKgUyWgwxFQeiKgUyWgwxFQeiKgUyWgwxFQeiKgUyWgwxFQeiKgUyWgwxFQeiKgUyWgwxFQeiKgUyWgwxFQeiKgUyWgwxFQeiKgUyWgw6ktoN/7zHUXvWTF0iOPP/XCd93+VOeHC+hwBHSqBHQ4dQV06y8tLwss/8CWjgsI6HAEdKoEdDhVBfTv1uwI59Gnrlq6Y3TeQ91WENDhbCiX3skUvUxAB1NTQJ85t5Qll278xtb5i60P3PamY0tZ+2ynJQR0OBsKUyWgQ6kpoBvnXnF+feHEP1xayq2dlhDQ4QjodAnoUGoK6EXluIf3nNl6elnXaQkBHY6ATpeADqWmgJ5Qrt576sZyUqclBHQ4AjpdAjqUmgK6uNyw99TGsqTTEgI6HAGdLgEdSk0BXVWu2HvqveWHOy0hoMPZUFatY4qWCehgagroFWXJ/XvOPLqyYxAFdDh+DnSq/BzocGoK6O2lnHrXzIKJe88p5Q87LSGgwxHQqRLQ4dQU0JnXl1JOv+FzX3pgy9YH771z/dlzl5fNHPhxCwjocAR0qgR0ODUFdPbJS/b+z/HLn+y2goAOR0CnSkCHU1VAZ2duO2dhPl+xqdvrTwEdkoBOlYAOp66Azvnyb/3MxT969lmv+cmf+42vdn+0gA5HQKdKQIdTXUAPjoAOR0CnSkCHI6D0RECnSkCHI6D0RECnSkCHI6D0RECnSkCHU3dA71i9evUPfu/maxpWlNceut09zwjoVAnocOoO6KZS9vN0r9/XsQqvOnS7e54R0KkS0OEczgH9xoaGf1k+cOh29zwjoFMloMOpO6CdvafcMvYWDlsCOlUCOhwBpScCOlUCOhwBpScCOlUCOhwBpScCOlUCOhwBpScCOlUCOhwBpScCOlUCOhwBpScCOlUCOhwBpScCOlUCOhwBpScCOlUCOhwBpScCOlUCOpyaArqvW9v3dyvnPgjocAR0qgR0ODUF9CgBnTIBnSoBHU5NAX3kV0+aC+bK1XvqtISADkdAp0pAh1NTQGdnv3lGKZsOZgEBHY6ATpWADqeugM7eKqCTJaBTJaDDqSygWxYJ6FQJ6FQJ6HAqC+js6QI6VQI6VQI6nNoC+vYXf/ZgHi6gwxHQqRLQ4dQW0IMkoMMR0KkS0OEIKD0R0KkS0OEIKD0R0KkS0OEIKD0R0KkS0OEIKD0R0KkS0OEIKD3ZUJaddtg4cckpY2+hPy8Q0MEIKD2568h9H5fF6JY9NPYnx2FLQOnLY187fPyb8sGxt9Cj7479qXH4ElBouudtXrTRgoAChAQUICSgACEBBQgJKEBIQKFpy+aZsbdADQQUmv5T+fTYW6AGAgpN15QNY2+BGggoNAkorQgoNAkorQgoNAkorQgoNAkorQgoNAkorQgoNAkorQgoNL2zfHzsLVADAYUm54HSioAChAQUICSgACEBBQgJKEBIQKHJeaC0IqDQ5DxQWhFQaHInEq0IKDQJKK0IKDQJKK0IKDQJKK0IKDQJKK0IKDQJKK0IKDQJKK0IKDQ5D5RWBBSanAdKKwIKEBJQgJCAAoQEFCAkoAAhAYUm54HSioBCk/NAaUVAocmdSLQioNAkoLQioNAkoLQioNAkoLQioNAkoLQioNAkoLQioNTl/k8dCuvKNYfiaT7z8NgfTg6OgFKXE8rh5LVjfzg5OAJKXT78pkNh3T99/SF5Hj+uXzkBBQgJKEBIQAFCAgoQElCAkIAChAQUICSgACEBBQgJKEBIQAFCAgoQElCAkIAChAQUICSgACEBBQgJKEBIQAFCAgoQet4F9J+cBtCPY59fAf3o2L/GFjicHLG550ZNOqCz3/gaQF++1Xeiph1QgAkTUICQgAKEBBQgJKAAIQEFCAkoQEhAAUICChASUICQgAKEBBQgJKAAIQEFCAkoQEhAAUICChASUICQgAKEBBQgJKAAIQEFCAkoQEhAAUICChASUICQgAKEBBQgJKAAIQEFCAkoQEhAAUICChASUICQgAKEBBQgJKAAIQEFCAkoQEhAAUICChASUICQgAKEBBQgJKAAIQEFCAkoQEhAAUICChASUICQgAKEBBQgJKAAIQEFCAkoQEhAAUICChASUICQgAKEBBQgJKAAIQEFCAkoQEhAAUICChASUICQgAKEBBQgJKAAIQEFCAkoQEhAAUICChASUICQgAKEBBQgJKAAIQEFCAkoQEhAAUICChASUICQgAKEBBQgJKAAIQEFCAkoQEhAAUICChASUICQgAKEBBQgJKAAIQEFCAkoQEhAAUICChASUICQgAKEBBQgJKAAIQEFCAkoQEhAAUICChASUICQgAKEBBQgJKAAIQEFCAkoQEhAAUICChASUICQgAKEBBQgJKAAIQEFCAkoQEhAAUICChASUICQgAKEBBQgJKAAIQEFCAkoQEhAAUICChASUICQgAKEBBQgJKAAIQEFCAkoQEhAAUICChASUICQgAKEBBQgJKAAIQEFCAkoQEhAAUICChASUICQgAKEBBQgJKAAIQEFCAkoQEhAAUICChASUICQgAKEBBQgJKAAIQEFCAkoQEhAAUICChASUICQgAKEBBQgJKAAIQEFCAkoQEhAAUICChASUICQgAKEBBQgJKAAIQEFCAkoQEhAAUICChASUICQgAKEBBQgJKAAIQEFCAkoQEhAAUICChASUICQgAKEBBQgJKAAIQEFCAkoQEhAAUICChASUIDQ/wdcnsbPcJpoywAAAABJRU5ErkJggg==" width="672" /></p>
 </div>
 
 

@@ -1083,9 +1083,11 @@ TADA_A_DNM_generator_v2 <- function(window_file = "../data/Example_windows.bed",
   
   # get the piror probability of genes.
   gene_prior <- fread(gene_prior_file, header = TRUE, sep = "\t", stringsAsFactors = FALSE)
+  genes_for_report_with_prior <- gene_prior[order(gene_prior[,2],decreasing = TRUE),]
+  genes_for_report_with_prior <- genes_for_report_with_prior[1:floor(nrow(genes_for_report_with_prior)*report_proportion),]
   
   # merge gene prior info
-  coverage <- coverage[gene_prior, on = "genename"]
+  coverage <- coverage[genes_for_report_with_prior, on = "genename"]
   coverage <-coverage[complete.cases(coverage)]
   
   # # select genes based on TADA prior probability and [report_proportion]
@@ -1182,9 +1184,7 @@ TADA_A_DNM_generator_v2 <- function(window_file = "../data/Example_windows.bed",
   for(m in 1:length(mutrate_scaling_files)){
     mut_output_list[[m]] <- data.table(chr = character(), start = integer(), end = integer(), ref = character(), alt = character())
   }
-  # select genes based on TADA prior probability and [report_proportion]
-  genes_for_report_with_prior <- gene_prior[order(gene_prior[,2],decreasing = TRUE),]
-  genes_for_report_with_prior <- genes_for_report_with_prior[1:floor(nrow(genes_for_report_with_prior)*report_proportion),]
+  
   
   # here only deals with the noncoding parts that are within 10kb of TSSs of genes. Will deal with 
   for(i in 1:chunk_partition_num){

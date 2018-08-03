@@ -11,3 +11,21 @@ All of the annotations that are used in TADA-A and TADA-A-plus have a bed file f
 `/project2/xinhe/TADA-A-plus/other_annotations/coding171029_synonymous_SNV_altC.bed.merge_removing_spidex_lower10pct.bed`
 `/project2/xinhe/TADA-A-plus/other_annotations/coding171029_synonymous_SNV_altG.bed.merge_removing_spidex_lower10pct.bed`
 `/project2/xinhe/TADA-A-plus/other_annotations/coding171029_synonymous_SNV_altT.bed.merge_removing_spidex_lower10pct.bed`
+
+#### Nonsynonymous mutations
+`/project2/xinhe/TADA-A-plus/other_annotations/coding/171121_coding_nonsynonymous_SNV_altA.bed.merge.bed`
+`/project2/xinhe/TADA-A-plus/other_annotations/coding/171121_coding_nonsynonymous_SNV_altC.bed.merge.bed`
+`/project2/xinhe/TADA-A-plus/other_annotations/coding/171121_coding_nonsynonymous_SNV_altG.bed.merge.bed`
+`/project2/xinhe/TADA-A-plus/other_annotations/coding/171121_coding_nonsynonymous_SNV_altT.bed.merge.bed`
+
+#### LoF mutations
+`/project2/xinhe/TADA-A-plus/other_annotations/coding/171121_coding_stop_loss_and_gain_SNV_altA.bed.merge.bed`
+`/project2/xinhe/TADA-A-plus/other_annotations/coding/171121_coding_stop_loss_and_gain_SNV_altC.bed.merge.bed`
+`/project2/xinhe/TADA-A-plus/other_annotations/coding/171121_coding_stop_loss_and_gain_SNV_altG.bed.merge.bed`
+`/project2/xinhe/TADA-A-plus/other_annotations/coding/171121_coding_stop_loss_and_gain_SNV_altT.bed.merge.bed`
+
+#### Mis3 mutations (Polyphen-2 probably damaging mutations)
+`/project2/xinhe/TADA-A-plus/other_annotations/coding/Polyphen_HDIV_probably_damaging_altA.bed.merge.bed`
+`/project2/xinhe/TADA-A-plus/other_annotations/coding/Polyphen_HDIV_probably_damaging_altC.bed.merge.bed`
+`/project2/xinhe/TADA-A-plus/other_annotations/coding/Polyphen_HDIV_probably_damaging_altG.bed.merge.bed`
+`/project2/xinhe/TADA-A-plus/other_annotations/coding/Polyphen_HDIV_probably_damaging_altT.bed.merge.bed`

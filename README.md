@@ -61,6 +61,26 @@ All of the annotations that are used in TADA-A and TADA-A-plus have a bed file f
 #### Ray et al RBP motif hits
 `/project2/xinhe/TADA-A-plus/other_annotations/coding/Ray_et_al_RBP_motif_hits/A_Up_Down.best_hit.hg19.bed.merge_in_coding_windows.bed`
 
+#### CADD
+`/project2/xinhe/TADA-A-plus/other_annotations/allele_specific_CADD/Example_windows_coding_SNVs_gt15_altA.bed`
+`/project2/xinhe/TADA-A-plus/other_annotations/allele_specific_CADD/Example_windows_coding_SNVs_gt15_altC.bed`
+`/project2/xinhe/TADA-A-plus/other_annotations/allele_specific_CADD/Example_windows_coding_SNVs_gt15_altG.bed`
+`/project2/xinhe/TADA-A-plus/other_annotations/allele_specific_CADD/Example_windows_coding_SNVs_gt15_altT.bed`
 
+#### GERP
+`/project2/xinhe/TADA-A-plus/other_annotations/conservation/Example_windows_coding_gerp_gt2.bed`
 
-#### 
+#### Spidex
+`../data/spidex_public_noncommercial_v1_0.tab_alt_A_lower10pct.bed`
+`../data/spidex_public_noncommercial_v1_0.tab_alt_C_lower10pct.bed`
+`../data/spidex_public_noncommercial_v1_0.tab_alt_G_lower10pct.bed`
+`../data/spidex_public_noncommercial_v1_0.tab_alt_T_lower10pct.bed`
+
+#### RBP_Var_Level2 (Based on Fengbiao Mao's paper)
+`../other_annotations/coding/RBP-VarDB/RBP.all.bed.merge_overlap_hg19_refGenes_exons.gtf.lg.transc.fa.RNAsnpM3.bed.abspos.p0.1.altA.bed.merge.bed`
+`../other_annotations/coding/RBP-VarDB/RBP.all.bed.merge_overlap_hg19_refGenes_exons.gtf.lg.transc.fa.RNAsnpM3.bed.abspos.p0.1.altC.bed.merge.bed`
+`../other_annotations/coding/RBP-VarDB/RBP.all.bed.merge_overlap_hg19_refGenes_exons.gtf.lg.transc.fa.RNAsnpM3.bed.abspos.p0.1.altG.bed.merge.bed`
+`../other_annotations/coding/RBP-VarDB/RBP.all.bed.merge_overlap_hg19_refGenes_exons.gtf.lg.transc.fa.RNAsnpM3.bed.abspos.p0.1.altT.bed.merge.bed`
+
+### UTR regions
+

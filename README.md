@@ -48,4 +48,19 @@ All of the annotations that are used in TADA-A and TADA-A-plus have a bed file f
 `/project2/xinhe/TADA-A-plus/other_annotations/coding/MPC_score/fordist_constraint_official_mpc_values_v2_MPC_gt2_altG.sorted.merged_in_coding_windows.bed`
 `/project2/xinhe/TADA-A-plus/other_annotations/coding/MPC_score/fordist_constraint_official_mpc_values_v2_MPC_gt2_altT.sorted.merged_in_coding_windows.bed`
 
+#### Ribosnitch
+`/project2/xinhe/TADA-A-plus/other_annotations/coding/ribosnitch/hg19_refGenes_exons.gtf.lg.transc.fa.RNAsnpM3.bed.abspos.p0.05.merged.altA_in_coding_windows.bed`
+`/project2/xinhe/TADA-A-plus/other_annotations/coding/ribosnitch/hg19_refGenes_exons.gtf.lg.transc.fa.RNAsnpM3.bed.abspos.p0.05.merged.altC_in_coding_windows.bed`
+`/project2/xinhe/TADA-A-plus/other_annotations/coding/ribosnitch/hg19_refGenes_exons.gtf.lg.transc.fa.RNAsnpM3.bed.abspos.p0.05.merged.altG_in_coding_windows.bed`
+`/project2/xinhe/TADA-A-plus/other_annotations/coding/ribosnitch/hg19_refGenes_exons.gtf.lg.transc.fa.RNAsnpM3.bed.abspos.p0.05.merged.altT_in_coding_windows.bed`
 
+#### RBP-VarDB all RBP binding sites
+> All RBP binding sites merged, possibly including sites that are in UTR regions in addtional to those that are in coding regions. 
+`/project2/xinhe/TADA-A-plus/other_annotations/coding/RBP-VarDB/RBP.all.bed.merge.bed`
+
+#### Ray et al RBP motif hits
+`/project2/xinhe/TADA-A-plus/other_annotations/coding/Ray_et_al_RBP_motif_hits/A_Up_Down.best_hit.hg19.bed.merge_in_coding_windows.bed`
+
+
+
+#### 

@@ -71,6 +71,7 @@ All of the annotations that are used in TADA-A and TADA-A-plus have a bed file f
 `/project2/xinhe/TADA-A-plus/other_annotations/conservation/Example_windows_coding_gerp_gt2.bed`
 
 #### Spidex
+> contains all the based that have a spidex score, no
 `/project2/xinhe/TADA-A-plus/data/spidex_public_noncommercial_v1_0.tab_alt_A_lower10pct.bed`
 `/project2/xinhe/TADA-A-plus/data/spidex_public_noncommercial_v1_0.tab_alt_C_lower10pct.bed`
 `/project2/xinhe/TADA-A-plus/data/spidex_public_noncommercial_v1_0.tab_alt_G_lower10pct.bed`
@@ -92,10 +93,12 @@ All of the annotations that are used in TADA-A and TADA-A-plus have a bed file f
 
 #### CLIP
 > Contains all the anotated CLIP regions, not only those that are within UTRs
+
 `/project2/xinhe/TADA-A-plus/other_annotations/coding/CLIP/human_combine.merged.bed`
 
 #### CLIPdb
 > Contains all the anotated CLIPdb regions, not only those that are within UTRs
+
 `/project2/xinhe/TADA-A-plus/other_annotations/coding/CLIPdb/human_combined.merged.bed`
 
 #### GERP
@@ -109,10 +112,12 @@ All of the annotations that are used in TADA-A and TADA-A-plus have a bed file f
 
 #### Ray_RBP_motif
 > Contains all the anotated Ray RBP motifs, not only those that are within UTRs
+
 `/project2/xinhe/TADA-A-plus/other_annotations/coding/Ray_et_al_RBP_motif_hits/UTR.best_hit.hg19.bed.merge.bed.sorted.merged.bed`
 
 #### RBP-Var level 2
 > contain all relevant regions, not only including regoins that are within UTRs
+
 `/project2/xinhe/TADA-A-plus/other_annotations/coding/RBP-VarDB/RBP.all.bed.merge_overlap_hg19_refGenes_exons.gtf.lg.transc.fa.RNAsnpM3.bed.abspos.p0.1.altA.bed.merge.bed`
 `/project2/xinhe/TADA-A-plus/other_annotations/coding/RBP-VarDB/RBP.all.bed.merge_overlap_hg19_refGenes_exons.gtf.lg.transc.fa.RNAsnpM3.bed.abspos.p0.1.altC.bed.merge.bed`
 `/project2/xinhe/TADA-A-plus/other_annotations/coding/RBP-VarDB/RBP.all.bed.merge_overlap_hg19_refGenes_exons.gtf.lg.transc.fa.RNAsnpM3.bed.abspos.p0.1.altG.bed.merge.bed`

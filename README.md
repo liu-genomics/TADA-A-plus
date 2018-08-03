@@ -89,3 +89,31 @@ All of the annotations that are used in TADA-A and TADA-A-plus have a bed file f
 `/project2/xinhe/TADA-A-plus/other_annotations/allele_specific_CADD/whole_genome_SNVs_gt15_altC_within_updated_UTRs.bed`
 `/project2/xinhe/TADA-A-plus/other_annotations/allele_specific_CADD/whole_genome_SNVs_gt15_altG_within_updated_UTRs.bed`
 `/project2/xinhe/TADA-A-plus/other_annotations/allele_specific_CADD/whole_genome_SNVs_gt15_altT_within_updated_UTRs.bed`
+
+#### CLIP
+> Contains all the anotated CLIP regions, not only those that are within UTRs
+`/project2/xinhe/TADA-A-plus/other_annotations/coding/CLIP/human_combine.merged.bed`
+
+#### CLIPdb
+> Contains all the anotated CLIPdb regions, not only those that are within UTRs
+`/project2/xinhe/TADA-A-plus/other_annotations/coding/CLIPdb/human_combined.merged.bed`
+
+#### GERP
+`/project2/xinhe/TADA-A-plus/other_annotations/conservation/Whole_genome.utr_genename.bed.sorted.merged_gerp_gt2.bed`
+
+#### Ribosnitch
+`/project2/xinhe/TADA-A-plus/other_annotations/coding/ribosnitch/hg19_refGenes_exons.gtf.lg.transc.fa.RNAsnpM3.bed.abspos.p0.05.merged.altA.bed`
+`/project2/xinhe/TADA-A-plus/other_annotations/coding/ribosnitch/hg19_refGenes_exons.gtf.lg.transc.fa.RNAsnpM3.bed.abspos.p0.05.merged.altC.bed`
+`/project2/xinhe/TADA-A-plus/other_annotations/coding/ribosnitch/hg19_refGenes_exons.gtf.lg.transc.fa.RNAsnpM3.bed.abspos.p0.05.merged.altG.bed`
+`/project2/xinhe/TADA-A-plus/other_annotations/coding/ribosnitch/hg19_refGenes_exons.gtf.lg.transc.fa.RNAsnpM3.bed.abspos.p0.05.merged.altT.bed`
+
+#### Ray_RBP_motif
+> Contains all the anotated Ray RBP motifs, not only those that are within UTRs
+`/project2/xinhe/TADA-A-plus/other_annotations/coding/Ray_et_al_RBP_motif_hits/UTR.best_hit.hg19.bed.merge.bed.sorted.merged.bed`
+
+#### RBP-Var level 2
+> contain all relevant regions, not only including regoins that are within UTRs
+`/project2/xinhe/TADA-A-plus/other_annotations/coding/RBP-VarDB/RBP.all.bed.merge_overlap_hg19_refGenes_exons.gtf.lg.transc.fa.RNAsnpM3.bed.abspos.p0.1.altA.bed.merge.bed`
+`/project2/xinhe/TADA-A-plus/other_annotations/coding/RBP-VarDB/RBP.all.bed.merge_overlap_hg19_refGenes_exons.gtf.lg.transc.fa.RNAsnpM3.bed.abspos.p0.1.altC.bed.merge.bed`
+`/project2/xinhe/TADA-A-plus/other_annotations/coding/RBP-VarDB/RBP.all.bed.merge_overlap_hg19_refGenes_exons.gtf.lg.transc.fa.RNAsnpM3.bed.abspos.p0.1.altG.bed.merge.bed`
+`/project2/xinhe/TADA-A-plus/other_annotations/coding/RBP-VarDB/RBP.all.bed.merge_overlap_hg19_refGenes_exons.gtf.lg.transc.fa.RNAsnpM3.bed.abspos.p0.1.altT.bed.merge.bed`

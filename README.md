@@ -29,3 +29,23 @@ All of the annotations that are used in TADA-A and TADA-A-plus have a bed file f
 `/project2/xinhe/TADA-A-plus/other_annotations/coding/Polyphen_HDIV_probably_damaging_altC.bed.merge.bed`
 `/project2/xinhe/TADA-A-plus/other_annotations/coding/Polyphen_HDIV_probably_damaging_altG.bed.merge.bed`
 `/project2/xinhe/TADA-A-plus/other_annotations/coding/Polyphen_HDIV_probably_damaging_altT.bed.merge.bed`
+
+#### CLIP
+`/project2/xinhe/TADA-A-plus/other_annotations/coding/CLIP/human_combine.merged_hg19_refGenes_exons.gtf.lg.transc.fa.RNAsnpM3.bed.abspos.p0.05.merged.altA_in_coding_windows.bed`
+`/project2/xinhe/TADA-A-plus/other_annotations/coding/CLIP/human_combine.merged_hg19_refGenes_exons.gtf.lg.transc.fa.RNAsnpM3.bed.abspos.p0.05.merged.altC_in_coding_windows.bed`
+`/project2/xinhe/TADA-A-plus/other_annotations/coding/CLIP/human_combine.merged_hg19_refGenes_exons.gtf.lg.transc.fa.RNAsnpM3.bed.abspos.p0.05.merged.altG_in_coding_windows.bed`
+`/project2/xinhe/TADA-A-plus/other_annotations/coding/CLIP/human_combine.merged_hg19_refGenes_exons.gtf.lg.transc.fa.RNAsnpM3.bed.abspos.p0.05.merged.altT_in_coding_windows.bed`
+
+#### CLIPdb
+`/project2/xinhe/TADA-A-plus/other_annotations/coding/CLIPdb/human_combine.merged_hg19_refGenes_exons.gtf.lg.transc.fa.RNAsnpM3.bed.abspos.p0.05.merged.altA_in_coding_windows.bed`
+`/project2/xinhe/TADA-A-plus/other_annotations/coding/CLIPdb/human_combine.merged_hg19_refGenes_exons.gtf.lg.transc.fa.RNAsnpM3.bed.abspos.p0.05.merged.altC_in_coding_windows.bed`
+`/project2/xinhe/TADA-A-plus/other_annotations/coding/CLIPdb/human_combine.merged_hg19_refGenes_exons.gtf.lg.transc.fa.RNAsnpM3.bed.abspos.p0.05.merged.altG_in_coding_windows.bed`
+`/project2/xinhe/TADA-A-plus/other_annotations/coding/CLIPdb/human_combine.merged_hg19_refGenes_exons.gtf.lg.transc.fa.RNAsnpM3.bed.abspos.p0.05.merged.altT_in_coding_windows.bed`
+
+#### MPC score
+`/project2/xinhe/TADA-A-plus/other_annotations/coding/MPC_score/fordist_constraint_official_mpc_values_v2_MPC_gt2_altA.sorted.merged_in_coding_windows.bed`
+`/project2/xinhe/TADA-A-plus/other_annotations/coding/MPC_score/fordist_constraint_official_mpc_values_v2_MPC_gt2_altC.sorted.merged_in_coding_windows.bed`
+`/project2/xinhe/TADA-A-plus/other_annotations/coding/MPC_score/fordist_constraint_official_mpc_values_v2_MPC_gt2_altG.sorted.merged_in_coding_windows.bed`
+`/project2/xinhe/TADA-A-plus/other_annotations/coding/MPC_score/fordist_constraint_official_mpc_values_v2_MPC_gt2_altT.sorted.merged_in_coding_windows.bed`
+
+

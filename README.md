@@ -138,9 +138,28 @@ All of the annotations that are used in TADA-A and TADA-A-plus have a bed file f
 #### Fetal brain DHS E081 DeepSEA annotation, log odds ratio greater than 0.4
 > To get annotations specifically in 2kb promoter regions, need to overlap the annotation with 2kb promoter windows
 `/project2/xinhe/TADA-A-plus/other_annotations/deepsea_annotations/180510_merged.E081.allele-specific_altA_gt_0.4.bed`
-`/project2/xinhe/TADA-A-plus/other_annotations/deepsea_annotations/180510_merged.E081.allele-specific_altA_gt_0.4.bed`
-`/project2/xinhe/TADA-A-plus/other_annotations/deepsea_annotations/180510_merged.E081.allele-specific_altA_gt_0.4.bed`
-`/project2/xinhe/TADA-A-plus/other_annotations/deepsea_annotations/180510_merged.E081.allele-specific_altA_gt_0.4.bed`
+`/project2/xinhe/TADA-A-plus/other_annotations/deepsea_annotations/180510_merged.E081.allele-specific_altC_gt_0.4.bed`
+`/project2/xinhe/TADA-A-plus/other_annotations/deepsea_annotations/180510_merged.E081.allele-specific_altG_gt_0.4.bed`
+`/project2/xinhe/TADA-A-plus/other_annotations/deepsea_annotations/180510_merged.E081.allele-specific_altT_gt_0.4.bed`
+
+#### Fetal brain DHS E081 DeepSEA annotation, log odds ratio smaller than -0.34
+> To get annotations specifically in 2kb promoter regions, need to overlap the annotation with 2kb promoter windows
+`/project2/xinhe/TADA-A-plus/other_annotations/deepsea_annotations/180510_merged.E081.allele-specific_altA_st_-0.34.bed`
+`/project2/xinhe/TADA-A-plus/other_annotations/deepsea_annotations/180510_merged.E081.allele-specific_altC_st_-0.34.bed`
+`/project2/xinhe/TADA-A-plus/other_annotations/deepsea_annotations/180510_merged.E081.allele-specific_altG_st_-0.34.bed`
+`/project2/xinhe/TADA-A-plus/other_annotations/deepsea_annotations/180510_merged.E081.allele-specific_altT_st_-0.34.bed`
+
+#### Noonan fetal brain H3K27AC plus Adult brain H3K27AC (This is what I used in the AJHG manuscript)
+> To get annotations specifically in 2kb promoter regions, need to overlap the annotation with 2kb promoter windows
+`/project2/xinhe/TADA-A-plus//other_annotations/epigenomic_annotation/Noonan_brain_roadmap_union.bed`
+
+#### Noonan hNSC ATAC-Seq Passage 5, rep1
+> To get annotations specifically in 2kb promoter regions, need to overlap the annotation with 2kb promoter windows
+`/project2/xinhe/TADA-A-plus/other_annotations/epigenomic_annotation/Noonan_hNSC_P5-1_peaks.bed`
+
+#### Noonan hNSC ATAC-Seq Passage 5, rep2
+> To get annotations specifically in 2kb promoter regions, need to overlap the annotation with 2kb promoter windows
+`/project2/xinhe/TADA-A-plus/other_annotations/epigenomic_annotation/Noonan_hNSC_P5-2_peaks.bed`
 
 
 

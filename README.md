@@ -122,3 +122,6 @@ All of the annotations that are used in TADA-A and TADA-A-plus have a bed file f
 `/project2/xinhe/TADA-A-plus/other_annotations/coding/RBP-VarDB/RBP.all.bed.merge_overlap_hg19_refGenes_exons.gtf.lg.transc.fa.RNAsnpM3.bed.abspos.p0.1.altC.bed.merge.bed`
 `/project2/xinhe/TADA-A-plus/other_annotations/coding/RBP-VarDB/RBP.all.bed.merge_overlap_hg19_refGenes_exons.gtf.lg.transc.fa.RNAsnpM3.bed.abspos.p0.1.altG.bed.merge.bed`
 `/project2/xinhe/TADA-A-plus/other_annotations/coding/RBP-VarDB/RBP.all.bed.merge_overlap_hg19_refGenes_exons.gtf.lg.transc.fa.RNAsnpM3.bed.abspos.p0.1.altT.bed.merge.bed`
+
+### promoter
+

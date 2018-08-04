@@ -124,4 +124,23 @@ All of the annotations that are used in TADA-A and TADA-A-plus have a bed file f
 `/project2/xinhe/TADA-A-plus/other_annotations/coding/RBP-VarDB/RBP.all.bed.merge_overlap_hg19_refGenes_exons.gtf.lg.transc.fa.RNAsnpM3.bed.abspos.p0.1.altT.bed.merge.bed`
 
 ### promoter
+#### CADD
+> To get annotations specifically in 2kb promoter regions, need to overlap the annotation with 2kb promoter windows
+`/project2/xinhe/TADA-A-plus/other_annotations/allele_specific_CADD/whole_genome_SNVs_gt15_altA.bed`
+`/project2/xinhe/TADA-A-plus/other_annotations/allele_specific_CADD/whole_genome_SNVs_gt15_altC.bed`
+`/project2/xinhe/TADA-A-plus/other_annotations/allele_specific_CADD/whole_genome_SNVs_gt15_altG.bed`
+`/project2/xinhe/TADA-A-plus/other_annotations/allele_specific_CADD/whole_genome_SNVs_gt15_altT.bed`
+
+#### GERP
+> To get annotations specifically in 2kb promoter regions, need to overlap the annotation with 2kb promoter windows
+`/project2/xinhe/TADA-A-plus/data/170820_gerp_gt2.all.sorted.merged.bed`
+
+#### Fetal brain DHS E081 DeepSEA annotation, log odds ratio greater than 0.4
+> To get annotations specifically in 2kb promoter regions, need to overlap the annotation with 2kb promoter windows
+`/project2/xinhe/TADA-A-plus/other_annotations/deepsea_annotations/180510_merged.E081.allele-specific_altA_gt_0.4.bed`
+`/project2/xinhe/TADA-A-plus/other_annotations/deepsea_annotations/180510_merged.E081.allele-specific_altA_gt_0.4.bed`
+`/project2/xinhe/TADA-A-plus/other_annotations/deepsea_annotations/180510_merged.E081.allele-specific_altA_gt_0.4.bed`
+`/project2/xinhe/TADA-A-plus/other_annotations/deepsea_annotations/180510_merged.E081.allele-specific_altA_gt_0.4.bed`
+
+
 

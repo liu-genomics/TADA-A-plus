@@ -161,6 +161,18 @@ All of the annotations that are used in TADA-A and TADA-A-plus have a bed file f
 > To get annotations specifically in 2kb promoter regions, need to overlap the annotation with 2kb promoter windows
 `/project2/xinhe/TADA-A-plus/other_annotations/epigenomic_annotation/Noonan_hNSC_P5-2_peaks.bed`
 
+#### Noonan hNSC ATAC-Seq Passage 15-1
+> To get annotations specifically in 2kb promoter regions, need to overlap the annotation with 2kb promoter windows
+`/project2/xinhe/TADA-A-plus/other_annotations/epigenomic_annotation/Noonan_hNSC_P15-1_peaks.bed`
+
+#### Noonan hNSC ATAC-Seq Passage 50
+> To get annotations specifically in 2kb promoter regions, need to overlap the annotation with 2kb promoter windows
+`/project2/xinhe/TADA-A-plus/other_annotations/epigenomic_annotation/Noonan_hNSC_P15-1_peaks.bed`
+
+#### Noonan hNSC ATAC-Seq Passage 50.
+> To get annotations specifically in 2kb promoter regions, need to overlap the annotation with 2kb promoter windows
+`/project2/xinhe/TADA-A-plus/other_annotations/epigenomic_annotation/Noonan_hNSC_50_peaks.bed`
+
 
 
 

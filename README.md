@@ -173,6 +173,28 @@ All of the annotations that are used in TADA-A and TADA-A-plus have a bed file f
 > To get annotations specifically in 2kb promoter regions, need to overlap the annotation with 2kb promoter windows
 `/project2/xinhe/TADA-A-plus/other_annotations/epigenomic_annotation/Noonan_hNSC_50_peaks.bed`
 
+#### Duan Lab iPSC neuron Day 27
+> To get annotations specifically in 2kb promoter regions, need to overlap the annotation with 2kb promoter windows
+`/project2/xinhe/TADA-A-plus/other_annotations/epigenomic_annotation/GSM1820082_d27_fdr0.05.hot.bed`
 
+#### Duan Lab iPSC neuron Day 33
+> To get annotations specifically in 2kb promoter regions, need to overlap the annotation with 2kb promoter windows
+`/project2/xinhe/TADA-A-plus/other_annotations/epigenomic_annotation/GSM1820083_d33_fdr0.05.hot.bed`
+
+#### Duan Lab iPSC neuron Day 41
+> To get annotations specifically in 2kb promoter regions, need to overlap the annotation with 2kb promoter windows
+`/project2/xinhe/TADA-A-plus//other_annotations/epigenomic_annotation/GSM1820085_d411_fdr0.05.hot.bed`
+
+#### Duan Lab iPSC neuron Day 42
+> To get annotations specifically in 2kb promoter regions, need to overlap the annotation with 2kb promoter windows
+`/project2/xinhe/TADA-A-plus/other_annotations/epigenomic_annotation/GSM1820087_d412_fdr0.05.hot.bed`
+
+#### ACC_H3K27AC, PsychENCODE
+> To get annotations specifically in 2kb promoter regions, need to overlap the annotation with 2kb promoter windows
+`/project2/xinhe/TADA-A-plus/other_annotations/epigenomic_annotation/171012_Zhongshan_ACC_H3K27AC_merged_picked.bed`
+
+#### DLPFC_ATAC_seq, PsychENCODE
+> To get annotations specifically in 2kb promoter regions, need to overlap the annotation with 2kb promoter windows
+`/project2/xinhe/TADA-A-plus/other_annotations/epigenomic_annotation/171012_Zhongshan_ACC_H3K27AC_merged_picked.bed`
 
 

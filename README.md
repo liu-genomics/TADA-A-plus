@@ -197,4 +197,9 @@ All of the annotations that are used in TADA-A and TADA-A-plus have a bed file f
 > To get annotations specifically in 2kb promoter regions, need to overlap the annotation with 2kb promoter windows
 `/project2/xinhe/TADA-A-plus/other_annotations/epigenomic_annotation/171012_Zhongshan_ACC_H3K27AC_merged_picked.bed`
 
+#### DLPFC_H3K27AC, PsychENCODE
+> To get annotations specifically in 2kb promoter regions, need to overlap the annotation with 2kb promoter windows
+`/project2/xinhe/TADA-A-plus/other_annotations/epigenomic_annotation/171012_Zhongshan_DLPFC_H3K27AC_merged_picked.bed`
+
+
 

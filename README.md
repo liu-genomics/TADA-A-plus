@@ -217,11 +217,23 @@ All of the annotations that are used in TADA-A and TADA-A-plus have a bed file f
 > To get annotations specifically in 2kb promoter regions, need to overlap the annotation with 2kb promoter windows
 `/project2/xinhe/TADA-A-plus/other_annotations/epigenomic_annotation/Turner_Cell_fetal_CNS_DNaseI.bed`
 
-#### 2kb_chromHMM_active_promoters_gerp_gt2
+#### 2kb_chromHMM_active_promoters_gerp_gt2, gerp greater than 2
 `/project2/xinhe/TADA-A-plus/other_annotations/chromHMM/E081_15_coreMarks_segments_E1_E2_overlap_Example_windows_for_2kb_upstream_of_TSSs_from_coding_noncoding_UTRs_updated_for_mutation_rate_adjustment_ERV_mutrate_noXY_no_header_gerp_gt2.bed`
 
 #### 2kb_chromHMM_active_promoters
-`/project2/xinhe/TADA-A-plus/other_annotations/chromHMM/other_annotations/chromHMM/E081_15_coreMarks_segments_E1_E2_overlap_Example_windows_for_2kb_upstream_of_TSSs_from_coding_noncoding_UTRs_updated_for_mutation_rate_adjustment_ERV_mutrate_noXY_no_header.bed`
+`/project2/xinhe/TADA-A-plus/other_annotations/chromHMM/E081_15_coreMarks_segments_E1_E2_overlap_Example_windows_for_2kb_upstream_of_TSSs_from_coding_noncoding_UTRs_updated_for_mutation_rate_adjustment_ERV_mutrate_noXY_no_header.bed`
+
+#### Geschwind_cell_2017_ATACseq, gerp greater than 2
+`/project2/xinhe/TADA-A-plus/other_annotations/Geschwind_cell2017_ATACseq/diff_DNAacc_hg19_TS1.FDR_st_0.05.bed.in_2kb_promoter.bed.gerp_gt2.bed"`
+
+#### Geschwind_cell_2017_ATACseq
+`/project2/xinhe/TADA-A-plus/other_annotations/Geschwind_cell2017_ATACseq/diff_DNAacc_hg19_TS1.FDR_st_0.05.bed.in_2kb_promoter.bed"`
+
+#### DeepSEA based HGMD score > 0.7, 
+> Notice this annotation is mutation dataset specific, and could only be used for the mixture binomial model and for the Simon WGS 1902 dataset. The annotation only contains bases that are present at least once in Simons WGS 1902 dataset.
 
 
-
+`/project2/xinhe/TADA-A-plus/other_annotations/deepsea_annotations/web_retrieved_HGMD_scores/Simons_wgs_1902/Simons1902_HGMD_0.7_cutoff_altA.bed_overlap_with_2kb_promoter.bed`
+`/project2/xinhe/TADA-A-plus/other_annotations/deepsea_annotations/web_retrieved_HGMD_scores/Simons_wgs_1902/Simons1902_HGMD_0.7_cutoff_altC.bed_overlap_with_2kb_promoter.bed`
+`/project2/xinhe/TADA-A-plus/other_annotations/deepsea_annotations/web_retrieved_HGMD_scores/Simons_wgs_1902/Simons1902_HGMD_0.7_cutoff_altG.bed_overlap_with_2kb_promoter.bed｀
+｀/project2/xinhe/TADA-A-plus/other_annotations/deepsea_annotations/web_retrieved_HGMD_scores/Simons_wgs_1902/Simons1902_HGMD_0.7_cutoff_altT.bed_overlap_with_2kb_promoter.bed｀

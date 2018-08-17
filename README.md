@@ -201,5 +201,22 @@ All of the annotations that are used in TADA-A and TADA-A-plus have a bed file f
 > To get annotations specifically in 2kb promoter regions, need to overlap the annotation with 2kb promoter windows
 `/project2/xinhe/TADA-A-plus/other_annotations/epigenomic_annotation/171012_Zhongshan_DLPFC_H3K27AC_merged_picked.bed`
 
+#### ENCODE DHS
+> To get annotations specifically in 2kb promoter regions, need to overlap the annotation with 2kb promoter windows
+`/project2/xinhe/TADA-A-plus/other_annotations/epigenomic_annotation/encode_DHS_union.bed`
+
+#### Epigenome E081_E081 intersection (intersection between female fetal brain and male fetal brain)
+> To get annotations specifically in 2kb promoter regions, need to overlap the annotation with 2kb promoter windows
+`/project2/xinhe/TADA-A-plus/other_annotations/epigenomic_annotation/Epigenome_E081_E082_intersection.bed`
+
+#### Epigenome E081_E081 intersection (intersection between female fetal brain and male fetal brain)
+> To get annotations specifically in 2kb promoter regions, need to overlap the annotation with 2kb promoter windows
+`/project2/xinhe/TADA-A-plus/other_annotations/epigenomic_annotation/Epigenome_E081_E082_intersection.bed`
+
+#### Turner cell featal CNS DNaseI (intersection between female fetal brain and male fetal brain)
+> To get annotations specifically in 2kb promoter regions, need to overlap the annotation with 2kb promoter windows
+`/project2/xinhe/TADA-A-plus/other_annotations/epigenomic_annotation/Turner_Cell_fetal_CNS_DNaseI.bed`
+
+
 
 

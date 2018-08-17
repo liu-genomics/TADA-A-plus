@@ -217,6 +217,11 @@ All of the annotations that are used in TADA-A and TADA-A-plus have a bed file f
 > To get annotations specifically in 2kb promoter regions, need to overlap the annotation with 2kb promoter windows
 `/project2/xinhe/TADA-A-plus/other_annotations/epigenomic_annotation/Turner_Cell_fetal_CNS_DNaseI.bed`
 
+#### 2kb_chromHMM_active_promoters_gerp_gt2
+`/project2/xinhe/TADA-A-plus/other_annotations/chromHMM/E081_15_coreMarks_segments_E1_E2_overlap_Example_windows_for_2kb_upstream_of_TSSs_from_coding_noncoding_UTRs_updated_for_mutation_rate_adjustment_ERV_mutrate_noXY_no_header_gerp_gt2.bed`
+
+#### 2kb_chromHMM_active_promoters
+`/project2/xinhe/TADA-A-plus/other_annotations/chromHMM/other_annotations/chromHMM/E081_15_coreMarks_segments_E1_E2_overlap_Example_windows_for_2kb_upstream_of_TSSs_from_coding_noncoding_UTRs_updated_for_mutation_rate_adjustment_ERV_mutrate_noXY_no_header.bed`
 
 
 
